@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Life OS</title>
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Life OS">
+<meta name="description" content="Track finance, time, habits and nature alignment">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f0f0f'/><text y='.9em' font-size='72' x='14'>🧭</text></svg>">
+<link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -271,6 +278,15 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .sf-btn{margin-left:auto;background:transparent;border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer;color:var(--muted);transition:all .12s}
 .sf-btn:hover{border-color:rgba(0,0,0,.2);color:var(--text)}
 @media(max-width:620px){.score4{grid-template-columns:1fr 1fr}.m3{grid-template-columns:1fr 1fr}.tcol{grid-template-columns:1fr}.mode-grid{grid-template-columns:1fr}.bal-amt{font-size:34px}.mc-val{font-size:18px}.wr-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.hdr-name{font-size:17px}.hdr-btns{gap:4px}.btn-sec{padding:8px 10px;font-size:11px}.btn-pri{padding:8px 12px;font-size:12px}.tab{font-size:11px;padding:8px 9px}.bal-amt{font-size:26px}.w2g{grid-template-columns:1fr}.w3g{grid-template-columns:1fr 1fr}.sc4-val{font-size:24px}}
+button,input,select,textarea{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.fi{font-size:16px}
+.pb{width:44px;height:44px;font-size:20px}
+.bsm{min-height:36px;padding:5px 10px}
+.sfooter{padding-bottom:max(9px,env(safe-area-inset-bottom))}
+.wrap{padding-bottom:max(150px,calc(130px + env(safe-area-inset-bottom)))}
+.mbox{padding-bottom:max(36px,calc(24px + env(safe-area-inset-bottom)));-webkit-overflow-scrolling:touch}
+.mov{padding-bottom:env(safe-area-inset-bottom)}
 </style>
 </head>
 <body>
