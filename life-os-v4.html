@@ -2,21 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Life OS</title>
-<meta name="theme-color" content="#ffffff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Life OS">
-<meta name="description" content="Track finance, time, habits and nature alignment">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f0f0f'/><text y='.9em' font-size='72' x='14'>🧭</text></svg>">
-<link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
-body{overscroll-behavior-y:contain}
 :root{
   --bg:#fff;--text:#0f0f0f;--muted:#6b7280;--faint:#9ca3af;
   --soft:#f5f4f1;--softer:#f9f8f6;--border:rgba(0,0,0,.08);
@@ -280,16 +271,6 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .sf-btn{margin-left:auto;background:transparent;border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;font-family:inherit;cursor:pointer;color:var(--muted);transition:all .12s}
 .sf-btn:hover{border-color:rgba(0,0,0,.2);color:var(--text)}
 @media(max-width:620px){.score4{grid-template-columns:1fr 1fr}.m3{grid-template-columns:1fr 1fr}.tcol{grid-template-columns:1fr}.mode-grid{grid-template-columns:1fr}.bal-amt{font-size:34px}.mc-val{font-size:18px}.wr-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:380px){.hdr-name{font-size:17px}.hdr-btns{gap:4px}.btn-sec{padding:8px 10px;font-size:11px}.btn-pri{padding:8px 12px;font-size:12px}.tab{font-size:11px;padding:8px 9px}.bal-amt{font-size:26px}.w2g{grid-template-columns:1fr}.w3g{grid-template-columns:1fr 1fr}.sc4-val{font-size:24px}}
-button,input,select,textarea,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.fi{font-size:16px}
-.pb{width:44px;height:44px;font-size:20px}
-.bsm{min-height:36px;padding:5px 10px}
-.sfooter{padding-bottom:max(9px,env(safe-area-inset-bottom))}
-.wrap{padding-bottom:max(150px,calc(130px + env(safe-area-inset-bottom)))}
-.mbox{padding-bottom:max(36px,calc(24px + env(safe-area-inset-bottom)));-webkit-overflow-scrolling:touch}
-.mov{padding-bottom:env(safe-area-inset-bottom)}
 </style>
 </head>
 <body>
@@ -300,7 +281,6 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
       <div><div class="hdr-name">Life OS</div><div class="hdr-sub">Finance &middot; Time &middot; Habits &middot; Nature</div></div>
     </div>
     <div class="hdr-btns">
-      <button class="btn-sec" onclick="openSettings()">⚙ Settings</button>
       <button class="btn-sec" onclick="exportCSV()">Export CSV</button>
       <button class="btn-pri" onclick="openModal(null)">+ Log</button>
     </div>
@@ -330,18 +310,6 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
 </div>
 <div class="mov" id="modal-ov" onclick="if(event.target.id==='modal-ov')closeModal()">
   <div class="mbox"><div class="mhandle"></div><div class="mtitle" id="modal-title">Log Entry</div><div id="modal-form"></div></div>
-</div>
-<div class="mov" id="settings-ov" onclick="if(event.target.id==='settings-ov')closeSettings()">
-  <div class="mbox">
-    <div class="mhandle"></div>
-    <div class="mtitle">Settings</div>
-    <div class="fg">
-      <label class="fl">Anthropic API Key <span style="font-weight:700;color:var(--faint);text-transform:none;letter-spacing:0">(for AI Insights &amp; Weekly Review)</span></label>
-      <input id="settings-apikey" class="fi" type="password" placeholder="sk-ant-..." autocomplete="off">
-      <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:6px;line-height:1.6">Your key is stored only in this browser's localStorage and never sent anywhere except Anthropic's API. Get yours at <strong>console.anthropic.com</strong>.</div>
-    </div>
-    <div class="fact"><button class="bcnl" onclick="closeSettings()">Cancel</button><button class="bsav" onclick="saveSettings()">Save</button></div>
-  </div>
 </div>
 <div class="sfooter"><span id="sf-icon">&#9203;</span><span id="sf-text">Loading...</span><span style="color:var(--border);margin-left:4px">v4.0</span><button class="sf-btn" onclick="exportCSV()">Export CSV</button></div>
 <script>
@@ -541,9 +509,7 @@ async function aiInsights(){
   insightLoading=true;renderInsights();
   var snap=entries.slice(-60).map(function(e){return{date:e.date,act:e.activity,cat:e.category,dur:e.duration,dir:e.direction,mode:e.mode,fric:e.friction,spend:(e.hasFinance&&e.financeType==='expense'?e.financeAmount:0),earn:(e.hasFinance&&e.financeType==='income'?e.financeAmount:0),finCat:e.financeCategory,nat:e.natureScore||null};});
   var prompt='You are a sharp life pattern analyst. Analyze this personal life log for a user in Telangana, India (INR). Identify behavioral patterns creating drains or strengths across finance, health, learning, and nature alignment. Entries: '+JSON.stringify(snap)+'. Return ONLY valid JSON with no markdown: {"finance_drains":[{"pattern":"...","severity":"high|medium|low","tip":"..."}],"health_drains":[...],"learning_drains":[...],"nature_drains":[...],"habit_loops":[{"head":"...","body":"..."}],"strengths":[{"pattern":"..."}],"top_insight":"...","energy_score":0-100,"alignment_score":0-100,"fin_score":0-100,"health_score":0-100}. Be specific with actual numbers. habit_loops: cross-domain patterns where a single habit drains finance AND health simultaneously. top_insight: one direct actionable sentence. 1-3 items per section. No em dashes.';
-  var apiKey=localStorage.getItem('lifeos_api_key')||'';
-  if(!apiKey){alert('Add your Anthropic API key in ⚙ Settings to use AI features.');insightLoading=false;insightData=null;renderInsights();return;}
-  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1400,messages:[{role:'user',content:prompt}]})});var d=await r.json();var txt=(d.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');insightData=JSON.parse(txt.replace(/```json|```/g,'').trim());lastAnalyzed=new Date().toISOString();var j=JSON.stringify({data:insightData,ts:lastAnalyzed});if(window.storage&&window.storage.set)window.storage.set('lifeos_ins_v2',j).catch(function(){});else try{localStorage.setItem('lifeos_ins_v2',j);}catch(e){}}catch(err){console.error(err);insightData={_error:true};}
+  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,messages:[{role:'user',content:prompt}]})});var d=await r.json();var txt=(d.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');insightData=JSON.parse(txt.replace(/```json|```/g,'').trim());lastAnalyzed=new Date().toISOString();var j=JSON.stringify({data:insightData,ts:lastAnalyzed});if(window.storage&&window.storage.set)window.storage.set('lifeos_ins_v2',j).catch(function(){});else try{localStorage.setItem('lifeos_ins_v2',j);}catch(e){}}catch(err){console.error(err);insightData={_error:true};}
   insightLoading=false;renderInsights();
 }
 async function aiWeeklyReview(){
@@ -557,9 +523,7 @@ async function aiWeeklyReview(){
   var tInc=wk.filter(function(e){return e.hasFinance&&e.financeType==='income';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
   var snap=wk.map(function(e){return{act:e.activity,cat:e.category,dur:e.duration,dir:e.direction,mode:e.mode,fric:e.friction,nat:e.natureScore||null,spend:(e.hasFinance&&e.financeType==='expense'?e.financeAmount:0),earn:(e.hasFinance&&e.financeType==='income'?e.financeAmount:0)};});
   var prompt='Write a sharp, direct weekly review for a life OS user in Telangana, India. Stats: Total hours '+fH(tH)+', Directed '+fH(dH)+' ('+Math.round(tH?dH/tH*100:0)+'%), Distracted '+fH(tH-dH)+', Spent Rs '+fM(tExp)+', Income Rs '+fM(tInc)+'. Entries: '+JSON.stringify(snap)+'. Return ONLY valid JSON with no markdown: {"summary":"2-3 sentence summary, specific","win":"single biggest win","miss":"single biggest miss or pattern","next_week_focus":"one clear priority","finance_note":"brief finance observation","nature_note":"brief nature note","score":0-100}. Be specific. Call out real patterns. No em dashes.';
-  var apiKey=localStorage.getItem('lifeos_api_key')||'';
-  if(!apiKey){alert('Add your Anthropic API key in ⚙ Settings to use AI features.');reviewLoading=false;reviewData=null;renderReview();return;}
-  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:900,messages:[{role:'user',content:prompt}]})});var d=await r.json();var txt=(d.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');reviewData=JSON.parse(txt.replace(/```json|```/g,'').trim());lastReview=new Date().toISOString();var j=JSON.stringify({data:reviewData,ts:lastReview});if(window.storage&&window.storage.set)window.storage.set('lifeos_rev_v1',j).catch(function(){});else try{localStorage.setItem('lifeos_rev_v1',j);}catch(e){}}catch(err){console.error(err);reviewData={_error:true};}
+  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:prompt}]})});var d=await r.json();var txt=(d.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');reviewData=JSON.parse(txt.replace(/```json|```/g,'').trim());lastReview=new Date().toISOString();var j=JSON.stringify({data:reviewData,ts:lastReview});if(window.storage&&window.storage.set)window.storage.set('lifeos_rev_v1',j).catch(function(){});else try{localStorage.setItem('lifeos_rev_v1',j);}catch(e){}}catch(err){console.error(err);reviewData={_error:true};}
   reviewLoading=false;renderReview();
 }
 function seedData(){
@@ -841,10 +805,6 @@ function exportCSV(){
   entries.forEach(function(e){rows.push(cols.map(function(c){var v=String(e[c]!==undefined?e[c]:'');if(v.includes(','))v='"'+v.replace(/"/g,'""')+'"';return v;}).join(','));});
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='life-os-export.csv';a.click();
 }
-function openSettings(){var el=document.getElementById('settings-ov');if(!el)return;var k=localStorage.getItem('lifeos_api_key')||'';var inp=document.getElementById('settings-apikey');if(inp)inp.value=k;el.classList.add('open');}
-function closeSettings(){var el=document.getElementById('settings-ov');if(el)el.classList.remove('open');}
-function saveSettings(){var inp=document.getElementById('settings-apikey');if(inp){var k=inp.value.trim();if(k)localStorage.setItem('lifeos_api_key',k);else localStorage.removeItem('lifeos_api_key');}closeSettings();}
-window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
 window.setF=setF;window.toggleFin=toggleFin;window.setFinType=setFinType;window.saveEntry=saveEntry;
 window.setLF=setLF;window.setFV=setFV;window.setTV=setTV;window.navF=navF;window.navT=navT;
