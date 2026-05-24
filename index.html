@@ -173,13 +173,14 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .ticker-section{margin-top:0;border-top:none;padding-top:0}
 .ticker-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:10px}
 .ticker-row{display:flex;align-items:stretch;border-radius:10px;margin-bottom:7px;border:1px solid rgba(0,0,0,.07);background:var(--softer);min-height:52px}
-.ticker-lbl{font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;padding:8px 9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:62px;max-width:62px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
-.ticker-track{flex:1;overflow:hidden;display:flex;align-items:center;padding:10px 13px}
-.ticker-text{font-size:12px;font-weight:700;color:var(--text);line-height:1.5;transition:opacity .4s ease;word-break:break-word}
+.ticker-lbl{font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;padding:8px 6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:50px;max-width:50px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
+.ticker-track{flex:1;overflow:hidden;display:flex;align-items:center;padding:9px 10px}
+.ticker-text{font-size:11px;font-weight:700;color:var(--text);line-height:1.55;word-break:break-word;will-change:transform,opacity;}
+.ticker-dev{font-size:14px;font-weight:400;color:#111;line-height:1.65;letter-spacing:.2px}
 .drain-quad{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
 .dq-cell{border-radius:14px;padding:11px 12px;background:var(--softer);border:1px solid var(--border)}
 .dq-t{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--faint);margin-bottom:8px}
-.ins-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.ins-layout{display:grid;grid-template-columns:1fr clamp(175px,20vw,260px);gap:18px;align-items:start}
 .ins-main{min-width:0}
 .ins-side{position:sticky;top:14px;max-height:calc(100vh - 70px);overflow-y:auto;scrollbar-width:thin}
 .ins-side::-webkit-scrollbar{width:3px}
@@ -776,107 +777,185 @@ var _TD={},_TT=[];
 function _clearTickers(){_TT.forEach(function(t){clearTimeout(t);});_TT=[];}
 function initTickers(){
   _clearTickers();
+  var EASE_IN='transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94),opacity 0.45s ease';
+  var EASE_OUT='transform 0.6s cubic-bezier(0.55,0,1,0.45),opacity 0.45s ease';
   Object.keys(_TD).forEach(function(key){
     var el=document.getElementById('tk-'+key);
     if(!el)return;
     var sents=_TD[key];
     var idx=Math.floor(Math.random()*sents.length);
-    (function cycle(){
-      var el2=document.getElementById('tk-'+key);
-      if(!el2)return;
-      var s=sents[idx];
-      var dur=Math.max(3200,Math.min(5800,s.length*46));
-      el2.style.opacity='0';
-      _TT.push(setTimeout(function(){
-        var el3=document.getElementById('tk-'+key);
-        if(!el3)return;
-        el3.innerHTML=s;
-        el3.style.opacity='1';
+    // Load first sentence off-screen below, then slide in
+    el.innerHTML=sents[idx];
+    el.style.transform='translateY(300%)';
+    el.style.opacity='0';
+    el.style.transition='none';
+    _TT.push(setTimeout(function(){
+      var e=document.getElementById('tk-'+key);
+      if(!e)return;
+      e.style.transition=EASE_IN;
+      e.style.transform='translateY(0)';
+      e.style.opacity='1';
+      // Begin cycle after initial slide-in settles
+      (function cycle(){
+        var cur=document.getElementById('tk-'+key);
+        if(!cur)return;
+        var s=sents[idx];
+        // Display time: 3.5s minimum, up to 6s for longer sentences
+        var dur=Math.max(3500,Math.min(6000,s.length*55));
         _TT.push(setTimeout(function(){
-          var el4=document.getElementById('tk-'+key);
-          if(!el4)return;
-          el4.style.opacity='0';
-          idx=(idx+1)%sents.length;
-          _TT.push(setTimeout(cycle,460));
+          var el2=document.getElementById('tk-'+key);
+          if(!el2)return;
+          // Slide current sentence up and out
+          el2.style.transition=EASE_OUT;
+          el2.style.transform='translateY(-300%)';
+          el2.style.opacity='0';
+          // After exit animation, load next and slide in from below
+          _TT.push(setTimeout(function(){
+            var el3=document.getElementById('tk-'+key);
+            if(!el3)return;
+            idx=(idx+1)%sents.length;
+            el3.innerHTML=sents[idx];
+            el3.style.transition='none';
+            el3.style.transform='translateY(300%)';
+            el3.style.opacity='0';
+            _TT.push(setTimeout(function(){
+              var el4=document.getElementById('tk-'+key);
+              if(!el4)return;
+              el4.style.transition=EASE_IN;
+              el4.style.transform='translateY(0)';
+              el4.style.opacity='1';
+              _TT.push(setTimeout(cycle,150));
+            },40));
+          },640));
         },dur));
-      },320));
-    })();
+      })();
+    },80));
   });
 }
 function buildTickers(){
   _TD['sm']=[
-    'Attention is finite: the prefrontal cortex depletes under chronic distraction, reducing executive function by up to 30%',
-    '90-minute deep work blocks protect ultradian rhythms — your brain naturally cycles between high and low focus',
-    'Dopamine from social media spikes and crashes within 20 minutes, creating withdrawal cycles that impair sustained focus',
-    'Sleep consolidates learning: 7-9 hours of uninterrupted sleep increases skill retention by 40% vs 6 hours',
-    'Exercise upregulates BDNF, the brain\'s growth factor — 30 minutes of movement daily measurably improves learning speed',
-    'Morning cortisol peaks 30-45 minutes after waking: this is your biological performance window, not your phone window'
+    'Prefrontal cortex depletes under distraction — executive function drops up to 30%',
+    '90-min deep work aligns with ultradian rhythms — your biology is the time-keeper',
+    'Social media dopamine spikes crash in 20 min — the withdrawal impairs sustained focus',
+    '7-9 hrs sleep raises skill retention 40% vs 6 hrs — sleep is consolidation, not rest',
+    'BDNF from 30 min movement daily improves learning speed within 2 weeks',
+    'Cortisol peaks 30-45 min after waking — your performance window, not your phone window',
+    'Chronic stress physically shrinks the hippocampus — memory and navigation centre',
+    'Mind-wandering consumes more energy than focused attention — idle is not free',
+    'Cold exposure 2-3 min raises norepinephrine 300% — improves focus for hours',
+    '8 weeks of meditation measurably thickens the prefrontal cortex'
   ];
   _TD['sh']=[
-    'Habits form through cue-routine-reward loops — changing your environment is 5× more effective than willpower alone',
-    'Financial decisions under stress show 23% higher impulsivity: automate savings before spending windows open each week',
-    'Social contagion is real — your income, health and habits trend toward the average of your closest 5 contacts within 3 years',
-    'Purpose-aligned work activates intrinsic motivation circuits, reducing perceived effort by up to 40%',
-    'Refining without shipping loops energy back on itself — real feedback from the world is irreplaceable by internal iteration',
-    'Rest cycles are not wasted time: they are when the nervous system consolidates pattern recognition and restores prefrontal capacity'
+    'Changing environment is 5× more effective than willpower for habit change',
+    'Stress raises financial impulsivity 23% — automate savings before spending windows open',
+    'Your habits trend toward your 5 closest contacts\' average within 3 years',
+    'Purpose-aligned work reduces perceived effort up to 40% via intrinsic circuits',
+    'Refining without shipping loops energy inward — external feedback is irreplaceable',
+    'Rest consolidates pattern recognition — recovery is structural, not optional',
+    'Implementation intentions double habit follow-through vs vague goals',
+    '"I am a person who moves daily" outlasts "I want to lose weight" as a habit anchor',
+    'Neural pathways for habits wire over 66 days — day 21 is a myth',
+    'Willpower depletes like a muscle — schedule priorities in your peak window'
   ];
   _TD['sn']=[
-    'Humans are the only species disrupting all 11 physiological systems simultaneously through artificial light, processed food, sedentary living and social fragmentation',
-    'A single 90-minute walk in nature lowers rumination in the prefrontal cortex more than 90 minutes of urban walking',
-    'Plants release phytoncides that raise natural killer cell activity in humans by 50% after just 2 days in forests',
-    'Biodiversity loss in cities directly correlates with reduced immune diversity in urban residents',
-    'Noise pollution above 65 dB raises cortisol and increases cardiovascular risk — a widespread but invisible urban drain',
-    'Diffuse natural light (even on overcast days) is 10-100× brighter than indoor lighting and irreplaceable for circadian anchoring'
+    '90-min nature walk lowers prefrontal rumination more than 90 min of urban walking',
+    'Forest phytoncides raise natural killer cell activity 50% after 2 days outdoors',
+    'Biodiversity loss in cities directly reduces immune diversity in residents',
+    'Noise above 65 dB raises cortisol and cardiovascular risk — invisible but measurable',
+    'Outdoor light is 10-100× brighter than indoors — irreplaceable for circadian anchoring',
+    'Viewing natural fractals reduces stress 60% in 40 seconds — trees, water, clouds',
+    'Earthing (bare feet on ground) reduces cortisol and inflammation in 20 minutes',
+    'Green space within 300m correlates with measurably lower depression and anxiety',
+    'Urban air pollution reduces cognitive function equivalent to 1 lost year of education',
+    'Blue light suppresses melatonin 3× more than other frequencies after dusk'
   ];
   _TD['vi']=[
-    'Ayurveda maps the day: Kapha (6-10am) for movement, Pitta (10am-2pm) for focused transformation, Vata (2-6pm) for creativity and communication',
-    'Brahma Muhurta — 90 minutes before sunrise — is the clearest learning window, matching modern data on cortisol and memory encoding',
-    'Ritucharya (seasonal living) prescribes different foods and routines every 2 months, mirroring chronobiology findings on metabolic adaptation',
-    'Dharma (purpose-aligned action) maps precisely to neuroscience\'s intrinsic motivation: both reduce friction and increase flow states',
-    'Prakriti (individual constitution) means there is no universal optimal schedule — the best routine is calibrated to your specific nature',
-    'The Vedic concept of Ama (accumulated toxin) parallels modern allostatic load — unprocessed stress accumulates silently before manifesting as breakdown'
+    '<span class="ticker-dev">योगश्चित्तवृत्तिनिरोधः</span><br><em>Yoga Sutras 1.2</em>',
+    'योग: from युज् — to yoke/unite. Yoga = cessation of mind\'s restlessness. Union of finite self with infinite source.',
+    '<span class="ticker-dev">तत्त्वमसि</span><br><em>Chandogya Upanishad 6.8.7</em>',
+    'तत् (That — absolute) + त्वम् (you) + असि (ARE). Not shall become. Already are. The distance between self and truth is linguistic, not real.',
+    '<span class="ticker-dev">अहं ब्रह्मास्मि</span><br><em>Brihadaranyaka Upanishad 1.4.10</em>',
+    'ब्रह्मन्: from बृह् — to expand infinitely. Identity with the boundless removes the root of all depletion and anxiety.',
+    '<span class="ticker-dev">स्वस्थस्य स्वास्थ्यरक्षणम्</span><br><em>Charaka Sutrasthana 1.1</em>',
+    'स्वास्थ्य (Svasthya): स्व (luminous Higher Self) + स्थ (rooted in). Health = the state of being anchored in one\'s true nature.',
+    '<span class="ticker-dev">सर्वं खल्विदं ब्रह्म</span><br><em>Chandogya Upanishad 3.14.1</em>',
+    'खलु: from खेल — to flow freely. All this flows as one undivided Brahman. The boundary between self and world is the root disease.',
+    '<span class="ticker-dev">धियो यो नः प्रचोदयात्</span><br><em>Rigveda 3.62.10 — Gayatri</em>',
+    'धी (Dhi): luminous intellect receiving light beyond the mind. ध्यान (Dhyana): धी (wisdom) + यान (vehicle) — the vehicle toward ultimate knowing.',
+    '<span class="ticker-dev">प्रज्ञानं ब्रह्म</span><br><em>Aitareya Upanishad 3.3</em>',
+    'प्रज्ञान: प्र (forward excellence) + ज्ञान (knowing). Consciousness is not produced by the brain. The brain appears within consciousness.',
+    '<span class="ticker-dev">न जायते म्रियते वा कदाचित्</span><br><em>Bhagavad Gita 2.20</em>',
+    'न-जायते: never born, cannot die. Knowing the deathless nature of awareness dissolves the anxiety depleting all 11 body systems.',
+    '<span class="ticker-dev">तदा द्रष्टुः स्वरूपेऽवस्थानम्</span><br><em>Yoga Sutras 1.3</em>',
+    'द्रष्टृ: from दृश् — to see. When modifications cease, the seer abides in its own pure nature. This is the root of all Svasthya.',
+    '<span class="ticker-dev">शान्तिः शान्तिः शान्तिः</span><br><em>All Upanishads — triple invocation</em>',
+    'शान्ति: from शम् — to quieten. Three-fold: body (adhibhautika), mind (adhidaivika), spirit (adhyatmika). Svasthya requires all three.',
+    '<span class="ticker-dev">श्रद्धावान् लभते ज्ञानम्</span><br><em>Bhagavad Gita 4.39</em>',
+    'श्रद्धा (Shraddha): श्रत् (heart recognising soul source) + धा (to establish firmly). The self becoming rooted in its deepest truth.',
+    '<span class="ticker-dev">यत्र विश्वमिदं भाति कल्पितं रज्जुसर्पवत्</span><br><em>Ashtavakra Gita 2.6</em>',
+    'रज्जुसर्पवत् — like a snake in a rope. The world\'s complexity is misperception of the unchanging. Viveka (discernment) ends the imagined snake.'
   ];
   _TD['w1']=[
-    'India\'s gig economy employs 38% of the workforce in freelance roles — income volatility removes structural routine that previously regulated sleep, eating and social connection',
-    'Hyderabad grows by 500+ new residents daily, straining water, air quality and green space — all of which directly affect cognition and wellbeing',
-    'Urban heat island effect makes Hyderabad summers 3-5°C hotter than surrounding areas, compressing the outdoor activity window to before 9am and after 6pm',
-    'Telangana\'s groundwater has dropped 40% in 20 years — water scarcity already affects food prices, stress levels and daily routines across the state',
-    '60% of India\'s new jobs since 2015 require sustained cognitive output — yet only 12% of workplaces have any formal cognitive load management practice'
+    'India: 38% gig workforce — income volatility disrupts the routine that regulated sleep and eating',
+    'Hyderabad adds 500+ residents daily — water, air and green space under growing strain',
+    'Hyderabad summers run 3-5°C hotter — outdoor window shrinks to before 9am and after 6pm',
+    'Telangana groundwater down 40% in 20 years — water stress is now a daily metabolic stressor',
+    '60% of India\'s new jobs need sustained cognitive output — 88% of workplaces have no load management',
+    'India has 0.07 psychiatrists per 10,000 people — mental health infrastructure is critically thin',
+    'Hyderabad pollution reduces average life expectancy by 3.8 years vs clean-air standards',
+    'India\'s 23% youth unemployment removes the structural daily rhythm most bodies rely on'
   ];
   _TD['w2']=[
-    'The average Indian knowledge worker logs 52 hours per week, against a science-backed optimal of 38-42 hours for sustained performance',
-    'Telangana\'s IT sector reports India\'s highest burnout rates, driven by US-timezone demands that chronically disrupt circadian rhythms',
-    'Hyderabad commutes average 90 minutes per day — time subtracted from sleep, exercise and family — the largest untracked energy drain in urban India',
-    'India\'s urban food inflation means mid-income households spend 35-40% of income on food, compressing all other discretionary and recovery choices',
-    'India loses an estimated Rs 18,000 crore annually to burnout — yet less than 2% of that is reinvested in preventive wellbeing infrastructure'
+    'Indian knowledge workers: 52 hrs/week vs science-backed optimal of 38-42 hrs',
+    'Telangana IT sector — India\'s highest burnout — US-timezone demands disrupt circadian rhythms nightly',
+    'Hyderabad commutes: 90 min/day extracted from sleep, exercise and family',
+    'Mid-income urban India: 35-40% of income on food — little left for recovery or health',
+    'Rs 18,000 crore/year lost to burnout — less than 2% reinvested in preventive wellbeing',
+    '800 million Indians online by 2023 — most via phones with no ergonomic awareness',
+    '70% of urban India skips breakfast — disrupting cortisol, immunity and focus from dawn',
+    'WFH in India added 3 hrs/day screen time with no corresponding increase in movement'
   ];
   _TD['r1']=[
-    'India wastes 40% of its food between farm and consumer, mostly at storage and market stage, while 190 million remain food insecure',
-    'Screen time in India averages 7.3 hours per day, displacing physical activity, face-to-face connection and creative thinking for 40% of urban youth',
-    'Water to produce 1 kg of beef: 15,000 litres. Water for 1 kg of lentils: 900 litres. India\'s dietary shift compresses water reserves 4× faster than population growth',
-    'Corporate wellness budgets average Rs 800 per employee per year — less than one gym visit — while burnout costs the economy Rs 18,000 crore annually',
-    'Indoor artificial light after sunset suppresses melatonin for 90+ minutes per session, compounding into a population-scale sleep deficit across millions'
+    'India wastes 40% of food between farm and consumer — mostly at storage, not plates',
+    'India: 7.3 hrs/day screen time — displacing movement, conversation and creative thinking',
+    '1 kg beef = 15,000 litres water. 1 kg lentils = 900 litres. A 16× gap in resource use.',
+    'Corporate wellness: Rs 800/employee/year — less than one gym visit — as burnout costs crores',
+    'Artificial light after sunset suppresses melatonin 90+ min/session across millions of people',
+    '90% of plastic since 1950 never recycled — most has entered food chains and human bodies',
+    '40% of farmland is now less nutritious than 50 years ago — food quality is quietly declining',
+    'Attention economy platforms maximise time-on-app, not user wellbeing — misaligned by design'
   ];
   _TD['r2']=[
-    'Regenerative farming on 15% of Indian farmland could sequester 200 million tons of carbon annually while improving soil nutrition and farmer income',
-    '4-day compressed work weeks (32 hours) in 60+ global pilots showed equal or higher output with 26% lower burnout rates',
-    'Community learning spaces reduce educational inequality 6× more cost-effectively than private tutoring — with far wider reach',
-    'India has 250 million volunteer hours per year — enough, if coordinated, to deliver basic literacy to 50 million adults within 24 months',
-    'Each hour of daily outdoor activity replaces roughly 20 minutes of clinical mental health support cost for mild anxiety — at zero marginal cost'
+    'Regenerative farming on 15% of Indian farmland could sequester 200M tons carbon/year',
+    '4-day work weeks (32 hrs) in 60+ pilots: equal output, 26% lower burnout',
+    'Community learning spaces cut educational inequality 6× more than private tutoring',
+    'India\'s 250M volunteer hours/year could deliver basic literacy to 50M adults in 24 months',
+    '1 hour daily outdoor activity replaces ~20 min of clinical support for mild anxiety, free',
+    'Time-restricted eating (8-10 hr window) improves metabolic markers without cutting calories',
+    '30% urban tree cover reduces city temperature 2-3°C — extending the outdoor activity window',
+    'Social prescribing (nature and community activities) reduces primary care visits by 25%'
   ];
   _TD['cr']=[
-    'The body\'s master clock (suprachiasmatic nucleus) synchronises all 11 physiological systems — a 1-hour sleep timing shift disrupts insulin sensitivity for 48 hours',
-    'Melatonin production begins 2 hours before habitual sleep onset — blue light after 9pm delays it by 90+ minutes, compressing recovery every single night',
-    'Cortisol peaks 30-45 minutes after waking and should be used for high-stakes thinking, not passive phone scrolling',
-    'Gut microbiome follows a 24-hour cycle — late-night eating disrupts microbial diversity within 7 days, directly affecting mood, immunity and metabolic rate',
-    'Light exposure in the first 30 minutes after waking anchors the circadian clock for the next 24 hours, more powerfully than any supplement'
+    'Suprachiasmatic nucleus syncs all 11 systems — 1-hr sleep shift disrupts insulin 48 hrs',
+    'Melatonin starts 2 hrs before sleep — blue light after 9pm delays it 90+ min every night',
+    'Cortisol peaks 30-45 min post-waking — the strongest natural performance signal of the day',
+    'Late-night eating disrupts gut microbiome in 7 days — mood, immunity, metabolism all follow',
+    'First 30 min of morning light anchors the circadian clock more than any supplement',
+    '1-hr social jet lag (sleeping late on weekends) raises obesity risk by 33%',
+    '12+ hr overnight fast activates autophagy — cellular repair impossible while digesting',
+    'Room temperature drop of 1-2°C signals sleep onset — cool rooms sleep faster and deeper'
   ];
   _TD['bs']=[
-    'Nervous system requires 7-9 hours of uninterrupted sleep for glymphatic waste clearance — chronic undersleep measurably accelerates neurodegenerative risk',
-    'Digestive system hosts 80% of immune function — gut barrier integrity is maintained by diverse fibre intake, not probiotic supplements alone',
-    'Musculoskeletal system needs resistance load (2× per week) and daily joint mobility to prevent the 1% per year muscle loss that begins at age 30',
-    'Endocrine disruption occurs within 3 days of shift work, irregular eating or chronic stress — full recovery takes 2-4 weeks of consistent habits',
-    'Lymphatic system has no pump of its own: physical movement and deep breathing are its only drivers — sitting 4+ hours shuts lymph flow to a trickle'
+    'Nervous: one night of poor sleep impairs decisions as severely as legal alcohol intoxication',
+    'Digestive: 80% of immune function lives in the gut — fibre diversity, not probiotic pills',
+    'Musculoskeletal: 1%/year muscle lost from age 30 without resistance training — slow and silent',
+    'Endocrine: 3 days of irregular sleep disrupts cortisol, insulin and thyroid simultaneously',
+    'Immune: NK cell activity drops 70% after one 6-hour sleep night — a single night',
+    'Cardiovascular: 8+ hrs sitting/day raises heart disease mortality independent of exercise',
+    'Lymphatic: no pump — movement and breath are its only drivers; 4h sitting halts flow',
+    'Respiratory: shallow chest breathing activates the sympathetic nervous system chronically',
+    'Integumentary (skin): barrier function degrades within 1 week of poor sleep — first visible signal',
+    'Reproductive: cortisol and sex hormones share precursors — chronic stress directly suppresses both'
   ];
   function tk(id,lbl,bg){
     return'<div class="ticker-row"><div class="ticker-lbl" style="background:'+bg+'">'+lbl+'</div><div class="ticker-track"><div class="ticker-text" id="tk-'+id+'" style="opacity:0">&#8635;</div></div></div>';
@@ -885,12 +964,12 @@ function buildTickers(){
     tk('sm','Science<br>Mind',    '#1A4A8C')+
     tk('sh','Science<br>Habits',  '#5C2A9D')+
     tk('sn','Science<br>Nature',  '#1A6B3C')+
-    tk('vi','Vedic<br>Insights',  '#92400E')+
-    tk('w1','World to<br>Local 1','#0F6B6B')+
-    tk('w2','World to<br>Local 2','#1E3A8A')+
-    tk('r1','Resources<br>Drained','#B83020')+
-    tk('r2','Resources<br>Restored','#166534')+
-    tk('cr','Circadian<br>Rhythms','#4C1D95')+
+    tk('vi','Vedic<br>Svasthya',  '#7C3000')+
+    tk('w1','World &gt;<br>Local','#0F6B6B')+
+    tk('w2','Bharat<br>Pulse',    '#1E3A8A')+
+    tk('r1','Resources<br>Lost',  '#B83020')+
+    tk('r2','Resources<br>Well',  '#166534')+
+    tk('cr','Circadian<br>Clock', '#4C1D95')+
     tk('bs','11 Body<br>Systems', '#065F46')+
     '</div>';
 }
