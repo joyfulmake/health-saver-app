@@ -167,6 +167,17 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .sl-c{width:10px;height:10px;border-radius:2px}
 .radar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
 .radar-cap{font-size:11px;font-weight:700;color:var(--faint);margin-top:7px;text-align:center}
+.hl-n{background:rgba(26,74,140,.11);color:var(--cb);border-radius:3px;padding:0 4px;font-weight:900}
+.hl-r{background:rgba(184,48,32,.1);color:var(--cr);border-radius:3px;padding:0 4px;font-weight:900}
+.hl-g{background:rgba(26,107,60,.1);color:var(--cg);border-radius:3px;padding:0 4px;font-weight:900}
+.ticker-section{margin-top:26px;border-top:1.5px solid var(--border);padding-top:20px}
+.ticker-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:12px}
+.ticker-row{display:flex;align-items:stretch;overflow:hidden;border-radius:10px;margin-bottom:7px;border:1px solid rgba(0,0,0,.07);background:var(--softer);height:38px}
+.ticker-lbl{font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;padding:0 9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:64px;max-width:64px;text-align:center;line-height:1.4}
+.ticker-track{flex:1;overflow:hidden;display:flex;align-items:center}
+.ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;animation:tickerScroll var(--spd,72s) linear infinite;font-size:11.5px;font-weight:700;color:var(--text);padding-left:14px}
+.ticker-sep{margin:0 16px;color:var(--faint);opacity:.5;font-size:11px}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .circ-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:16px}
 .circ-cap{font-size:11px;font-weight:700;color:var(--faint);margin-top:6px;text-align:center}
 .nat-hero{border-radius:20px;padding:20px 22px;margin-bottom:14px;border:1px solid rgba(0,0,0,.06)}
@@ -463,7 +474,7 @@ function buildStreak(){
   return'<div class="streak-wrap"><div class="streak-hdr"><span class="streak-title">84-day activity heatmap</span><span class="streak-count">'+streak+' day streak'+(streak>=7?' &#127942;':streak>=3?' &#9889;':'')+'</span></div><div class="streak-grid">'+cells+'</div><div class="streak-leg"><span>Less</span>'+['','l1','l2','l3','l4'].map(function(c){return'<div class="sl-c '+c+'" style="background:'+(c?'':'rgba(0,0,0,.06)')+'"></div>';}).join('')+'<span>More</span></div></div>';
 }
 function buildRadar(scores){
-  var W=220,cx=110,cy=110,R=74;
+  var W=300,cx=150,cy=150,R=88;
   var labels=['Finance','Health','Learning','Nature'],colors=['#B07020','#B83020','#5C2A9D','#1A6B3C'];
   var N=4;
   function pt(ang,r){return{x:cx+r*Math.cos(ang-Math.PI/2),y:cy+r*Math.sin(ang-Math.PI/2)};}
@@ -471,12 +482,14 @@ function buildRadar(scores){
   var poly=pts.map(function(p){return p.x+','+p.y;}).join(' ');
   var grid='';
   [25,50,75,100].forEach(function(pct){var gp=Array.from({length:N},function(_,i){return pt(i*(2*Math.PI/N),R*pct/100);});grid+='<polygon points="'+gp.map(function(p){return p.x+','+p.y;}).join(' ')+'" fill="none" stroke="rgba(0,0,0,.07)" stroke-width="1"/>';});
+  var pctLbls='';
+  [25,50,75].forEach(function(pct){var p=pt(-Math.PI/2*0,R*pct/100);pctLbls+='<text x="'+(cx+3)+'" y="'+(cy-R*pct/100-3)+'" font-size="7.5" fill="rgba(0,0,0,.25)" font-family="Outfit,sans-serif" font-weight="700">'+pct+'</text>';});
   var axes='';
   for(var i=0;i<N;i++){var ep=pt(i*(2*Math.PI/N),R);axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+ep.x+'" y2="'+ep.y+'" stroke="rgba(0,0,0,.07)" stroke-width="1"/>';}
-  var off=[{x:0,y:-15},{x:20,y:4},{x:0,y:17},{x:-20,y:4}];
+  var off=[{x:0,y:-16},{x:18,y:5},{x:0,y:19},{x:-18,y:5}];
   var lbls='';
-  labels.forEach(function(l,i){var ep=pt(i*(2*Math.PI/N),R+19);lbls+='<text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y)+'" text-anchor="middle" font-size="9" font-weight="800" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+l+'</text><text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y+11)+'" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(0,0,0,.38)" font-family="Outfit,sans-serif">'+Math.round(scores[i])+'</text>';});
-  return'<div class="radar-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'">'+grid+axes+'<polygon points="'+poly+'" fill="rgba(26,74,140,.13)" stroke="#1A4A8C" stroke-width="2" stroke-linejoin="round"/>'+lbls+'</svg><div class="radar-cap">Life balance snapshot. Higher = healthier pattern.</div></div>';
+  labels.forEach(function(l,i){var ep=pt(i*(2*Math.PI/N),R+22);var score=Math.round(scores[i]);var sc2=score>=70?'var(--cg)':(score>=40?'var(--ca)':'var(--cr)');lbls+='<text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y)+'" text-anchor="middle" font-size="11" font-weight="800" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+l+'</text><text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y+14)+'" text-anchor="middle" font-size="12" font-weight="900" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+score+'</text>';});
+  return'<div class="radar-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'">'+grid+pctLbls+axes+'<polygon points="'+poly+'" fill="rgba(26,74,140,.14)" stroke="#1A4A8C" stroke-width="2.5" stroke-linejoin="round"/>'+lbls+'</svg><div class="radar-cap">Life balance snapshot &nbsp;&#183;&nbsp; Higher = healthier pattern</div></div>';
 }
 function buildClock(){
   var W=200,cx=100,cy=100,R=80,iR=52;
@@ -701,6 +714,43 @@ function wsFinT(t){wReadFin();WD.financeType=t;WD.financeCategory=(t==='expense'
 function wTogFin(){wReadFin();WD.hasFinance=!WD.hasFinance;renderQuickLog();}
 function wSave(){wReadFin();entries.push({id:uid(),date:dstr(today()),activity:WD.activity,category:WD.category,duration:WD.duration,direction:WD.direction,mode:WD.mode,friction:WD.friction,hasFinance:!!WD.hasFinance,financeType:WD.financeType,financeAmount:WD.hasFinance?WD.financeAmount:0,financeCategory:WD.financeCategory,natureScore:WD.natureScore||3,note:''});persist();wizDone=true;renderQuickLog();}
 function resetWiz(){wizStep=1;wizDone=false;WD={activity:'',category:'Work',duration:1,direction:'directed',mode:'doing',friction:'low',hasFinance:false,financeType:'expense',financeAmount:0,financeCategory:'Food',natureScore:3};renderQuickLog();}
+function hlP(str){
+  return he(str)
+    .replace(/(\d+[\.,]?\d*\s*%)/g,'<span class="hl-n">$1</span>')
+    .replace(/(Rs\s[\d,]+)/g,'<span class="hl-n">$1</span>')
+    .replace(/(\d{1,2}\.\d\/5)/g,'<span class="hl-n">$1</span>')
+    .replace(/(high friction|distracted time|spending exceeds|drops|below)/gi,'<span class="hl-r">$1</span>')
+    .replace(/(directed time|flow state|low.*friction|strength|momentum)/gi,'<span class="hl-g">$1</span>');
+}
+function buildTickers(){
+  function tk(lbl,bg,spd,content){
+    var c=content+'<span class="ticker-sep">&#9670;</span>'+content+'<span class="ticker-sep">&#9670;</span>';
+    return'<div class="ticker-row"><div class="ticker-lbl" style="background:'+bg+'">'+lbl+'</div><div class="ticker-track"><div class="ticker-inner" style="--spd:'+spd+'s">'+c+'</div></div></div>';
+  }
+  var sep='<span class="ticker-sep">&#9670;</span>';
+  var s1='Attention is finite: the prefrontal cortex depletes under chronic distraction, reducing executive function by up to 30%'+sep+'90-minute deep work blocks protect ultradian rhythms — your brain naturally cycles between high and low focus'+sep+'Dopamine from social media spikes and crashes within 20 minutes, creating withdrawal cycles that impair sustained focus'+sep+'Sleep consolidates learning: 7-9 hours of uninterrupted sleep increases skill retention by 40% vs 6 hours'+sep+'Exercise upregulates BDNF, the brain\'s growth factor — 30 minutes of movement daily measurably improves learning speed'+sep+'Morning cortisol peaks 30-45 minutes after waking: this is your biological performance window, not your phone window';
+  var s2='Habits form through cue-routine-reward loops — changing your environment is 5× more effective than willpower alone'+sep+'Financial decisions under stress show 23% higher impulsivity: automate savings before spending windows open each week'+sep+'Social contagion is real — your income, health and habits trend toward the average of your closest 5 contacts within 3 years'+sep+'Purpose-aligned work activates intrinsic motivation circuits, reducing perceived effort by up to 40%'+sep+'Refining without shipping loops energy back on itself — real feedback from the world is irreplaceable by internal iteration'+sep+'Rest cycles are not wasted time: they are when the nervous system consolidates pattern recognition and restores prefrontal capacity';
+  var s3='Humans are the only species disrupting all 11 physiological systems simultaneously — through artificial light, processed food, sedentary living and social fragmentation'+sep+'A single 90-minute walk in nature lowers rumination in the prefrontal cortex more than 90 minutes of urban walking'+sep+'Plants release phytoncides that raise natural killer cell activity in humans by 50% after just 2 days in forests'+sep+'Biodiversity loss in cities directly correlates with reduced immune diversity in urban residents'+sep+'Noise pollution above 65 dB raises cortisol and increases cardiovascular risk — a widespread but invisible urban drain'+sep+'Diffuse natural light (even on overcast days) is 10-100× brighter than indoor lighting and is irreplaceable for circadian anchoring';
+  var v1='Ayurveda maps the day into doshas: Kapha (6-10am) for movement, Pitta (10am-2pm) for focused digestion and transformation, Vata (2-6pm) for creativity and communication'+sep+'Brahma Muhurta — 90 minutes before sunrise — is described as the clearest learning window, matching modern data on cortisol and memory encoding'+sep+'Ritucharya (seasonal living) prescribes different foods and routines every 2 months, mirroring chronobiology findings on metabolic adaptation'+sep+'Dharma (purpose-aligned action) maps precisely to what neuroscience calls intrinsic motivation — both reduce friction and increase flow states'+sep+'Prakriti (individual constitution) means there is no universal optimal schedule — the best routine is the one calibrated to your specific nature and life context'+sep+'The Vedic concept of Ama (accumulated toxin) parallels modern understanding of allostatic load — unprocessed stress and poor inputs that accumulate silently before manifesting as breakdown';
+  var w1='India\'s gig economy employs 38% of the workforce in freelance or contract roles — income volatility removes the structural routine that previously regulated sleep, eating and social connection'+sep+'Hyderabad grows by 500+ new residents daily, straining water, air quality and green space — all of which directly affect cognition and wellbeing'+sep+'Urban heat island effect makes Hyderabad summers 3-5°C hotter than surrounding rural areas, compressing the outdoor activity window to before 9am and after 6pm'+sep+'Telangana\'s groundwater has dropped 40% in 20 years — water scarcity already affects food prices, stress levels and daily routines across the state'+sep+'60% of India\'s new jobs since 2015 are in services requiring sustained cognitive output — yet only 12% of Indian workplaces have any formal cognitive load management practice';
+  var w2='The average Indian knowledge worker logs 52 hours per week, against a science-backed optimal of 38-42 hours for sustained performance'+sep+'Telangana\'s IT sector reports the highest burnout rates in India, driven by US-timezone demands that chronically disrupt circadian rhythms'+sep+'Hyderabad commutes average 90 minutes per day — time subtracted from sleep, exercise and family — the largest untracked energy drain in urban India'+sep+'India\'s urban food inflation means mid-income households spend 35-40% of income on food, compressing all other discretionary and recovery choices'+sep+'India loses an estimated Rs 18,000 crore annually in productivity to burnout — yet less than 2% of that is reinvested in preventive wellbeing infrastructure';
+  var r1='India wastes 40% of its food between farm and consumer, mostly at storage and market stage, while 190 million remain food insecure'+sep+'Screen time in India averages 7.3 hours per day, displacing physical activity, face-to-face connection and unstructured creative thinking for 40% of urban youth'+sep+'Water to produce 1 kg of beef: 15,000 litres. Water to produce 1 kg of lentils: 900 litres. India\'s dietary shift compresses water reserves 4× faster than population growth alone'+sep+'Corporate wellness budgets in Indian firms average Rs 800 per employee per year — less than one gym visit — while burnout costs the economy Rs 18,000 crore annually'+sep+'Bright indoor artificial light used after sunset suppresses melatonin for 90+ minutes per session, compounding across millions of people into a population-scale sleep deficit';
+  var r2='Regenerative farming on 15% of Indian farmland could sequester 200 million tons of carbon annually while improving soil nutrition and farmer income simultaneously'+sep+'4-day compressed work weeks (32 hours) in 60+ global pilot programmes showed equal or higher output with 26% lower burnout rates'+sep+'Community learning spaces reduce educational inequality 6× more cost-effectively than private tutoring infrastructure — with far wider reach'+sep+'India has 250 million volunteer hours per year — enough, if coordinated, to deliver basic literacy and numeracy to 50 million adults within 24 months'+sep+'Each hour of outdoor activity daily is estimated to replace roughly 20 minutes of clinical mental health support cost for mild anxiety — at zero marginal cost';
+  var c1='The body\'s master clock (suprachiasmatic nucleus) synchronises all 11 physiological systems — even a 1-hour shift in sleep timing disrupts insulin sensitivity for 48 hours'+sep+'Melatonin production begins 2 hours before habitual sleep onset — blue light exposure after 9pm delays it by 90+ minutes, compressing recovery time each night'+sep+'Cortisol peaks 30-45 minutes after waking and should be used for high-stakes thinking, not passive phone scrolling'+sep+'Gut microbiome follows a 24-hour cycle — late-night eating disrupts microbial diversity within 7 days, directly affecting mood, immunity and metabolic rate'+sep+'Light exposure in the first 30 minutes after waking anchors the circadian clock for the next 24 hours, more powerfully than any supplement available';
+  var c2='Nervous system requires 7-9 hours of uninterrupted sleep for glymphatic waste clearance — chronic undersleep measurably accelerates neurodegenerative risk over time'+sep+'Digestive system hosts 80% of immune function — gut barrier integrity is maintained by diverse fibre intake, not probiotic supplements alone'+sep+'Musculoskeletal system needs both resistance load (2× per week) and daily joint mobility to prevent the 1% per year muscle loss that begins silently at age 30'+sep+'Endocrine system disruption occurs within 3 days of shift work, irregular eating or chronic stress — full recovery takes 2-4 weeks of consistent habits, not a single rest day'+sep+'Lymphatic system has no pump of its own: physical movement and deep breathing are its only drivers — sitting 4+ hours continuously shuts lymph flow to a trickle';
+  return'<div class="ticker-section"><div class="ticker-title">&#128225; Life Intelligence Feed &mdash; science, Vedic wisdom &amp; living systems</div>'+
+    tk('Science<br>Mind',     '#1A4A8C', 80, s1)+
+    tk('Science<br>Habits',   '#5C2A9D', 90, s2)+
+    tk('Science<br>Nature',   '#1A6B3C', 85, s3)+
+    tk('Vedic<br>Insights',   '#92400E', 95, v1)+
+    tk('World to<br>Local 1', '#0F6B6B', 88, w1)+
+    tk('World to<br>Local 2', '#1E3A8A', 82, w2)+
+    tk('Resources<br>Misused', '#B83020', 92, r1)+
+    tk('Resources<br>Used Well','#166534',86, r2)+
+    tk('Circadian<br>Rhythms', '#4C1D95', 98, c1)+
+    tk('11 Body<br>Systems',  '#065F46', 94, c2)+
+    '</div>';
+}
 function renderInsights(){
   var el=document.getElementById('p-insights');if(!el)return;
   var L=localAnalysis();
@@ -723,11 +773,11 @@ function renderInsights(){
   var scores='<div class="score4">'+[['&#128184;','Finance',fS],['&#9889;','Health',hS],['&#128218;','Learning',eS],['&#127807;','Nature',aS]].map(function(s){var c=sc(s[2]),g=sg(s[2]),trend=s[2]>=70?'&#9650;':s[2]>=40?'&#9679;':'&#9660;';return'<div class="sc4"><div class="sc4-ico">'+s[0]+'</div><div class="sc4-val" style="color:'+c+';text-shadow:'+g+'">'+s[2]+'</div><div class="sc4-lbl">'+s[1]+'</div><div class="sc4-bar"><div class="sc4-fill" style="width:'+s[2]+'%;background:'+c+'"></div></div></div>';}).join('')+'</div>';
   function cards(arr,ok){
     if(!arr||!arr.length)return'<div style="color:var(--faint);font-size:13px;font-weight:700;padding:6px 0">Nothing flagged here.</div>';
-    return'<div class="dstk">'+arr.map(function(item){var cls=ok?'dcok':(item.severity==='high'?'dch':(item.severity==='medium'?'dcm':'dcl'));return'<div class="dc '+cls+'"><div class="dc-p">'+he(item.pattern)+'</div>'+(item.tip?'<div class="dc-t">'+he(item.tip)+'</div>':'')+' </div>';}).join('')+'</div>';
+    return'<div class="dstk">'+arr.map(function(item){var cls=ok?'dcok':(item.severity==='high'?'dch':(item.severity==='medium'?'dcm':'dcl'));return'<div class="dc '+cls+'"><div class="dc-p">'+hlP(item.pattern)+'</div>'+(item.tip?'<div class="dc-t">'+hlP(item.tip)+'</div>':'')+' </div>';}).join('')+'</div>';
   }
   var habHtml='';
   if(habs&&habs.length)habHtml='<div class="dsec"><div class="dsec-t">&#128257; Habit Loops</div>'+habs.map(function(h){return'<div class="hloop"><div class="hloop-h">'+he(h.head||h.pattern||'')+'</div><div class="hloop-b">'+he(h.body||h.tip||'')+'</div></div>';}).join('')+'</div>';
-  el.innerHTML=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+he(tip)+'</div>':'')+habHtml+'<div class="dsec"><div class="dsec-t">&#128184; Finance Drains</div>'+cards(fin,false)+'</div><div class="dsec"><div class="dsec-t">&#9889; Health and Attention Drains</div>'+cards(hlt,false)+'</div><div class="dsec"><div class="dsec-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div><div class="dsec"><div class="dsec-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
+  el.innerHTML=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+'<div class="dsec"><div class="dsec-t">&#128184; Finance Drains</div>'+cards(fin,false)+'</div><div class="dsec"><div class="dsec-t">&#9889; Health and Attention Drains</div>'+cards(hlt,false)+'</div><div class="dsec"><div class="dsec-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div><div class="dsec"><div class="dsec-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'')+buildTickers();
 }
 function renderReview(){
   var el=document.getElementById('p-review');if(!el)return;
