@@ -219,7 +219,7 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .wr-hero{border-radius:20px;padding:20px 22px;background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 100%);margin-bottom:16px;color:#fff}
 .wr-hero-t{font-size:20px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px}
 .wr-hero-s{font-size:13px;opacity:.55;font-weight:700}
-.wr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.wr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0}
 .wr-stat{background:rgba(255,255,255,.08);border-radius:12px;padding:12px 13px}
 .wr-stat-t{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;opacity:.5;margin-bottom:4px;color:#fff}
 .wr-stat-v{font-size:18px;font-weight:900;color:#fff}
@@ -376,14 +376,20 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
     <div class="mhandle"></div>
     <div class="mtitle">Settings</div>
     <div style="margin-bottom:18px">
-      <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint);margin-bottom:10px">Account &amp; Sync</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint)">Account &amp; Sync</div>
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;padding:2px 7px;border-radius:20px;background:#0f0f0f;color:#fff">Pro</span>
+      </div>
       <div id="auth-state-signed-out" style="display:block">
-        <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px;line-height:1.6">Sign in with Google to sync your data across devices. Your entries stay private under your account.</div>
-        <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#333" onclick="signInGoogle()">
+        <div style="background:var(--softer);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:12px">
+          <div style="font-size:13px;font-weight:900;margin-bottom:4px">Cross-device sync</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.65">Sync your entries across all devices securely. This is a <strong style="color:var(--text)">paid feature</strong> — available as an in-app purchase when Life OS launches on Play Store and App Store. Free users always get full local access.</div>
+        </div>
+        <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#333;opacity:.55" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/></svg>
-          Sign in with Google
+          Sign in with Google &mdash; Coming soon
         </button>
-        <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:8px;line-height:1.6;text-align:center">Free &mdash; your data stays in your Google account</div>
+        <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:8px;line-height:1.6;text-align:center">All features work free &amp; offline. Sync is the only paid add-on.</div>
       </div>
       <div id="auth-state-signed-in" style="display:none">
         <div style="background:var(--bg2);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,107,60,.14);margin-bottom:12px">
@@ -1111,7 +1117,7 @@ function renderReview(){
   var tInc=wk.filter(function(e){return e.hasFinance&&e.financeType==='income';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
   var ts=lastReview?new Date(lastReview).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}):null;
   var wkEntries=wk.slice().sort(function(a,b){return b.id.localeCompare(a.id);});
-  var hero='<div class="wr-hero"><div class="wr-hero-t">Weekly Review</div><div class="wr-hero-s">'+mo.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' to '+su.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'</div></div>';
+  var hero='<div class="wr-hero"><div class="wr-hero-t">Weekly Review</div><div class="wr-hero-s">'+mo.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' to '+su.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'</div><div style="height:14px"></div>';
   var stats='<div class="wr-grid"><div class="wr-stat"><div class="wr-stat-t">Total Hours</div><div class="wr-stat-v">'+fH(tH)+'</div><div class="wr-stat-s">'+wk.length+' entries</div></div><div class="wr-stat"><div class="wr-stat-t">Directed</div><div class="wr-stat-v">'+fH(dH)+' ('+Math.round(tH?dH/tH*100:0)+'%)</div><div class="wr-stat-s">Distracted: '+fH(tH-dH)+'</div></div><div class="wr-stat"><div class="wr-stat-t">Spent</div><div class="wr-stat-v">Rs '+fM(tExp)+'</div><div class="wr-stat-s">Income logged: Rs '+fM(tInc)+'</div></div><div class="wr-stat"><div class="wr-stat-t">Week Score</div><div class="wr-stat-v">'+(reviewData&&reviewData.score?reviewData.score+'/100':'--')+'</div><div class="wr-stat-s">'+(ts?'Scored: '+ts:'Generate review to score')+'</div></div></div>';
   var btn=reviewLoading?'<button class="wr-btn" disabled><span class="spin">&#8635;</span> Generating review...</button>':'<button class="wr-btn" onclick="localWeeklyReview()">&#10022; '+(ts?'Refresh':'Generate')+' Week Review</button>';
   var aiH='';
@@ -1120,7 +1126,7 @@ function renderReview(){
   else if(reviewData&&reviewData._error)aiH='<div class="wr-ai"><div class="wr-ai-t">Review error</div><div class="wr-ai-b">Check connection and try again.</div></div>';
   else if(reviewData){var R=reviewData;aiH=(R.summary?'<div class="wr-ai"><div class="wr-ai-t">This week in summary</div><div class="wr-ai-b">'+he(R.summary)+'</div></div>':'')+(R.win?'<div class="wr-ai" style="background:var(--bg2);border:1px solid rgba(26,107,60,.14)"><div class="wr-ai-t" style="color:var(--cg)">&#10022; Biggest Win</div><div class="wr-ai-b">'+he(R.win)+'</div></div>':'')+(R.miss?'<div class="wr-ai" style="background:var(--ba);border:1px solid rgba(176,112,32,.14)"><div class="wr-ai-t" style="color:var(--ca)">&#9650; Watch this</div><div class="wr-ai-b">'+he(R.miss)+'</div></div>':'')+(R.next_week_focus?'<div class="wr-ai" style="background:var(--bb);border:1px solid rgba(26,74,140,.12)"><div class="wr-ai-t" style="color:var(--cb)">&#8594; Next week focus</div><div class="wr-ai-b">'+he(R.next_week_focus)+'</div></div>':'')+(R.finance_note?'<div class="wr-ai"><div class="wr-ai-t">Finance</div><div class="wr-ai-b">'+he(R.finance_note)+'</div></div>':'')+(R.nature_note?'<div class="wr-ai"><div class="wr-ai-t">Nature</div><div class="wr-ai-b">'+he(R.nature_note)+'</div></div>':'');}
   else aiH='<div class="wr-ai"><div class="wr-ai-t">Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week. No API or account needed.</div></div>';
-  el.innerHTML=hero+stats+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">No entries this week yet.</div>');
+  el.innerHTML=hero+stats+'</div>'+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">No entries this week yet.</div>');
 }
 function renderNature(){
   var el=document.getElementById('p-nature');if(!el)return;
