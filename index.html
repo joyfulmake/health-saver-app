@@ -536,15 +536,82 @@ function localAnalysis(){
   R.healthScore=Math.min(100,Math.max(8,82-pctF*0.75-distrPct*0.38));
   return R;
 }
-async function aiInsights(){
+function aiInsights(){
   if(entries.length<3){alert('Log at least 3 entries first.');return;}
-  insightLoading=true;renderInsights();
-  var snap=entries.slice(-60).map(function(e){return{date:e.date,act:e.activity,cat:e.category,dur:e.duration,dir:e.direction,mode:e.mode,fric:e.friction,spend:(e.hasFinance&&e.financeType==='expense'?e.financeAmount:0),earn:(e.hasFinance&&e.financeType==='income'?e.financeAmount:0),finCat:e.financeCategory,nat:e.natureScore||null};});
-  var prompt='You are a sharp life pattern analyst. Analyze this personal life log for a user in Telangana, India (INR). Identify behavioral patterns creating drains or strengths across finance, health, learning, and nature alignment. Entries: '+JSON.stringify(snap)+'. Return ONLY valid JSON with no markdown: {"finance_drains":[{"pattern":"...","severity":"high|medium|low","tip":"..."}],"health_drains":[...],"learning_drains":[...],"nature_drains":[...],"habit_loops":[{"head":"...","body":"..."}],"strengths":[{"pattern":"..."}],"top_insight":"...","energy_score":0-100,"alignment_score":0-100,"fin_score":0-100,"health_score":0-100}. Be specific with actual numbers. habit_loops: cross-domain patterns where a single habit drains finance AND health simultaneously. top_insight: one direct actionable sentence. 1-3 items per section. No em dashes.';
-  var apiKey=localStorage.getItem('lifeos_api_key')||'';
-  if(!apiKey){alert('Add your Anthropic API key in ⚙ Settings to use AI features.');insightLoading=false;insightData=null;renderInsights();return;}
-  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1400,messages:[{role:'user',content:prompt}]})});var d=await r.json();var txt=(d.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');insightData=JSON.parse(txt.replace(/```json|```/g,'').trim());lastAnalyzed=new Date().toISOString();var j=JSON.stringify({data:insightData,ts:lastAnalyzed});if(window.storage&&window.storage.set)window.storage.set('lifeos_ins_v2',j).catch(function(){});else try{localStorage.setItem('lifeos_ins_v2',j);}catch(e){}}catch(err){console.error(err);insightData={_error:true};}
-  insightLoading=false;renderInsights();
+  var L=localAnalysis();
+  var snap=entries.slice(-90);
+  var now=Date.now();
+  var dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  // ---- week-over-week trend ----
+  var recent=snap.filter(function(e){return new Date(e.date+'T12:00:00').getTime()>now-7*864e5;});
+  var prev=snap.filter(function(e){var t=new Date(e.date+'T12:00:00').getTime();return t>now-14*864e5&&t<=now-7*864e5;});
+  var rDir=recent.length>2?recent.filter(function(e){return e.direction==='directed';}).length/recent.length:null;
+  var pDir=prev.length>2?prev.filter(function(e){return e.direction==='directed';}).length/prev.length:null;
+  var weekTrend=(rDir!==null&&pDir!==null)?rDir-pDir:null;
+
+  // ---- day-of-week distraction ----
+  var dayD={},dayT={};
+  snap.forEach(function(e){var d=new Date(e.date+'T12:00:00').getDay();dayT[d]=(dayT[d]||0)+1;if(e.direction==='distractor')dayD[d]=(dayD[d]||0)+1;});
+  var worstDay=Object.keys(dayT).filter(function(d){return dayT[d]>=2;}).sort(function(a,b){return((dayD[b]||0)/dayT[b])-((dayD[a]||0)/dayT[a]);})[0];
+  var worstDayPct=worstDay!==undefined?Math.round((dayD[worstDay]||0)/dayT[worstDay]*100):0;
+
+  // ---- spending velocity ----
+  var allDays=[...new Set(snap.map(function(e){return e.date;}))];
+  var allSpend=snap.filter(function(e){return e.hasFinance&&e.financeType==='expense';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
+  var avgDailySpend=allDays.length>0?allSpend/allDays.length:0;
+  var rDays=[...new Set(recent.map(function(e){return e.date;}))];
+  var rSpend=recent.filter(function(e){return e.hasFinance&&e.financeType==='expense';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
+  var rDailySpend=rDays.length>0?rSpend/rDays.length:0;
+
+  // ---- inconsistent activity framing ----
+  var actMap={};
+  snap.forEach(function(e){var k=e.activity.toLowerCase().trim().slice(0,28);if(!actMap[k])actMap[k]={dir:0,dis:0,n:0};actMap[k].n++;if(e.direction==='directed')actMap[k].dir++;else actMap[k].dis++;});
+  var mixedAct=Object.keys(actMap).filter(function(k){var a=actMap[k];return a.n>=4&&a.dir>0&&a.dis>0;}).sort(function(a,b){return actMap[b].n-actMap[a].n;})[0];
+
+  // ---- category focus score ----
+  var catH={};snap.forEach(function(e){if(e.duration>0)catH[e.category]=(catH[e.category]||0)+(+e.duration||0);});
+  var tH2=Object.values(catH).reduce(function(s,v){return s+v;},0);
+  var topCat=Object.keys(catH).sort(function(a,b){return catH[b]-catH[a];})[0];
+  var topCatPct=topCat&&tH2>0?Math.round(catH[topCat]/tH2*100):0;
+
+  // ---- build enhanced drain arrays ----
+  var fin=L.finance.slice();
+  if(rDailySpend>avgDailySpend*1.4&&rSpend>500){fin.push({pattern:'Spending this week (Rs '+fM(rSpend)+') is '+Math.round(rDailySpend/avgDailySpend*100-100)+'% above your daily average',severity:'high',tip:'Identify the spike category. One-off or new pattern?'});}
+
+  var hlt=L.health.slice();
+  if(worstDayPct>40&&worstDay!==undefined){hlt.push({pattern:dayNames[worstDay]+'s: '+worstDayPct+'% distraction rate, your hardest day',severity:'medium',tip:'Protect '+dayNames[worstDay]+' mornings. Move any deep work there before the day erodes focus.'});}
+  if(weekTrend!==null&&weekTrend<-0.12){hlt.push({pattern:'Directed time dropped '+Math.round(Math.abs(weekTrend)*100)+'% this week vs last',severity:'medium',tip:'What changed? Sleep, schedule, new commitments, or social load. Isolate the variable.'});}
+  if(topCatPct>55&&topCat){hlt.push({pattern:topCatPct+'% of logged time in '+topCat+' only. Other domains starved.',severity:'medium',tip:'Monoculture in attention creates blind spots. Block time for at least one other category weekly.'});}
+
+  var lrn=L.learning.slice();
+  if(mixedAct){var ma=actMap[mixedAct];lrn.push({pattern:'"'+mixedAct.slice(0,22)+'" logged as directed '+ma.dir+'x and distractor '+ma.dis+'x',severity:'medium',tip:'Same task, different experience. Define clearly before starting: what outcome makes this directed today?'});}
+
+  var nat=L.nature.slice();
+
+  var habits=L.habits.slice();
+  var hiFricDis=snap.filter(function(e){return e.friction==='high'&&e.direction==='distractor';});
+  if(hiFricDis.length>2){habits.push({head:'High-friction distractors: double drain',body:hiFricDis.length+' sessions with both high friction and distractor label. Maximum energy cost, zero return. Eliminate or restructure the top one.'});}
+  var lateWeekSpend=snap.filter(function(e){var d=new Date(e.date+'T12:00:00').getDay();return(d===5||d===6)&&e.hasFinance&&e.financeType==='expense'&&e.financeAmount>0;});
+  if(lateWeekSpend.length>2){var lwT=lateWeekSpend.reduce(function(s,e){return s+(+e.financeAmount||0);},0);habits.push({head:'Weekend spending pattern',body:'Rs '+fM(lwT)+' across '+lateWeekSpend.length+' Fri-Sat entries. Weekend decompression often masks habitual spending. Intentional or reactive?'});}
+
+  var str=L.strengths.slice();
+  if(weekTrend!==null&&weekTrend>0.1){str.push({pattern:'Direction quality up '+Math.round(weekTrend*100)+'% this week. Momentum.'});}
+
+  // ---- top insight ----
+  var top=null;
+  var highFin=fin.find(function(d){return d.severity==='high';});
+  var highHlt=hlt.find(function(d){return d.severity==='high';});
+  if(highFin)top=highFin.pattern;
+  else if(highHlt)top=highHlt.pattern;
+  else if(habits.length)top=habits[0].head;
+  else if(str.length)top=str[0].pattern;
+  else if(lrn.length)top=lrn[0].pattern;
+
+  insightData={finance_drains:fin,health_drains:hlt,learning_drains:lrn,nature_drains:nat,habit_loops:habits,strengths:str,top_insight:top,energy_score:L.energyScore,alignment_score:L.alignScore,fin_score:L.finScore,health_score:L.healthScore};
+  lastAnalyzed=new Date().toISOString();
+  try{localStorage.setItem('lifeos_ins_v2',JSON.stringify({data:insightData,ts:lastAnalyzed}));}catch(e){}
+  renderInsights();
 }
 async function aiWeeklyReview(){
   reviewLoading=true;renderReview();
@@ -638,8 +705,8 @@ function renderInsights(){
   var el=document.getElementById('p-insights');if(!el)return;
   var L=localAnalysis();
   var ts=lastAnalyzed?new Date(lastAnalyzed).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}):null;
-  var hdr='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px"><div><div style="font-size:21px;font-weight:900;letter-spacing:-.4px">Habit Drains</div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:2px">'+(ts?'AI scan: '+ts:'Local analysis. AI Scan adds cross-domain pattern detection.')+'</div></div><button style="background:#0f0f0f;color:#fff;border:none;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;opacity:'+(insightLoading?.45:1)+';pointer-events:'+(insightLoading?'none':'auto')+'" onclick="aiInsights()">'+(insightLoading?'<span class="spin">&#8635;</span> Scanning...':'&#10022; AI Scan')+'</button></div>';
-  if(insightLoading){el.innerHTML=hdr+'<div style="text-align:center;padding:42px;color:var(--muted);font-size:14px;font-weight:700"><span class="spin">&#8635;</span> AI analyzing your patterns...</div>';return;}
+  var hdr='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px"><div><div style="font-size:21px;font-weight:900;letter-spacing:-.4px">Habit Drains</div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:2px">'+(ts?'Scanned: '+ts:'Tap Scan to detect cross-domain patterns in your data.')+'</div></div><button style="background:#0f0f0f;color:#fff;border:none;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;opacity:'+(insightLoading?.45:1)+';pointer-events:'+(insightLoading?'none':'auto')+'" onclick="aiInsights()">&#10022; Scan</button></div>';
+  if(insightLoading){el.innerHTML=hdr+'<div style="text-align:center;padding:42px;color:var(--muted);font-size:14px;font-weight:700"><span class="spin">&#8635;</span> Scanning patterns...</div>';return;}
   if(entries.length<2){el.innerHTML=hdr+'<div style="text-align:center;padding:52px 20px;color:var(--faint);font-size:14px;font-weight:700;line-height:1.9">&#128202;<br><br>Log 2+ entries to see your patterns.<br>Start with <strong>&#9889; Quick Log</strong>.<br><span style="font-size:12px;opacity:.7">Finance, health, learning and nature patterns<br>all surface automatically from your entries.</span></div>';return;}
   var useAI=insightData&&!insightData._error;
   var fin=useAI?insightData.finance_drains:L.finance;
