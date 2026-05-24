@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flourish — Feature Deck</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f0f;color:#fff;height:100vh;overflow:hidden;user-select:none;}
+  .deck{width:100%;height:100vh;position:relative;}
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 60px;opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(40px);}
+  .slide.active{opacity:1;pointer-events:all;transform:translateX(0);}
+  .slide.exit{opacity:0;transform:translateX(-40px);}
+  .tag{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:.45;margin-bottom:16px;}
+  h1{font-size:clamp(28px,5vw,52px);font-weight:900;line-height:1.12;letter-spacing:-.5px;text-align:center;margin-bottom:14px;}
+  .sub{font-size:clamp(14px,2vw,18px);font-weight:600;opacity:.6;text-align:center;line-height:1.65;max-width:600px;}
+  .pill{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;}
+  .grid{display:grid;gap:16px;width:100%;max-width:820px;margin-top:32px;}
+  .grid-2{grid-template-columns:1fr 1fr;}
+  .grid-3{grid-template-columns:1fr 1fr 1fr;}
+  .card{border-radius:16px;padding:20px 22px;}
+  .card-dark{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
+  .card-glow-g{background:rgba(26,107,60,.2);border:1px solid rgba(26,107,60,.35);}
+  .card-glow-p{background:rgba(92,42,157,.2);border:1px solid rgba(92,42,157,.35);}
+  .card-glow-b{background:rgba(26,74,140,.2);border:1px solid rgba(26,74,140,.35);}
+  .card-glow-a{background:rgba(176,112,32,.2);border:1px solid rgba(176,112,32,.35);}
+  .card-ico{font-size:26px;margin-bottom:10px;}
+  .card-t{font-size:15px;font-weight:800;margin-bottom:4px;}
+  .card-s{font-size:12px;font-weight:600;opacity:.6;line-height:1.6;}
+  /* slide backgrounds */
+  .s1{background:radial-gradient(ellipse at 60% 30%,rgba(92,42,157,.25) 0%,#0f0f0f 65%);}
+  .s2{background:radial-gradient(ellipse at 20% 60%,rgba(26,107,60,.2) 0%,#0f0f0f 65%);}
+  .s3{background:radial-gradient(ellipse at 80% 20%,rgba(26,74,140,.2) 0%,#0f0f0f 65%);}
+  .s4{background:radial-gradient(ellipse at 40% 70%,rgba(176,112,32,.2) 0%,#0f0f0f 65%);}
+  .s5{background:radial-gradient(ellipse at 70% 40%,rgba(15,107,107,.18) 0%,#0f0f0f 65%);}
+  /* big stat */
+  .big{font-size:clamp(42px,8vw,80px);font-weight:900;letter-spacing:-2px;line-height:1;}
+  .big-s{font-size:14px;font-weight:700;opacity:.5;margin-top:4px;}
+  /* flow list */
+  .flow{display:flex;flex-direction:column;gap:0;width:100%;max-width:520px;margin-top:28px;}
+  .flow-item{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+  .flow-item:last-child{border-bottom:none;}
+  .flow-num{font-size:11px;font-weight:900;letter-spacing:.5px;opacity:.35;padding-top:2px;min-width:18px;}
+  .flow-t{font-size:14px;font-weight:800;}
+  .flow-s{font-size:12px;font-weight:600;opacity:.55;line-height:1.55;margin-top:2px;}
+  /* nav */
+  .nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;z-index:99;}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .25s;}
+  .dot.on{background:#fff;width:22px;border-radius:4px;}
+  .nav-btn{padding:8px 20px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s;}
+  .nav-btn:hover{background:rgba(255,255,255,.1);}
+  .slide-num{position:fixed;top:22px;right:28px;font-size:12px;font-weight:700;opacity:.3;}
+  /* price badge */
+  .price{display:inline-flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px 24px;gap:3px;}
+  .price-amt{font-size:36px;font-weight:900;letter-spacing:-1px;}
+  .price-s{font-size:11px;font-weight:700;opacity:.5;text-transform:uppercase;letter-spacing:.8px;}
+  /* privacy row */
+  .prv-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;justify-content:center;}
+  .prv-chip{padding:9px 16px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);font-size:12px;font-weight:700;}
+  /* logo */
+  .logo{font-size:22px;font-weight:900;letter-spacing:-.5px;opacity:.7;margin-bottom:6px;}
+  .logo-s{font-size:11px;font-weight:700;opacity:.35;letter-spacing:1.5px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide s1 active" id="s1">
+    <div class="logo">Flourish</div>
+    <div class="logo-s">flourish.is-a.dev</div>
+    <h1 style="margin-top:28px">Honest patterns.<br>Better days.</h1>
+    <div class="sub" style="margin-top:16px">A personal growth app that surfaces your finance drains, attention leaks, and nature misalignment — automatically from 3-tap daily logs. No account needed. No data on our servers.</div>
+    <div style="display:flex;gap:10px;margin-top:32px;flex-wrap:wrap;justify-content:center">
+      <span class="pill" style="background:rgba(92,42,157,.3);border:1px solid rgba(92,42,157,.5)">Free tier — full offline</span>
+      <span class="pill" style="background:rgba(26,107,60,.3);border:1px solid rgba(26,107,60,.5)">Pro — ₹100 one-time</span>
+      <span class="pill" style="background:rgba(26,74,140,.3);border:1px solid rgba(26,74,140,.5)">Play Store ready</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Core Free Features -->
+  <div class="slide s2" id="s2">
+    <div class="tag">Free — Always</div>
+    <h1>Everything you need,<br>no account required</h1>
+    <div class="grid grid-2" style="max-width:720px;margin-top:30px">
+      <div class="card card-dark">
+        <div class="card-ico">⚡</div>
+        <div class="card-t">3-tap Quick Log</div>
+        <div class="card-s">Activity · Direction · Nature score. Log in under 20 seconds. Finance entry optional.</div>
+      </div>
+      <div class="card card-glow-g">
+        <div class="card-ico">📊</div>
+        <div class="card-t">Dashboard + Streaks</div>
+        <div class="card-s">Balance radar, habit streaks, category drills. All derived from your own entries.</div>
+      </div>
+      <div class="card card-dark">
+        <div class="card-ico">🔁</div>
+        <div class="card-t">Insights + Habit Loops</div>
+        <div class="card-s">Finance drains, attention leaks, learning gaps, and nature misalignment surface automatically.</div>
+      </div>
+      <div class="card card-glow-b">
+        <div class="card-ico">📖</div>
+        <div class="card-t">Weekly Review</div>
+        <div class="card-s">Local AI review with score, biggest win, watch-list, and one clear focus for next week.</div>
+      </div>
+      <div class="card card-dark">
+        <div class="card-ico">🌿</div>
+        <div class="card-t">Nature + Circadian Clock</div>
+        <div class="card-s">Live 24-hour clock, nature tickers, Vedic alignment guide. Real-time period awareness.</div>
+      </div>
+      <div class="card card-glow-a">
+        <div class="card-ico">💾</div>
+        <div class="card-t">Backup &amp; Restore</div>
+        <div class="card-s">One-tap portable backup code. Paste on any device. No account, no server, no expiry.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Pro Features -->
+  <div class="slide s3" id="s3">
+    <div class="tag">Pro — ₹100 one-time</div>
+    <h1>Two features that remove<br>the last friction</h1>
+    <div class="grid grid-2" style="max-width:700px;margin-top:28px">
+      <div class="card" style="background:linear-gradient(135deg,rgba(92,42,157,.3),rgba(26,74,140,.2));border:1px solid rgba(92,42,157,.4);padding:24px">
+        <div style="font-size:36px;margin-bottom:14px">🎙️</div>
+        <div class="card-t" style="font-size:17px;margin-bottom:8px">Voice Logging</div>
+        <div class="card-s" style="font-size:13px">Speak your entry anywhere in the app. Transcribed instantly via Speech API. Works offline. No audio stored.</div>
+        <div style="margin-top:14px;font-size:11px;font-weight:800;opacity:.4;text-transform:uppercase;letter-spacing:.8px">Active throughout app</div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,rgba(26,107,60,.3),rgba(15,107,107,.2));border:1px solid rgba(26,107,60,.4);padding:24px">
+        <div style="font-size:36px;margin-bottom:14px">☁️</div>
+        <div class="card-t" style="font-size:17px;margin-bottom:8px">Cross-device Sync</div>
+        <div class="card-s" style="font-size:13px">Sign in once. Entries sync to your own Google / Firebase account — not ours. You own your cloud, we just merge.</div>
+        <div style="margin-top:14px;font-size:11px;font-weight:800;opacity:.4;text-transform:uppercase;letter-spacing:.8px">Your data, your cloud</div>
+      </div>
+    </div>
+    <div class="grid grid-3" style="max-width:700px;margin-top:14px">
+      <div class="card card-dark" style="text-align:center">
+        <div style="font-size:22px;margin-bottom:8px">🌙</div>
+        <div class="card-t" style="font-size:13px">Monthly Reflection</div>
+        <div class="card-s">Dark card with narrative, 4 metric tiles, peak day &amp; mode</div>
+      </div>
+      <div class="card card-dark" style="text-align:center">
+        <div style="font-size:22px;margin-bottom:8px">🧬</div>
+        <div class="card-t" style="font-size:13px">Rhythm DNA Chart</div>
+        <div class="card-s">Day-of-week bar chart, directed %, strongest day highlighted</div>
+      </div>
+      <div class="card card-dark" style="text-align:center">
+        <div style="font-size:22px;margin-bottom:8px">⭐</div>
+        <div class="card-t" style="font-size:13px">Early Access</div>
+        <div class="card-s">Habit coaching letters, accountability partner, and more as they ship</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Payment Flow -->
+  <div class="slide s4" id="s4">
+    <div class="tag">How to get Pro</div>
+    <h1>Pay once. Unlock forever.<br>No subscription.</h1>
+    <div style="display:flex;align-items:center;gap:40px;margin-top:32px;flex-wrap:wrap;justify-content:center">
+      <div class="price">
+        <div class="price-amt">₹100</div>
+        <div class="price-s">one-time · ≈ $1.20</div>
+      </div>
+      <div class="flow" style="margin-top:0;max-width:400px">
+        <div class="flow-item">
+          <div class="flow-num">01</div>
+          <div>
+            <div class="flow-t">Open Settings → Get Pro</div>
+            <div class="flow-s">Tap the "Get Pro — ₹100" button in Account &amp; Sync</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">02</div>
+          <div>
+            <div class="flow-t">Enter email + agree to terms</div>
+            <div class="flow-s">Your email receives the activation code. One-time, no renewals.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">03</div>
+          <div>
+            <div class="flow-t">Pay via GPay / PhonePe / UPI</div>
+            <div class="flow-s">Razorpay secure checkout. Any UPI method accepted.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">04</div>
+          <div>
+            <div class="flow-t">Enter OTP from email</div>
+            <div class="flow-s">6-digit code sent instantly. Enter it to verify and activate.</div>
+          </div>
+        </div>
+        <div class="flow-item" style="border:none">
+          <div class="flow-num">05</div>
+          <div>
+            <div class="flow-t">Pro active — voice + sync unlocked</div>
+            <div class="flow-s">Status saved to device. No re-login needed unless you clear app data.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Privacy & Play Store -->
+  <div class="slide s5" id="s5">
+    <div class="tag">Privacy &amp; Play Store</div>
+    <h1>Your data never<br>leaves your hands</h1>
+    <div class="sub" style="margin-top:14px">Flourish collects nothing. Stores nothing on its own servers. Processes everything locally in the browser. Your entries live on your device — or your own Google account when Pro sync is on.</div>
+    <div class="prv-row">
+      <div class="prv-chip">🔒 No server storage</div>
+      <div class="prv-chip">📵 Works fully offline</div>
+      <div class="prv-chip">🧾 No ads, no tracking</div>
+      <div class="prv-chip">☁️ Your cloud = your Google account</div>
+      <div class="prv-chip">🎤 Audio never recorded or sent</div>
+      <div class="prv-chip">💳 Payment via Razorpay (PCI-DSS)</div>
+    </div>
+    <div class="grid grid-3" style="max-width:720px;margin-top:24px">
+      <div class="card card-dark" style="text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">📱</div>
+        <div class="card-t">Play Store</div>
+        <div class="card-s" style="font-size:11px">PWA wrapper via Bubblewrap or TWA. No native code changes needed.</div>
+      </div>
+      <div class="card card-dark" style="text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">🌐</div>
+        <div class="card-t">Web App</div>
+        <div class="card-s" style="font-size:11px">Live at flourish.is-a.dev. Single HTML file. Zero dependencies.</div>
+      </div>
+      <div class="card card-dark" style="text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">📦</div>
+        <div class="card-t">Self-hostable</div>
+        <div class="card-s" style="font-size:11px">Download and run locally. No server, no build step, no setup.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav" id="nav-dots"></div>
+<div class="slide-num" id="slide-num">1 / 5</div>
+
+<script>
+var slides=['s1','s2','s3','s4','s5'];
+var cur=0;
+var dotsEl=document.getElementById('nav-dots');
+
+function buildNav(){
+  dotsEl.innerHTML='';
+  var prev=document.createElement('button');prev.className='nav-btn';prev.textContent='←';prev.onclick=function(){go(cur-1);};
+  dotsEl.appendChild(prev);
+  slides.forEach(function(_,i){
+    var d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=function(){go(i);};
+    dotsEl.appendChild(d);
+  });
+  var next=document.createElement('button');next.className='nav-btn';next.textContent='→';next.onclick=function(){go(cur+1);};
+  dotsEl.appendChild(next);
+}
+
+function go(n){
+  if(n<0||n>=slides.length)return;
+  var prev=document.getElementById(slides[cur]);
+  prev.classList.remove('active');prev.classList.add('exit');
+  setTimeout(function(){prev.classList.remove('exit');},450);
+  cur=n;
+  var next=document.getElementById(slides[cur]);
+  next.classList.add('active');
+  document.getElementById('slide-num').textContent=(cur+1)+' / '+slides.length;
+  dotsEl.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===cur);});
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(cur-1);
+});
+
+var tx0=0;
+document.addEventListener('touchstart',function(e){tx0=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tx0;
+  if(Math.abs(dx)>50){go(dx<0?cur+1:cur-1);}
+},{passive:true});
+
+buildNav();
+</script>
+</body>
+</html>
