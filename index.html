@@ -178,6 +178,31 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;animation:tickerScroll var(--spd,72s) linear infinite;font-size:11.5px;font-weight:700;color:var(--text);padding-left:14px}
 .ticker-sep{margin:0 16px;color:var(--faint);opacity:.5;font-size:11px}
 @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ins-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.ins-main{min-width:0}
+.ins-side{position:sticky;top:14px;max-height:calc(100vh - 70px);overflow-y:auto;scrollbar-width:thin}
+.ins-side::-webkit-scrollbar{width:3px}
+.ins-side::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12);border-radius:2px}
+.ins-side .ticker-section{margin-top:0;border-top:none;padding-top:0}
+.ins-side .ticker-title{margin-bottom:10px}
+@media(max-width:720px){.ins-layout{grid-template-columns:1fr}.ins-side{position:static;max-height:none}}
+.circ-why{border-radius:16px;padding:15px 17px;background:linear-gradient(135deg,rgba(92,42,157,.07),rgba(26,74,140,.06));border:1px solid rgba(92,42,157,.14);margin-bottom:14px}
+.circ-why-t{font-size:13px;font-weight:900;color:var(--cp);margin-bottom:6px}
+.circ-why-b{font-size:12px;font-weight:700;color:var(--muted);line-height:1.75}
+.circ-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.circ-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:800;color:var(--muted)}
+.circ-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.sys-drain{border-radius:16px;background:var(--softer);border:1px solid var(--border);padding:16px 16px 12px;margin-bottom:14px}
+.sys-drain-t{font-size:13px;font-weight:900;margin-bottom:3px}
+.sys-drain-s{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:13px;line-height:1.55}
+.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sysc{border-radius:11px;padding:10px 12px;background:#fff;border:1px solid rgba(0,0,0,.06)}
+.sysc-top{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.sysc-ico{font-size:14px;line-height:1;flex-shrink:0}
+.sysc-name{font-size:11px;font-weight:900;color:var(--text)}
+.sysc-bar{height:5px;background:rgba(0,0,0,.07);border-radius:3px;overflow:hidden;margin-bottom:5px}
+.sysc-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.sysc-note{font-size:10px;font-weight:700;color:var(--muted);line-height:1.45}
 .circ-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:16px}
 .circ-cap{font-size:11px;font-weight:700;color:var(--faint);margin-top:6px;text-align:center}
 .nat-hero{border-radius:20px;padding:20px 22px;margin-bottom:14px;border:1px solid rgba(0,0,0,.06)}
@@ -492,16 +517,40 @@ function buildRadar(scores){
   return'<div class="radar-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'">'+grid+pctLbls+axes+'<polygon points="'+poly+'" fill="rgba(26,74,140,.14)" stroke="#1A4A8C" stroke-width="2.5" stroke-linejoin="round"/>'+lbls+'</svg><div class="radar-cap">Life balance snapshot &nbsp;&#183;&nbsp; Higher = healthier pattern</div></div>';
 }
 function buildClock(){
-  var W=200,cx=100,cy=100,R=80,iR=52;
+  var W=270,cx=135,cy=135,R=100,iR=64;
   var hr=new Date().getHours(),mn=new Date().getMinutes();
-  var segs=[{s:22,e:29.5,color:'rgba(92,42,157,.18)'},{s:5.5,e:8,color:'rgba(26,107,60,.28)'},{s:8,e:12,color:'rgba(26,74,140,.22)'},{s:12,e:14,color:'rgba(176,112,32,.18)'},{s:14,e:17,color:'rgba(15,107,107,.22)'},{s:17,e:19,color:'rgba(26,107,60,.24)'},{s:19,e:22,color:'rgba(92,42,157,.14)'}];
+  var segs=[
+    {s:22,e:29.5,color:'rgba(92,42,157,.2)',label:'Sleep',lh:1.75},
+    {s:5.5,e:8,  color:'rgba(26,107,60,.3)', label:'Move', lh:6.75},
+    {s:8,e:12,   color:'rgba(26,74,140,.22)',label:'Focus',lh:10},
+    {s:12,e:14,  color:'rgba(176,112,32,.2)',label:'Rest', lh:13},
+    {s:14,e:17,  color:'rgba(15,107,107,.22)',label:'Create',lh:15.5},
+    {s:17,e:19,  color:'rgba(26,107,60,.26)',label:'Walk', lh:18},
+    {s:19,e:22,  color:'rgba(92,42,157,.15)',label:'Wind↓',lh:20.5}
+  ];
   function ptA(h,r){var a=h/24*2*Math.PI-Math.PI/2;return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
   function arc(s,e,or,ir){var sa=s/24*2*Math.PI-Math.PI/2,ea=e/24*2*Math.PI-Math.PI/2;var p1=ptA(s,or),p2=ptA(e,or),p3=ptA(e,ir),p4=ptA(s,ir);var lg=((e-s+24)%24)>12?1:0;return'M'+p1.x+','+p1.y+' A'+or+','+or+' 0 '+lg+' 1 '+p2.x+','+p2.y+' L'+p3.x+','+p3.y+' A'+ir+','+ir+' 0 '+lg+' 0 '+p4.x+','+p4.y+' Z';}
-  var segH=segs.map(function(s){return'<path d="'+arc(s.s,s.e,R,iR)+'" fill="'+s.color+'"/>';}).join('');
-  var ticks=[0,6,12,18].map(function(h){var p1=ptA(h,R+2),p2=ptA(h,R+8),pl=ptA(h,R+18);return'<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="rgba(0,0,0,.18)" stroke-width="1.5"/><text x="'+pl.x+'" y="'+pl.y+'" text-anchor="middle" dominant-baseline="middle" font-size="8" font-weight="800" fill="rgba(0,0,0,.3)" font-family="Outfit,sans-serif">'+(h===0?'12am':(h===12?'12pm':h+'h'))+'</text>';}).join('');
-  var np=ptA(hr+mn/60,iR-3),npo=ptA(hr+mn/60,R+3);
+  var segH=segs.map(function(s){
+    var mid=(s.s+s.e)/2;
+    var lp=ptA(mid,(R+iR)/2);
+    return'<path d="'+arc(s.s,s.e,R,iR)+'" fill="'+s.color+'"/><text x="'+lp.x+'" y="'+lp.y+'" text-anchor="middle" dominant-baseline="middle" font-size="8.5" font-weight="900" fill="rgba(0,0,0,.5)" font-family="Outfit,sans-serif">'+s.label+'</text>';
+  }).join('');
+  var ticks=[0,6,12,18].map(function(h){
+    var p1=ptA(h,R+2),p2=ptA(h,R+10),pl=ptA(h,R+22);
+    var lbl=h===0?'12am':(h===12?'12pm':h+'h');
+    return'<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="rgba(0,0,0,.25)" stroke-width="2"/><text x="'+pl.x+'" y="'+pl.y+'" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="900" fill="rgba(0,0,0,.7)" font-family="Outfit,sans-serif">'+lbl+'</text>';
+  }).join('');
+  var np=ptA(hr+mn/60,iR-4),npo=ptA(hr+mn/60,R+4);
   var ts=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
-  return'<div class="circ-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="rgba(0,0,0,.06)" stroke-width="1"/><circle cx="'+cx+'" cy="'+cy+'" r="'+iR+'" fill="var(--softer)" stroke="rgba(0,0,0,.06)" stroke-width="1"/>'+segH+ticks+'<line x1="'+np.x+'" y1="'+np.y+'" x2="'+npo.x+'" y2="'+npo.y+'" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="#0f0f0f"/><text x="'+cx+'" y="'+(cy-7)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#0f0f0f" font-family="Outfit,sans-serif">'+ts+'</text><text x="'+cx+'" y="'+(cy+9)+'" text-anchor="middle" font-size="8" font-weight="700" fill="rgba(0,0,0,.35)" font-family="Outfit,sans-serif">Now</text></svg><div class="circ-cap">Circadian window map. Green = high nature alignment.</div></div>';
+  var legend='<div class="circ-legend">'+[
+    {c:'rgba(92,42,157,.5)',l:'Sleep 10pm–5:30am'},
+    {c:'rgba(26,107,60,.6)',l:'Move / Outdoor'},
+    {c:'rgba(26,74,140,.55)',l:'Focus window'},
+    {c:'rgba(176,112,32,.5)',l:'Rest & digest'},
+    {c:'rgba(15,107,107,.55)',l:'Creative flow'},
+    {c:'rgba(92,42,157,.3)',l:'Wind-down'}
+  ].map(function(x){return'<div class="circ-leg-item"><div class="circ-dot" style="background:'+x.c+'"></div>'+x.l+'</div>';}).join('')+'</div>';
+  return'<div class="circ-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="rgba(0,0,0,.07)" stroke-width="1.5"/><circle cx="'+cx+'" cy="'+cy+'" r="'+iR+'" fill="var(--softer)" stroke="rgba(0,0,0,.06)" stroke-width="1"/>'+segH+ticks+'<line x1="'+np.x+'" y1="'+np.y+'" x2="'+npo.x+'" y2="'+npo.y+'" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#0f0f0f"/><text x="'+cx+'" y="'+(cy-8)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#0f0f0f" font-family="Outfit,sans-serif">'+ts+'</text><text x="'+cx+'" y="'+(cy+9)+'" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(0,0,0,.4)" font-family="Outfit,sans-serif">Now</text></svg>'+legend+'<div class="circ-cap" style="margin-top:9px">Circadian window map &nbsp;&#183;&nbsp; Each colour = your body\'s natural operating mode</div></div>';
 }
 function localAnalysis(){
   var R={finance:[],health:[],learning:[],nature:[],habits:[],strengths:[],energyScore:50,alignScore:50,finScore:50,healthScore:50};
@@ -777,7 +826,8 @@ function renderInsights(){
   }
   var habHtml='';
   if(habs&&habs.length)habHtml='<div class="dsec"><div class="dsec-t">&#128257; Habit Loops</div>'+habs.map(function(h){return'<div class="hloop"><div class="hloop-h">'+he(h.head||h.pattern||'')+'</div><div class="hloop-b">'+he(h.body||h.tip||'')+'</div></div>';}).join('')+'</div>';
-  el.innerHTML=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+'<div class="dsec"><div class="dsec-t">&#128184; Finance Drains</div>'+cards(fin,false)+'</div><div class="dsec"><div class="dsec-t">&#9889; Health and Attention Drains</div>'+cards(hlt,false)+'</div><div class="dsec"><div class="dsec-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div><div class="dsec"><div class="dsec-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'')+buildTickers();
+  var mainCol=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+'<div class="dsec"><div class="dsec-t">&#128184; Finance Drains</div>'+cards(fin,false)+'</div><div class="dsec"><div class="dsec-t">&#9889; Health and Attention Drains</div>'+cards(hlt,false)+'</div><div class="dsec"><div class="dsec-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div><div class="dsec"><div class="dsec-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
+  el.innerHTML='<div class="ins-layout"><div class="ins-main">'+mainCol+'</div><div class="ins-side">'+buildTickers()+'</div></div>';
 }
 function renderReview(){
   var el=document.getElementById('p-review');if(!el)return;
@@ -817,11 +867,32 @@ function renderNature(){
   var distrH=entries.filter(function(e){return e.direction==='distractor';}).reduce(function(s,e){return s+(+e.duration||0);},0);
   var distrPct=tH?Math.round(distrH/tH*100):0;
   var nC=avgN?(avgN>=4?'var(--cg)':(avgN>=3?'var(--ca)':'var(--cr)')):'var(--muted)';
-  el.innerHTML='<div class="nat-hero" style="background:'+sBg+'"><div class="nat-badge" style="background:'+sColor+'">'+season+' &middot; Telangana</div><div class="nat-title" style="color:'+sTxt+'">Nature Alignment</div><div class="nat-sub" style="color:'+sTxt+'">Your patterns read against natural rhythms, season, and circadian biology.</div></div><div class="m2"><div class="mc mcb"><div class="mc-lbl">Avg Nature Score</div><div class="mc-val" style="color:'+nC+'">'+(avgN?avgN.toFixed(1)+'/5':'--')+'</div><div class="mc-sub">'+(avgN?NATICONS[Math.round(avgN)]+' '+NATLBL[Math.round(avgN)]:'Not tracked yet')+'</div></div><div class="mc mca"><div class="mc-lbl">High Friction</div><div class="mc-val" style="color:'+(pctF>35?'var(--cr)':(pctF>20?'var(--ca)':'var(--cg))'))+'">'+pctF+'%</div><div class="mc-sub">of all activities</div></div></div><div class="m2"><div class="mc mcp"><div class="mc-lbl">Directed Time</div><div class="mc-val" style="color:'+(dirPct>=60?'var(--cg)':(dirPct>=40?'var(--ca)':'var(--cr))'))+'">'+dirPct+'%</div><div class="mc-sub">'+fH(dirH)+' logged</div></div><div class="mc mco"><div class="mc-lbl">Distractor Time</div><div class="mc-val">'+distrPct+'%</div><div class="mc-sub">'+fH(distrH)+' logged</div></div></div><div class="slbl">Circadian Clock</div>'+buildClock()+'<div class="slbl" style="margin-top:6px">Seasonal Guide</div>'+tips.map(function(t){return'<div class="nat-tip"><div class="nat-tip-h">'+t.h+'</div><div class="nat-tip-b">'+t.b+'</div></div>';}).join('');
+  var circWhy='<div class="circ-why"><div class="circ-why-t">&#128336; Why your circadian clock controls everything</div><div class="circ-why-b">Your body\'s master clock — the <strong>suprachiasmatic nucleus</strong> — sits in the hypothalamus and synchronises all 11 physiological systems through light signals. When this clock is respected, hormones, digestion, immunity, focus and mood all run in coordination. When it is disrupted — by artificial light after dark, irregular sleep, late eating or constant screen exposure — <strong>every system drifts</strong> independently and efficiency collapses across all domains simultaneously. Even a <strong>1-hour shift</strong> in your sleep timing disrupts insulin sensitivity for 48 hours. The clock below shows the natural operating modes mapped across a 24-hour day.</div></div>';
+  el.innerHTML='<div class="nat-hero" style="background:'+sBg+'"><div class="nat-badge" style="background:'+sColor+'">'+season+' &middot; Telangana</div><div class="nat-title" style="color:'+sTxt+'">Nature Alignment</div><div class="nat-sub" style="color:'+sTxt+'">Your patterns read against natural rhythms, season, and circadian biology.</div></div><div class="m2"><div class="mc mcb"><div class="mc-lbl">Avg Nature Score</div><div class="mc-val" style="color:'+nC+'">'+(avgN?avgN.toFixed(1)+'/5':'--')+'</div><div class="mc-sub">'+(avgN?NATICONS[Math.round(avgN)]+' '+NATLBL[Math.round(avgN)]:'Not tracked yet')+'</div></div><div class="mc mca"><div class="mc-lbl">High Friction</div><div class="mc-val" style="color:'+(pctF>35?'var(--cr)':(pctF>20?'var(--ca)':'var(--cg))'))+'">'+pctF+'%</div><div class="mc-sub">of all activities</div></div></div><div class="m2"><div class="mc mcp"><div class="mc-lbl">Directed Time</div><div class="mc-val" style="color:'+(dirPct>=60?'var(--cg)':(dirPct>=40?'var(--ca)':'var(--cr))'))+'">'+dirPct+'%</div><div class="mc-sub">'+fH(dirH)+' logged</div></div><div class="mc mco"><div class="mc-lbl">Distractor Time</div><div class="mc-val">'+distrPct+'%</div><div class="mc-sub">'+fH(distrH)+' logged</div></div></div>'+circWhy+'<div class="slbl">Circadian Clock &mdash; Your Body\'s 24-Hour Map</div>'+buildClock()+buildSystemsDrain()+'<div class="slbl" style="margin-top:6px">Seasonal Guide &mdash; '+season+', Telangana</div>'+tips.map(function(t){return'<div class="nat-tip"><div class="nat-tip-h">'+t.h+'</div><div class="nat-tip-b">'+t.b+'</div></div>';}).join('');
 }
 function stips(s){
   var a={summer:[{h:'Pre-dawn window is your prime slot',b:'5:30 to 7:30am is the most aligned time for outdoor activity in Telangana right now. After 9am, heat is physiologically draining. Front-load cognitive and physical work.'},{h:'The afternoon slump is biology, not laziness',b:'2 to 4pm energy dip is amplified by summer heat. Use for low-friction admin, not decisions or creative output.'},{h:'Hydration and cortisol are directly linked',b:'Low water intake in heat elevates cortisol. Afternoon crashes often correlate with low hydration, not willpower failure.'},{h:'Evening reset window',b:'6:30 to 8pm as temperatures drop is ideal. A 20-minute outdoor walk at this time measurably shifts cortisol and improves sleep onset.'}],monsoon:[{h:'Monsoon suppresses serotonin',b:'Reduced sunlight lowers serotonin. Prioritize any outdoor time during clear patches. Even 10 minutes of diffuse outdoor light has measurable effect.'},{h:'Post-rain mornings are optimal',b:'Mornings after rain bring cooler, cleaner air. This is your best nature alignment window during monsoon. Log these intentionally.'},{h:'Humidity reads as friction',b:'High humidity increases perceived exertion by 20 to 30 percent. Low motivation during monsoon may be environmental, not behavioral.'}],postmonsoon:[{h:'Best outdoor season in Telangana',b:'October and November offer the most pleasant outdoor conditions of the year. Rebuild outdoor habits that slipped during summer and monsoon.'},{h:'Extended golden hour advantage',b:'Post-monsoon sunset quality is exceptional. An evening walk now has outsized effects on sleep quality and next-day alertness.'},{h:'Reset your baseline now',b:'Lower friction, stable light patterns make new routines significantly easier to establish than any other time of year. Anchor one new habit this month.'}],winter:[{h:'Early morning clarity is real',b:'December to February mornings in Telangana are crisp and cool. A 6 to 8am outdoor session delivers maximum alertness gains and a strong circadian anchor for the day.'},{h:'Stable light patterns are your anchor',b:'Winter has the most predictable daylight of the year. Use this consistency to lock in a fixed sleep-wake schedule.'},{h:'Cool weather lowers the barrier to starting',b:'Morning activity feels easier in cool weather. Use this window to build the outdoor morning habit before summer raises the barrier again.'}]};
   return a[s]||a.summer;
+}
+function buildSystemsDrain(){
+  var sys=[
+    {i:'🧠',n:'Nervous',p:92,c:'#B83020',t:'1 poor sleep night impairs prefrontal function 30%'},
+    {i:'⚡',n:'Endocrine',p:85,c:'#B83020',t:'3 stress days: cortisol dominates all other hormones'},
+    {i:'🛡️',n:'Immune',p:88,c:'#B83020',t:'NK cell activity drops 70% after one 6-hour sleep night'},
+    {i:'❤️',n:'Cardiovascular',p:72,c:'#B07020',t:'Sedentary + chronic stress raises resting HR in 2 weeks'},
+    {i:'🌿',n:'Digestive',p:80,c:'#B83020',t:'7 days late eating collapses gut microbiome diversity'},
+    {i:'💪',n:'Musculoskeletal',p:55,c:'#5C2A9D',t:'1%/year muscle loss from age 30 without resistance load'},
+    {i:'🫁',n:'Respiratory',p:58,c:'#5C2A9D',t:'Shallow indoor breathing lowers O₂, raises CO₂ in blood'},
+    {i:'🔄',n:'Lymphatic',p:82,c:'#B83020',t:'4h sitting halts lymph flow — toxins accumulate silently'},
+    {i:'🌡️',n:'Integumentary',p:50,c:'#5C2A9D',t:'Poor sleep breaks down collagen and skin barrier weekly'},
+    {i:'🔬',n:'Reproductive',p:65,c:'#5C2A9D',t:'Chronic cortisol suppresses sex hormones within weeks'},
+    {i:'🕐',n:'Circadian',p:96,c:'#B83020',t:'Artificial light after 9pm delays all 11 systems 90+ min'},
+  ];
+  var cards=sys.map(function(s){
+    var bc=s.p>=85?'#B83020':(s.p>=70?'#B07020':'#5C2A9D');
+    return'<div class="sysc"><div class="sysc-top"><span class="sysc-ico">'+s.i+'</span><span class="sysc-name">'+s.n+'</span></div><div class="sysc-bar"><div class="sysc-fill" style="width:'+s.p+'%;background:'+bc+'"></div></div><div class="sysc-note">'+s.t+'</div></div>';
+  }).join('');
+  return'<div class="sys-drain"><div class="sys-drain-t">&#9888;&#65039; When Bad Habits Dominate &mdash; System Drain Map</div><div class="sys-drain-s">How quickly each system shows measurable stress when routines collapse. Bar = disruption speed. <span style="color:#B83020;font-weight:900">Red</span> = days. <span style="color:#B07020;font-weight:900">Amber</span> = 2 weeks. <span style="color:#5C2A9D;font-weight:900">Purple</span> = slower.</div><div class="sys-grid">'+cards+'</div></div>';
 }
 function renderDashboard(){
   var el=document.getElementById('p-dashboard');if(!el)return;
