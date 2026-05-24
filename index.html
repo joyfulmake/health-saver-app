@@ -386,27 +386,45 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
   <div class="mbox">
     <div class="mhandle"></div>
     <div class="mtitle">Settings</div>
+
+    <!-- YOUR DATA -->
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Your Data</div>
+      <div style="background:var(--softer);border-radius:14px;padding:14px 15px;border:1px solid var(--border);margin-bottom:10px">
+        <div style="font-size:14px;font-weight:900;margin-bottom:4px">Backup &amp; restore</div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.65;margin-bottom:12px">Generate a portable code that holds all your entries. Paste it on any device to restore — no account needed.</div>
+        <button style="width:100%;padding:11px;border-radius:10px;border:none;background:#0f0f0f;color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;margin-bottom:8px" onclick="genBackupCode()">&#8681; Generate Backup Code</button>
+        <div id="backup-code-wrap" style="display:none;margin-bottom:8px">
+          <textarea id="backup-code-area" readonly style="width:100%;height:72px;border-radius:9px;border:1.5px solid var(--border);padding:9px 11px;font-size:11px;font-family:monospace;resize:none;color:#333;background:#fff;line-height:1.4"></textarea>
+          <button id="copy-code-btn" style="width:100%;padding:9px;border-radius:9px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--text);margin-top:5px" onclick="copyBackupCode()">Copy Code</button>
+        </div>
+        <div style="height:1px;background:var(--border);margin:10px 0"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:7px">Restore from code</div>
+        <textarea id="restore-code-input" style="width:100%;height:60px;border-radius:9px;border:1.5px solid var(--border);padding:9px 11px;font-size:11px;font-family:monospace;resize:none;color:#333;background:#fff;line-height:1.4;margin-bottom:7px" placeholder="Paste your backup code here..."></textarea>
+        <button style="width:100%;padding:10px;border-radius:9px;border:none;background:var(--soft);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--text)" onclick="restoreFromCode()">&#8679; Restore</button>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:16px"></div>
+
+    <!-- ACCOUNT & SYNC -->
     <div style="margin-bottom:18px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint)">Account &amp; Sync</div>
-        <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;padding:2px 7px;border-radius:20px;background:#0f0f0f;color:#fff">Pro</span>
+        <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Account &amp; Sync</div>
+        <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;padding:2px 8px;border-radius:20px;background:#0f0f0f;color:#fff">Pro</span>
       </div>
       <div id="auth-state-signed-out" style="display:block">
-        <div style="background:var(--softer);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:12px">
-          <div style="font-size:13px;font-weight:900;margin-bottom:4px">Cross-device sync</div>
-          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.65">Sync your entries across all devices securely. This is a <strong style="color:var(--text)">paid feature</strong> — available as an in-app purchase when Flourish launches on Play Store and App Store. Free users always get full local access.</div>
-        </div>
-        <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#333;opacity:.55" onclick="signInGoogle()">
+        <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#555;opacity:.5" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/></svg>
           Sign in with Google &mdash; Coming soon
         </button>
-        <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:8px;line-height:1.6;text-align:center">All features work free &amp; offline. Sync is the only paid add-on.</div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-top:8px;line-height:1.6;text-align:center">All features work free &amp; offline. Real-time sync is the only paid add-on.</div>
       </div>
       <div id="auth-state-signed-in" style="display:none">
         <div style="background:var(--bg2);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,107,60,.14);margin-bottom:12px">
           <div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:2px">Signed in</div>
           <div id="auth-user-name" style="font-size:14px;font-weight:800;color:var(--text)"></div>
-          <div id="auth-user-email" style="font-size:11px;font-weight:700;color:var(--muted)"></div>
+          <div id="auth-user-email" style="font-size:12px;font-weight:700;color:var(--muted)"></div>
         </div>
         <div style="display:flex;gap:8px">
           <button style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--soft);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted)" onclick="syncNow()">&#8635; Sync now</button>
@@ -414,12 +432,42 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
         </div>
       </div>
     </div>
+
     <div style="height:1px;background:var(--border);margin-bottom:16px"></div>
+
+    <!-- ON THE HORIZON -->
     <div style="margin-bottom:18px">
-      <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint);margin-bottom:10px">Feedback</div>
-      <button style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--text)" onclick="closeSettings();openFeedback()">&#9993; Send Feedback</button>
-      <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:8px;line-height:1.6;text-align:center">Your feedback reaches the developer. Your email is never shown publicly.</div>
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px">On the Horizon</div>
+      <div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.65;margin-bottom:12px">Thinking hats on &mdash; nothing promised, everything being considered with care.</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--bp);border-radius:12px;padding:12px 14px;border:1px solid rgba(92,42,157,.1)">
+          <div style="font-size:13px;font-weight:900;color:var(--cp);margin-bottom:3px">&#128336; Real-time cross-device sync</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">Sign in once, your entries follow you across all devices seamlessly.</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,107,60,.1)">
+          <div style="font-size:13px;font-weight:900;color:var(--cg);margin-bottom:3px">&#128140; Monthly growth letter</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">A quiet, honest email at month-end — your patterns, a mirror, one thought to carry forward.</div>
+        </div>
+        <div style="background:var(--ba);border-radius:12px;padding:12px 14px;border:1px solid rgba(176,112,32,.1)">
+          <div style="font-size:13px;font-weight:900;color:var(--ca);margin-bottom:3px">&#129309; Accountability partner</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">Optionally share a weekly summary with one person you trust. Growth is quieter with a witness.</div>
+        </div>
+        <div style="background:var(--bb);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,74,140,.1)">
+          <div style="font-size:13px;font-weight:900;color:var(--cb);margin-bottom:3px">&#127908; Voice logging</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">Speak your entry in 10 seconds. Friction removed, honesty kept.</div>
+        </div>
+      </div>
     </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:16px"></div>
+
+    <!-- FEEDBACK -->
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px">Your Feedback</div>
+      <div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.65;margin-bottom:10px">Every message is read. Your honest thoughts are the clearest signal we have.</div>
+      <button style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--text)" onclick="closeSettings();openFeedback()">&#9993; Send a note</button>
+    </div>
+
     <div class="fact"><button class="bsav" onclick="closeSettings()" style="width:100%">Done</button></div>
   </div>
 </div>
@@ -1424,6 +1472,39 @@ function persistCloud(){
   fbDB.collection('users').doc(currentUser.uid).collection('data').doc('entries')
     .set({entries:entries,updated:new Date().toISOString()}).catch(function(){});
 }
+function genBackupCode(){
+  var data=JSON.stringify({entries:entries,v:5,ts:new Date().toISOString()});
+  var code=btoa(unescape(encodeURIComponent(data)));
+  var ta=document.getElementById('backup-code-area');
+  var wrap=document.getElementById('backup-code-wrap');
+  if(ta)ta.value=code;
+  if(wrap)wrap.style.display='block';
+  var btn=document.getElementById('copy-code-btn');
+  if(btn)btn.textContent='Copy Code';
+}
+function copyBackupCode(){
+  var ta=document.getElementById('backup-code-area');
+  if(!ta)return;
+  if(navigator.clipboard){navigator.clipboard.writeText(ta.value);}else{ta.select();document.execCommand('copy');}
+  var btn=document.getElementById('copy-code-btn');
+  if(btn){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy Code';},2200);}
+}
+function restoreFromCode(){
+  var ta=document.getElementById('restore-code-input');
+  if(!ta)return;
+  var code=ta.value.trim();
+  if(!code){alert('Paste a backup code first.');return;}
+  try{
+    var data=JSON.parse(decodeURIComponent(escape(atob(code))));
+    if(!data.entries||!Array.isArray(data.entries))throw new Error('bad');
+    if(!confirm('Replace your current '+entries.length+' entries with '+data.entries.length+' entries from this backup?'))return;
+    entries=data.entries;
+    persist();
+    ta.value='';
+    closeSettings();
+    render();
+  }catch(e){alert('Invalid backup code. Please check and try again.');}
+}
 function openSettings(){
   var el=document.getElementById('settings-ov');if(!el)return;
   updateAuthUI();el.classList.add('open');
@@ -1456,6 +1537,7 @@ function submitFeedback(){
     .catch(function(){alert('Could not send. Check your connection.');});
 }
 window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
+window.genBackupCode=genBackupCode;window.copyBackupCode=copyBackupCode;window.restoreFromCode=restoreFromCode;
 window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
 window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
