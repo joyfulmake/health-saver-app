@@ -174,7 +174,7 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .ticker-section{margin-top:0;border-top:none;padding-top:0}
 .ticker-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:10px}
 .ticker-row{display:flex;align-items:stretch;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,.07);background:var(--softer);min-height:62px}
-.ticker-lbl{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;padding:8px 7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:60px;max-width:60px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
+.ticker-lbl{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;padding:8px 7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:72px;max-width:72px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
 .ticker-track{flex:1;overflow:hidden;display:flex;align-items:center;padding:10px 14px}
 .ticker-text{font-size:12px;font-weight:700;color:var(--text);line-height:1.6;word-break:break-word;will-change:transform,opacity;}
 .ticker-dev{font-family:'Noto Sans Devanagari',sans-serif;font-size:17px;font-weight:500;color:#1a1a2e;line-height:1.75;letter-spacing:.4px}
@@ -1058,16 +1058,16 @@ function buildTickers(){
     return'<div class="ticker-row"><div class="ticker-lbl" style="background:'+bg+'">'+lbl+'</div><div class="ticker-track"><div class="ticker-text" id="tk-'+id+'" style="opacity:0">&#8635;</div></div></div>';
   }
   return'<div class="ticker-section"><div class="ticker-title">&#128225; Life Intelligence Feed</div>'+
-    tk('sm','Science<br>Mind',    '#1A4A8C')+
-    tk('sh','Science<br>Habits',  '#5C2A9D')+
-    tk('sn','Science<br>Nature',  '#1A6B3C')+
-    tk('vi','Vedic<br>Svasthya',  '#7C3000')+
-    tk('w1','World &gt;<br>Local','#0F6B6B')+
-    tk('w2','Bharat<br>Pulse',    '#1E3A8A')+
-    tk('r1','Resources<br>Lost',  '#B83020')+
-    tk('r2','Resources<br>Well',  '#166534')+
-    tk('cr','Circadian<br>Clock', '#4C1D95')+
-    tk('bs','11 Body<br>Systems', '#065F46')+
+    tk('sm','Mind<br>Science',      '#1A4A8C')+
+    tk('sh','Habit<br>Science',     '#5C2A9D')+
+    tk('sn','Nature<br>Science',    '#1A6B3C')+
+    tk('vi','Vedic<br>Svasthya',    '#7C3000')+
+    tk('w1','World &gt;<br>Local',  '#0F6B6B')+
+    tk('w2','Bharat<br>Pulse',      '#1E3A8A')+
+    tk('r1','Resources<br>Lost',    '#B83020')+
+    tk('r2','Resources<br>Well Used','#166534')+
+    tk('cr','Circadian<br>Clock',   '#4C1D95')+
+    tk('bs','11 Body<br>Systems',   '#065F46')+
     '</div>';
 }
 function renderInsights(){
