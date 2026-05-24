@@ -37,7 +37,7 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .hdr-l{display:flex;align-items:center;gap:11px}
 .hdr-logo{width:40px;height:40px;background:#0f0f0f;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
 .hdr-name{font-size:21px;font-weight:900;letter-spacing:-.5px}
-.hdr-sub{font-size:11px;color:var(--faint);font-weight:700;margin-top:1px}
+.hdr-sub{font-size:12px;color:var(--faint);font-weight:700;margin-top:1px}
 .hdr-btns{display:flex;gap:7px}
 .btn-pri{background:#0f0f0f;color:#fff;border:none;border-radius:11px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;transition:opacity .15s}
 .btn-pri:hover{opacity:.78}
@@ -48,8 +48,8 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .now-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;animation:pulseA 2.2s ease-in-out infinite}
 @keyframes pulseA{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
 .now-text{font-size:13px;font-weight:800}
-.now-sub{font-size:11px;font-weight:700;color:var(--muted);margin-top:1px}
-.now-time{font-size:12px;font-weight:800;color:var(--faint);white-space:nowrap}
+.now-sub{font-size:12px;font-weight:700;color:var(--muted);margin-top:1px}
+.now-time{font-size:13px;font-weight:800;color:var(--faint);white-space:nowrap}
 .tabs{display:flex;border-bottom:1.5px solid var(--border);margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{background:none;border:none;font-family:inherit;font-size:13px;font-weight:800;color:var(--faint);padding:9px 14px;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap;flex-shrink:0;transition:color .15s,border-color .15s;letter-spacing:-.1px}
@@ -63,15 +63,15 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .sc4{border-radius:14px;padding:16px 13px;background:var(--softer);border:1px solid var(--border);text-align:center;transition:box-shadow .2s}.sc4:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
 .sc4-ico{font-size:18px;margin-bottom:5px}
 .sc4-val{font-size:30px;font-weight:900;letter-spacing:-1.5px;line-height:1}
-.sc4-lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--faint);margin-top:5px}
+.sc4-lbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--faint);margin-top:5px}
 .sc4-bar{height:3px;background:rgba(0,0,0,.06);border-radius:2px;margin-top:9px;overflow:hidden}
 .sc4-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 .m2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .m3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
 .mc{border-radius:14px;padding:14px;border:1px solid rgba(0,0,0,.04)}
-.mc-lbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:.6;margin-bottom:5px}
+.mc-lbl{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:.6;margin-bottom:5px}
 .mc-val{font-size:22px;font-weight:900;letter-spacing:-.8px;line-height:1.1}
-.mc-sub{font-size:11px;margin-top:4px;font-weight:700;opacity:.62}
+.mc-sub{font-size:12px;margin-top:4px;font-weight:700;opacity:.62}
 .mcb{background:#EAF6EF;color:var(--cg);box-shadow:0 2px 14px rgba(26,107,60,.1)}
 .mcr{background:#FBE9E6;color:var(--cr);box-shadow:0 2px 14px rgba(184,48,32,.1)}
 .mcp{background:#E8EFF8;color:var(--cb);box-shadow:0 2px 14px rgba(26,74,140,.1)}
@@ -83,15 +83,15 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .bal{border-radius:20px;padding:22px 24px;margin-bottom:14px;border:1px solid transparent}
 .bal.pos{background:#EDF0FB;box-shadow:0 4px 28px rgba(30,50,160,.08);border-color:rgba(30,60,180,.07)}
 .bal.neg{background:#FBE9E6;box-shadow:0 4px 28px rgba(184,48,32,.08);border-color:rgba(184,48,32,.07)}
-.bal-lbl{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;opacity:.6;margin-bottom:4px}
+.bal-lbl{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;opacity:.6;margin-bottom:4px}
 .bal.pos .bal-lbl,.bal.pos .bal-amt{color:#111D5E}
 .bal.neg .bal-lbl,.bal.neg .bal-amt{color:#8C1A0A}
 .bal-amt{font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1}
-.bal-sub{font-size:13px;color:var(--muted);margin-top:7px;font-weight:700}
-.ki{background:var(--bb);border-left:3px solid var(--cb);border-radius:0 14px 14px 0;padding:13px 15px;margin-bottom:18px;font-size:13px;font-weight:800;color:var(--cb);line-height:1.65;box-shadow:var(--gwb)}
-.ki-lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:.65;margin-bottom:4px}
+.bal-sub{font-size:14px;color:var(--muted);margin-top:7px;font-weight:700}
+.ki{background:var(--bb);border-left:3px solid var(--cb);border-radius:0 14px 14px 0;padding:13px 15px;margin-bottom:18px;font-size:14px;font-weight:800;color:var(--cb);line-height:1.65;box-shadow:var(--gwb)}
+.ki-lbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:.65;margin-bottom:4px}
 .dsec{margin-bottom:18px}
-.dsec-t{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:8px}
+.dsec-t{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:8px}
 .dstk{display:flex;flex-direction:column;gap:7px}
 .dc{border-radius:14px;padding:13px 15px 13px 18px;position:relative}
 .dc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
@@ -99,22 +99,22 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .dcm{background:var(--ba);border:1px solid rgba(176,112,32,.14)}.dcm::before{background:var(--ca)}
 .dcl{background:var(--bb);border:1px solid rgba(26,74,140,.1)}.dcl::before{background:var(--cb)}
 .dcok{background:var(--bg2);border:1px solid rgba(26,107,60,.14)}.dcok::before{background:var(--cg)}
-.dc-p{font-size:14px;font-weight:800;margin-bottom:4px}
-.dc-t{font-size:12px;font-weight:700;color:var(--muted);line-height:1.6}
+.dc-p{font-size:15px;font-weight:800;margin-bottom:4px}
+.dc-t{font-size:13px;font-weight:700;color:var(--muted);line-height:1.6}
 .hloop{border-radius:14px;padding:13px 15px;background:var(--bp);border:1px solid rgba(92,42,157,.14);margin-bottom:8px}
-.hloop-h{font-size:13px;font-weight:900;color:var(--cp);margin-bottom:4px}
-.hloop-b{font-size:12px;font-weight:700;color:var(--muted);line-height:1.6}
+.hloop-h{font-size:14px;font-weight:900;color:var(--cp);margin-bottom:4px}
+.hloop-b{font-size:13px;font-weight:700;color:var(--muted);line-height:1.6}
 .elist{display:flex;flex-direction:column;gap:7px}
 .ec{border-radius:14px;padding:12px 13px;display:flex;align-items:center;gap:11px;border:1px solid rgba(0,0,0,.05);transition:box-shadow .15s}
 .ec:hover{box-shadow:0 2px 14px rgba(0,0,0,.06)}
 .ei{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .eb{flex:1;min-width:0}
-.en{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.em{font-size:11px;color:#ccc;margin-top:2px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.bdg{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.en{font-weight:800;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.em{font-size:12px;color:#ccc;margin-top:2px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.bdg{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 7px;border-radius:5px;white-space:nowrap}
 .er{text-align:right;flex-shrink:0}
-.ea{font-size:15px;font-weight:900;letter-spacing:-.3px}
-.ed{font-size:11px;color:#ccc;font-weight:700;margin-top:1px}
+.ea{font-size:16px;font-weight:900;letter-spacing:-.3px}
+.ed{font-size:12px;color:#ccc;font-weight:700;margin-top:1px}
 .eact{display:flex;gap:4px;flex-shrink:0}
 .bsm{background:rgba(0,0,0,.06);border:none;border-radius:6px;padding:5px 9px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;color:#333;transition:background .12s}
 .bsm:hover{background:rgba(0,0,0,.1)}
@@ -131,24 +131,24 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .bghi{background:rgba(184,48,32,.1);color:var(--cr)}
 .bch{display:flex;flex-direction:column;gap:8px}
 .br{display:flex;align-items:center;gap:9px}
-.br-n{font-size:11px;font-weight:800;color:#bbb;width:88px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.br-n{font-size:12px;font-weight:800;color:#bbb;width:94px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .br-t{flex:1;background:rgba(0,0,0,.07);border-radius:5px;height:15px;overflow:hidden}
 .br-f{height:100%;border-radius:5px;transition:width .45s ease;min-width:3px}
-.br-v{font-size:12px;font-weight:800;min-width:76px;color:#111;flex-shrink:0}
+.br-v{font-size:13px;font-weight:800;min-width:80px;color:#111;flex-shrink:0}
 .ccard{background:var(--softer);border-radius:14px;padding:14px}
-.ctitle{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#ccc;margin-bottom:10px}
+.ctitle{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#ccc;margin-bottom:10px}
 .tcol{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .insight{background:var(--softer);border-left:3px solid #DDD;border-radius:0 12px 12px 0;padding:12px 14px;margin-bottom:14px;font-size:13px;font-weight:700;color:#444;line-height:1.8}
 .insight strong{color:#111;font-weight:900}
 .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .mode-tile{border-radius:12px;padding:12px 13px}
-.mode-tile-t{font-size:13px;font-weight:900;margin-bottom:3px}
-.mode-tile-d{font-size:11px;font-weight:700;opacity:.75;line-height:1.5}
+.mode-tile-t{font-size:14px;font-weight:900;margin-bottom:3px}
+.mode-tile-d{font-size:12px;font-weight:700;opacity:.75;line-height:1.5}
 .fbar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
 .fchip{background:#F2F0EC;border:none;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;color:#888;transition:all .15s}
 .fchip.on{background:#111;color:#fff}
 .cnt{display:inline-flex;align-items:center;background:rgba(0,0,0,.1);color:inherit;border-radius:20px;font-size:10px;font-weight:800;padding:1px 6px;margin-left:4px}
-.slbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#ccc;margin-bottom:9px}
+.slbl{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#ccc;margin-bottom:9px}
 .vsw{display:flex;gap:5px;margin-bottom:12px}
 .vbtn{background:#F2F0EC;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;color:#888;transition:all .15s;text-transform:capitalize}
 .vbtn.on{background:#111;color:#fff}
@@ -160,14 +160,14 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .streak-wrap{margin-bottom:18px}
 .streak-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
 .streak-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint)}
-.streak-count{font-size:12px;font-weight:900;color:var(--cg)}
+.streak-count{font-size:13px;font-weight:900;color:var(--cg)}
 .streak-grid{display:flex;flex-wrap:wrap;gap:3px}
 .sc{width:11px;height:11px;border-radius:2px;background:rgba(0,0,0,.06);flex-shrink:0}
 .sc.l1{background:rgba(26,107,60,.22)}.sc.l2{background:rgba(26,107,60,.45)}.sc.l3{background:rgba(26,107,60,.7)}.sc.l4{background:var(--cg)}
 .streak-leg{display:flex;align-items:center;gap:5px;margin-top:7px;font-size:10px;font-weight:700;color:var(--faint)}
 .sl-c{width:10px;height:10px;border-radius:2px}
 .radar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
-.radar-cap{font-size:11px;font-weight:700;color:var(--faint);margin-top:7px;text-align:center}
+.radar-cap{font-size:12px;font-weight:700;color:var(--faint);margin-top:7px;text-align:center}
 .hl-n{background:rgba(26,74,140,.11);color:var(--cb);border-radius:3px;padding:0 4px;font-weight:900}
 .hl-r{background:rgba(184,48,32,.1);color:var(--cr);border-radius:3px;padding:0 4px;font-weight:900}
 .hl-g{background:rgba(26,107,60,.1);color:var(--cg);border-radius:3px;padding:0 4px;font-weight:900}
@@ -198,15 +198,15 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .circ-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
 .sys-drain{border-radius:16px;background:var(--softer);border:1px solid var(--border);padding:16px 16px 12px;margin-bottom:14px}
 .sys-drain-t{font-size:13px;font-weight:900;margin-bottom:3px}
-.sys-drain-s{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:13px;line-height:1.55}
+.sys-drain-s{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:13px;line-height:1.55}
 .sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .sysc{border-radius:11px;padding:10px 12px;background:#fff;border:1px solid rgba(0,0,0,.06)}
 .sysc-top{display:flex;align-items:center;gap:6px;margin-bottom:6px}
 .sysc-ico{font-size:14px;line-height:1;flex-shrink:0}
-.sysc-name{font-size:11px;font-weight:900;color:var(--text)}
+.sysc-name{font-size:12px;font-weight:900;color:var(--text)}
 .sysc-bar{height:5px;background:rgba(0,0,0,.07);border-radius:3px;overflow:hidden;margin-bottom:5px}
 .sysc-fill{height:100%;border-radius:3px;transition:width .6s ease}
-.sysc-note{font-size:10px;font-weight:700;color:var(--muted);line-height:1.45}
+.sysc-note{font-size:11px;font-weight:700;color:var(--muted);line-height:1.45}
 .circ-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:16px}
 .circ-cap{font-size:11px;font-weight:700;color:var(--faint);margin-top:6px;text-align:center}
 .nat-hero{border-radius:20px;padding:20px 22px;margin-bottom:14px;border:1px solid rgba(0,0,0,.06)}
@@ -215,18 +215,18 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .nat-sub{font-size:13px;font-weight:700;line-height:1.65;opacity:.78}
 .nat-tip{border-radius:14px;padding:13px 15px;background:var(--softer);border:1px solid var(--border);margin-bottom:9px}
 .nat-tip-h{font-size:14px;font-weight:900;margin-bottom:4px}
-.nat-tip-b{font-size:12px;font-weight:700;color:var(--muted);line-height:1.65}
+.nat-tip-b{font-size:13px;font-weight:700;color:var(--muted);line-height:1.65}
 .wr-hero{border-radius:20px;padding:20px 22px;background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 100%);margin-bottom:16px;color:#fff}
 .wr-hero-t{font-size:20px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px}
 .wr-hero-s{font-size:13px;opacity:.55;font-weight:700}
 .wr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .wr-stat{background:rgba(255,255,255,.08);border-radius:12px;padding:12px 13px}
-.wr-stat-t{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;opacity:.5;margin-bottom:4px;color:#fff}
+.wr-stat-t{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;opacity:.5;margin-bottom:4px;color:#fff}
 .wr-stat-v{font-size:18px;font-weight:900;color:#fff}
-.wr-stat-s{font-size:11px;font-weight:700;opacity:.45;margin-top:2px;color:#fff}
+.wr-stat-s{font-size:12px;font-weight:700;opacity:.45;margin-top:2px;color:#fff}
 .wr-ai{background:var(--softer);border-radius:14px;padding:15px 16px;margin-bottom:10px;border:1px solid var(--border)}
-.wr-ai-t{font-size:13px;font-weight:900;margin-bottom:7px}
-.wr-ai-b{font-size:13px;font-weight:700;color:var(--muted);line-height:1.7}
+.wr-ai-t{font-size:14px;font-weight:900;margin-bottom:7px}
+.wr-ai-b{font-size:14px;font-weight:700;color:var(--muted);line-height:1.7}
 .wr-btn{width:100%;padding:13px;border-radius:14px;border:none;background:#0f0f0f;color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:12px;transition:opacity .15s}
 .wr-btn:hover{opacity:.82}
 .wr-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -375,12 +375,59 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
   <div class="mbox">
     <div class="mhandle"></div>
     <div class="mtitle">Settings</div>
-    <div class="fg">
-      <label class="fl">Anthropic API Key <span style="font-weight:700;color:var(--faint);text-transform:none;letter-spacing:0">(for AI Insights &amp; Weekly Review)</span></label>
-      <input id="settings-apikey" class="fi" type="password" placeholder="sk-ant-..." autocomplete="off">
-      <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:6px;line-height:1.6">Your key is stored only in this browser's localStorage and never sent anywhere except Anthropic's API. Get yours at <strong>console.anthropic.com</strong>.</div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint);margin-bottom:10px">Account &amp; Sync</div>
+      <div id="auth-state-signed-out" style="display:block">
+        <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px;line-height:1.6">Sign in with Google to sync your data across devices. Your entries stay private under your account.</div>
+        <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#333" onclick="signInGoogle()">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/></svg>
+          Sign in with Google
+        </button>
+        <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:8px;line-height:1.6;text-align:center">Free &mdash; your data stays in your Google account</div>
+      </div>
+      <div id="auth-state-signed-in" style="display:none">
+        <div style="background:var(--bg2);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,107,60,.14);margin-bottom:12px">
+          <div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:2px">Signed in</div>
+          <div id="auth-user-name" style="font-size:14px;font-weight:800;color:var(--text)"></div>
+          <div id="auth-user-email" style="font-size:11px;font-weight:700;color:var(--muted)"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--soft);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted)" onclick="syncNow()">&#8635; Sync now</button>
+          <button style="flex:1;padding:10px;border-radius:10px;border:none;background:rgba(184,48,32,.1);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--cr)" onclick="signOutUser()">Sign out</button>
+        </div>
+      </div>
     </div>
-    <div class="fact"><button class="bcnl" onclick="closeSettings()">Cancel</button><button class="bsav" onclick="saveSettings()">Save</button></div>
+    <div style="height:1px;background:var(--border);margin-bottom:16px"></div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--faint);margin-bottom:10px">Feedback</div>
+      <button style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--text)" onclick="closeSettings();openFeedback()">&#9993; Send Feedback</button>
+      <div style="font-size:11px;font-weight:700;color:var(--faint);margin-top:8px;line-height:1.6;text-align:center">Your feedback reaches the developer. Your email is never shown publicly.</div>
+    </div>
+    <div class="fact"><button class="bsav" onclick="closeSettings()" style="width:100%">Done</button></div>
+  </div>
+</div>
+<div class="mov" id="feedback-ov" onclick="if(event.target.id==='feedback-ov')closeFeedback()">
+  <div class="mbox">
+    <div class="mhandle"></div>
+    <div class="mtitle">Send Feedback</div>
+    <div id="fb-form">
+      <div class="fg" style="margin-bottom:12px">
+        <label class="fl">Your message</label>
+        <textarea id="fb-msg" class="fi" rows="4" placeholder="What's working well? What could be better? Feature ideas, bugs, anything..." style="resize:none;line-height:1.6;height:110px"></textarea>
+      </div>
+      <div class="fg" style="margin-bottom:18px">
+        <label class="fl">Your email (optional &mdash; only if you want a reply)</label>
+        <input id="fb-email" class="fi" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <button class="bsav" style="width:100%" onclick="submitFeedback()">Send Feedback</button>
+      <button class="bcnl" style="width:100%;margin-top:8px" onclick="closeFeedback()">Cancel</button>
+    </div>
+    <div id="fb-success" style="display:none;text-align:center;padding:32px 0">
+      <div style="font-size:32px;margin-bottom:12px">&#10003;</div>
+      <div style="font-size:17px;font-weight:900;margin-bottom:6px">Thank you!</div>
+      <div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.6">Your feedback was sent. It genuinely helps improve Life OS.</div>
+      <button class="bsav" style="margin-top:20px" onclick="closeFeedback()">Close</button>
+    </div>
   </div>
 </div>
 <div class="sfooter"><span id="sf-icon">&#9203;</span><span id="sf-text">Loading...</span><span style="color:var(--border);margin-left:4px">v4.0</span><button class="sf-btn" onclick="exportCSV()">Export CSV</button></div>
@@ -412,7 +459,7 @@ var F={date:'',activity:'',category:'Work',duration:0,direction:'directed',mode:
 var insightData=null,insightLoading=false,lastAnalyzed=null;
 var reviewData=null,reviewLoading=false,lastReview=null;
 
-function persist(){var j=JSON.stringify(entries);if(window.storage&&window.storage.set)window.storage.set('lifeos_v5',j).catch(function(){try{localStorage.setItem('lifeos_v5',j);}catch(e){}});else try{localStorage.setItem('lifeos_v5',j);}catch(e){}}
+function persist(){var j=JSON.stringify(entries);if(window.storage&&window.storage.set)window.storage.set('lifeos_v5',j).catch(function(){try{localStorage.setItem('lifeos_v5',j);}catch(e){}});else try{localStorage.setItem('lifeos_v5',j);}catch(e){}persistCloud();}
 function sfBar(t){var i=document.getElementById('sf-icon'),x=document.getElementById('sf-text');if(!i||!x)return;if(t==='cloud'){i.textContent='☁️';x.innerHTML='<strong>Session Storage</strong> Data persists in this Claude session.';}else if(t==='local'){i.textContent='💾';x.innerHTML='<strong>Local Storage</strong> Saved in this browser.';}else{i.textContent='⚠️';x.innerHTML='<strong>No persistent storage</strong>';}}
 async function boot(){
   var loaded=false;
@@ -426,6 +473,7 @@ async function boot(){
   if(entries.length)wizWelcome=false;
   fRef=today();tRef=today();
   nowStrip();setInterval(nowStrip,60000);render();
+  if(FIREBASE_CONFIG)initFirebase();
 }
 function today(){var d=new Date();d.setHours(0,0,0,0);return d;}
 function dstr(d){return new Date(d).toISOString().slice(0,10);}
@@ -679,7 +727,7 @@ function aiInsights(){
   try{localStorage.setItem('lifeos_ins_v2',JSON.stringify({data:insightData,ts:lastAnalyzed}));}catch(e){}
   renderInsights();
 }
-async function aiWeeklyReview(){
+function localWeeklyReview(){
   reviewLoading=true;renderReview();
   var mo=getMon(today()),su=getSun(today());
   var wk=entries.filter(function(e){var d=new Date(e.date+'T00:00:00');return d>=mo&&d<=su;});
@@ -688,11 +736,64 @@ async function aiWeeklyReview(){
   var dH=wk.filter(function(e){return e.direction==='directed';}).reduce(function(s,e){return s+(+e.duration||0);},0);
   var tExp=wk.filter(function(e){return e.hasFinance&&e.financeType==='expense';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
   var tInc=wk.filter(function(e){return e.hasFinance&&e.financeType==='income';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
-  var snap=wk.map(function(e){return{act:e.activity,cat:e.category,dur:e.duration,dir:e.direction,mode:e.mode,fric:e.friction,nat:e.natureScore||null,spend:(e.hasFinance&&e.financeType==='expense'?e.financeAmount:0),earn:(e.hasFinance&&e.financeType==='income'?e.financeAmount:0)};});
-  var prompt='Write a sharp, direct weekly review for a life OS user in Telangana, India. Stats: Total hours '+fH(tH)+', Directed '+fH(dH)+' ('+Math.round(tH?dH/tH*100:0)+'%), Distracted '+fH(tH-dH)+', Spent Rs '+fM(tExp)+', Income Rs '+fM(tInc)+'. Entries: '+JSON.stringify(snap)+'. Return ONLY valid JSON with no markdown: {"summary":"2-3 sentence summary, specific","win":"single biggest win","miss":"single biggest miss or pattern","next_week_focus":"one clear priority","finance_note":"brief finance observation","nature_note":"brief nature note","score":0-100}. Be specific. Call out real patterns. No em dashes.';
-  var apiKey=localStorage.getItem('lifeos_api_key')||'';
-  if(!apiKey){alert('Add your Anthropic API key in ⚙ Settings to use AI features.');reviewLoading=false;reviewData=null;renderReview();return;}
-  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:900,messages:[{role:'user',content:prompt}]})});var d=await r.json();var txt=(d.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');reviewData=JSON.parse(txt.replace(/```json|```/g,'').trim());lastReview=new Date().toISOString();var j=JSON.stringify({data:reviewData,ts:lastReview});if(window.storage&&window.storage.set)window.storage.set('lifeos_rev_v1',j).catch(function(){});else try{localStorage.setItem('lifeos_rev_v1',j);}catch(e){}}catch(err){console.error(err);reviewData={_error:true};}
+  var dirPct=tH>0?Math.round(dH/tH*100):0;
+  var actH={};wk.forEach(function(e){actH[e.activity]=(actH[e.activity]||0)+(+e.duration||0);});
+  var topAct=Object.keys(actH).sort(function(a,b){return actH[b]-actH[a];})[0];
+  var highFric=wk.filter(function(e){return e.friction==='high';});
+  var natE=wk.filter(function(e){return e.natureScore>0;});
+  var avgNat=natE.length?natE.reduce(function(s,e){return s+(+e.natureScore||3);},0)/natE.length:0;
+  var mH={knowing:0,doing:0,refining:0,flowing:0};
+  wk.forEach(function(e){if(e.mode&&mH[e.mode]!==undefined)mH[e.mode]+=(+e.duration||0);});
+  var dominantMode=Object.keys(mH).sort(function(a,b){return mH[b]-mH[a];})[0];
+  var longDistr=wk.filter(function(e){return e.direction==='distractor'&&(+e.duration||0)>1;});
+  // summary
+  var sp=[];
+  sp.push('Week logged: '+fH(tH)+' total, '+dirPct+'% directed across '+wk.length+' entries.');
+  if(dirPct>=70)sp.push('Strong direction rate. Focus discipline is working.');
+  else if(dirPct>=50)sp.push('Over half your time was directed. Solid foundation to build on.');
+  else sp.push('Less than half the week was directed. Worth examining what pulled focus away.');
+  if(tInc>0)sp.push('Income this week: Rs '+fM(tInc)+'.');
+  var summary=sp.join(' ');
+  // win
+  var win=null;
+  if(dirPct>=70&&dH>=10)win=dirPct+'% of '+fH(tH)+' logged was directed. Rare consistency this week.';
+  else if(tInc>0&&tInc>=tExp)win='Financially positive week: Rs '+fM(tInc)+' in, Rs '+fM(tExp)+' out. Net +Rs '+fM(tInc-tExp)+'.';
+  else if(topAct&&actH[topAct]>=3)win='"'+topAct+'" led with '+fH(actH[topAct])+' logged this week. Consistency in main work.';
+  else if(avgNat>=4)win='Strong nature alignment this week. Average '+avgNat.toFixed(1)+'/5 — outdoor habits active.';
+  else if(highFric.length===0)win='Zero high-friction sessions this week. Low resistance is a real asset.';
+  else if(mH.flowing>0&&mH.flowing/tH>0.25)win=Math.round(mH.flowing/tH*100)+'% of logged time in Flow state. That is above average.';
+  // miss
+  var miss=null;
+  if(dirPct<40&&tH>0)miss='Only '+dirPct+'% directed. Distraction weeks compound — the cost is not just this week but next week\'s baseline.';
+  else if(highFric.length>=3)miss=highFric.length+' high-friction sessions this week. Energy leaks here. Find the recurring one and eliminate or reframe it.';
+  else if(tExp>0&&tInc>0&&tExp>tInc*1.5)miss='Spending outpaced income by Rs '+fM(tExp-tInc)+'. Track which category drove the spike.';
+  else if(avgNat<2&&natE.length>2)miss='Nature scores low across the week ('+avgNat.toFixed(1)+'/5). Mostly indoor, screen-heavy time. One outdoor session shifts the baseline.';
+  else if(longDistr.length>=3)miss=longDistr.length+' distractor sessions over 1 hour each. Duration costs more than frequency.';
+  else if(tInc===0&&tExp>0)miss='Rs '+fM(tExp)+' spent, no income logged. Pattern visibility matters even when income is offline.';
+  // focus
+  var focus=null;
+  if(dirPct<50)focus='Lock in directed work before 11am. First 3 hours set the trajectory of the day.';
+  else if(avgNat<2.5)focus='Add one outdoor session per day, 20 minutes before 9am. Highest ROI move right now.';
+  else if(highFric.length>=3)focus='Identify your single highest-friction recurring task and eliminate, delegate, or restructure it.';
+  else if(dominantMode==='refining')focus='Refining mode dominated this week. Ship and get real feedback. Iteration beyond a point delays learning.';
+  else focus='Protect what worked. Replicate the directed-time pattern and build on momentum.';
+  // finance note
+  var finNote=null;
+  if(tExp===0&&tInc===0)finNote='No finance entries this week. Log even small expenses for pattern detection to activate.';
+  else if(tInc>0)finNote='Income Rs '+fM(tInc)+', Expenses Rs '+fM(tExp)+'. Net: '+(tInc>=tExp?'+':'')+' Rs '+fM(tInc-tExp)+'.';
+  else finNote='Rs '+fM(tExp)+' spent, no income logged this week.';
+  // nature note
+  var natNote=null;
+  if(avgNat>=4)natNote='Strong nature alignment ('+avgNat.toFixed(1)+'/5 average). Physical connection to environment supports recovery and focus.';
+  else if(avgNat>=2.5)natNote='Moderate nature alignment ('+avgNat.toFixed(1)+'/5). Outdoor time is present but not optimised. Morning window in Telangana is 6 to 8am.';
+  else natNote='Low nature scores ('+(avgNat>0?avgNat.toFixed(1):'--')+'/5). Indoor, screen-heavy week. Cortisol regulation and sleep quality both suffer without outdoor light exposure.';
+  // score
+  var score=Math.min(100,Math.max(10,Math.round(
+    dirPct*0.45+(tH>=8?20:tH/8*20)+(avgNat>0?avgNat/5*15:7)+(highFric.length===0?10:Math.max(0,10-highFric.length*2))+(tInc>=tExp&&tInc>0?10:tInc>0?5:3)
+  )));
+  reviewData={summary:summary,win:win,miss:miss,next_week_focus:focus,finance_note:finNote,nature_note:natNote,score:score};
+  lastReview=new Date().toISOString();
+  try{localStorage.setItem('lifeos_rev_v1',JSON.stringify({data:reviewData,ts:lastReview}));}catch(e){}
   reviewLoading=false;renderReview();
 }
 function seedData(){
@@ -728,7 +829,7 @@ function seedData(){
 }
 function renderQuickLog(){
   var el=document.getElementById('p-quicklog');if(!el)return;
-  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Your Life OS</div><div class="wwsub">3 taps per entry. Finance drains, attention leaks, habit loops, and nature misalignment surface automatically from your own data.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Dashboard</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Balance, streaks, active drains</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Habit Loops</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Cross-domain pattern detection</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 Weekly Review</div><div style="font-size:11px;font-weight:700;color:var(--muted)">AI writes your week summary</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Nature Alignment</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Circadian and seasonal guide</div></div></div><button class="wwstart" onclick="startWiz()">Start logging</button><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
+  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Your Life OS</div><div class="wwsub">3 taps per entry. Finance drains, attention leaks, habit loops, and nature misalignment surface automatically from your own data.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Dashboard</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Balance, streaks, active drains</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Habit Loops</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Cross-domain pattern detection</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 Weekly Review</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Local pattern review, no API needed</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Nature Alignment</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Circadian and seasonal guide</div></div></div><button class="wwstart" onclick="startWiz()">Start logging</button><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
   if(wizDone){var m=MODES[WD.mode]||MODES.doing;el.innerHTML='<div class="wsuccess"><div class="wsicon">'+m.emoji+'</div><div class="wstitle">Logged.</div><div class="wssub"><strong>'+he(WD.activity)+'</strong><br>'+(WD.direction==='directed'?'Directed':'Distractor')+' &middot; '+m.label+' &middot; '+NATICONS[WD.natureScore]+' '+WD.natureScore+'/5'+(WD.hasFinance&&WD.financeAmount>0?'<br>'+(WD.financeType==='expense'?'Spent':'Earned')+' Rs '+fM(WD.financeAmount):'')+' </div><div class="wsbtns"><button class="wsbtn" style="background:var(--soft);color:#444" onclick="resetWiz()">Log another</button><button class="wsbtn" style="background:var(--cb);color:#fff" onclick="sw(&#39;dashboard&#39;,document.querySelectorAll(&#39;.tab&#39;)[1])">Dashboard</button><button class="wsbtn" style="background:#0f0f0f;color:#fff" onclick="sw(&#39;insights&#39;,document.querySelectorAll(&#39;.tab&#39;)[2])">Insights</button></div></div>';return;}
   var pct=[0,33,66][wizStep-1]||99;
   var names=['What and How Long','How It Felt','Context'];
@@ -967,7 +1068,7 @@ function renderInsights(){
   var el=document.getElementById('p-insights');if(!el)return;
   var L=localAnalysis();
   var ts=lastAnalyzed?new Date(lastAnalyzed).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}):null;
-  var hdr='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px"><div><div style="font-size:21px;font-weight:900;letter-spacing:-.4px">Habit Drains</div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:2px">'+(ts?'Scanned: '+ts:'Tap Scan to detect cross-domain patterns in your data.')+'</div></div><button style="background:#0f0f0f;color:#fff;border:none;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;opacity:'+(insightLoading?.45:1)+';pointer-events:'+(insightLoading?'none':'auto')+'" onclick="aiInsights()">&#10022; Scan</button></div>';
+  var hdr='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px"><div><div style="font-size:21px;font-weight:900;letter-spacing:-.4px">Habit Drains</div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:2px">'+(ts?'Last scan: '+ts:'Patterns from your entries. Tap Refresh to re-scan.')+'</div></div><button style="background:#0f0f0f;color:#fff;border:none;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;opacity:'+(insightLoading?.45:1)+';pointer-events:'+(insightLoading?'none':'auto')+'" onclick="aiInsights()">&#8635; Refresh</button></div>';
   if(insightLoading){el.innerHTML=hdr+'<div class="ins-layout"><div class="ins-main"><div style="text-align:center;padding:42px;color:var(--muted);font-size:14px;font-weight:700"><span class="spin">&#8635;</span> Scanning patterns...</div></div><div class="ins-side">'+buildTickers()+'</div></div>';setTimeout(initTickers,60);return;}
   if(entries.length<2){el.innerHTML=hdr+'<div class="ins-layout"><div class="ins-main"><div style="text-align:center;padding:52px 20px;color:var(--faint);font-size:14px;font-weight:700;line-height:1.9">&#128202;<br><br>Log 2+ entries to see your patterns.<br>Start with <strong>&#9889; Quick Log</strong>.<br><span style="font-size:12px;opacity:.7">Finance, health, learning and nature patterns<br>all surface automatically from your entries.</span></div></div><div class="ins-side">'+buildTickers()+'</div></div>';setTimeout(initTickers,60);return;}
   var useAI=insightData&&!insightData._error;
@@ -1011,14 +1112,14 @@ function renderReview(){
   var ts=lastReview?new Date(lastReview).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}):null;
   var wkEntries=wk.slice().sort(function(a,b){return b.id.localeCompare(a.id);});
   var hero='<div class="wr-hero"><div class="wr-hero-t">Weekly Review</div><div class="wr-hero-s">'+mo.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' to '+su.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'</div></div>';
-  var stats='<div class="wr-grid"><div class="wr-stat"><div class="wr-stat-t">Total Hours</div><div class="wr-stat-v">'+fH(tH)+'</div><div class="wr-stat-s">'+wk.length+' entries</div></div><div class="wr-stat"><div class="wr-stat-t">Directed</div><div class="wr-stat-v">'+fH(dH)+' ('+Math.round(tH?dH/tH*100:0)+'%)</div><div class="wr-stat-s">Distracted: '+fH(tH-dH)+'</div></div><div class="wr-stat"><div class="wr-stat-t">Spent</div><div class="wr-stat-v">Rs '+fM(tExp)+'</div><div class="wr-stat-s">Income logged: Rs '+fM(tInc)+'</div></div><div class="wr-stat"><div class="wr-stat-t">Week Score</div><div class="wr-stat-v">'+(reviewData&&reviewData.score?reviewData.score+'/100':'--')+'</div><div class="wr-stat-s">'+(ts?'AI: '+ts:'Run review to score')+'</div></div></div>';
-  var btn=reviewLoading?'<button class="wr-btn" disabled><span class="spin">&#8635;</span> Writing your review...</button>':'<button class="wr-btn" onclick="aiWeeklyReview()">&#10022; '+(ts?'Refresh':'Get')+' AI Weekly Review</button>';
+  var stats='<div class="wr-grid"><div class="wr-stat"><div class="wr-stat-t">Total Hours</div><div class="wr-stat-v">'+fH(tH)+'</div><div class="wr-stat-s">'+wk.length+' entries</div></div><div class="wr-stat"><div class="wr-stat-t">Directed</div><div class="wr-stat-v">'+fH(dH)+' ('+Math.round(tH?dH/tH*100:0)+'%)</div><div class="wr-stat-s">Distracted: '+fH(tH-dH)+'</div></div><div class="wr-stat"><div class="wr-stat-t">Spent</div><div class="wr-stat-v">Rs '+fM(tExp)+'</div><div class="wr-stat-s">Income logged: Rs '+fM(tInc)+'</div></div><div class="wr-stat"><div class="wr-stat-t">Week Score</div><div class="wr-stat-v">'+(reviewData&&reviewData.score?reviewData.score+'/100':'--')+'</div><div class="wr-stat-s">'+(ts?'Scored: '+ts:'Generate review to score')+'</div></div></div>';
+  var btn=reviewLoading?'<button class="wr-btn" disabled><span class="spin">&#8635;</span> Generating review...</button>':'<button class="wr-btn" onclick="localWeeklyReview()">&#10022; '+(ts?'Refresh':'Generate')+' Week Review</button>';
   var aiH='';
   if(reviewLoading)aiH='<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:700"><span class="spin">&#8635;</span> Reviewing your week...</div>';
   else if(reviewData&&reviewData._empty)aiH='<div class="wr-ai"><div class="wr-ai-t">Not enough data this week</div><div class="wr-ai-b">Log a few more entries this week before running the AI review.</div></div>';
   else if(reviewData&&reviewData._error)aiH='<div class="wr-ai"><div class="wr-ai-t">Review error</div><div class="wr-ai-b">Check connection and try again.</div></div>';
   else if(reviewData){var R=reviewData;aiH=(R.summary?'<div class="wr-ai"><div class="wr-ai-t">This week in summary</div><div class="wr-ai-b">'+he(R.summary)+'</div></div>':'')+(R.win?'<div class="wr-ai" style="background:var(--bg2);border:1px solid rgba(26,107,60,.14)"><div class="wr-ai-t" style="color:var(--cg)">&#10022; Biggest Win</div><div class="wr-ai-b">'+he(R.win)+'</div></div>':'')+(R.miss?'<div class="wr-ai" style="background:var(--ba);border:1px solid rgba(176,112,32,.14)"><div class="wr-ai-t" style="color:var(--ca)">&#9650; Watch this</div><div class="wr-ai-b">'+he(R.miss)+'</div></div>':'')+(R.next_week_focus?'<div class="wr-ai" style="background:var(--bb);border:1px solid rgba(26,74,140,.12)"><div class="wr-ai-t" style="color:var(--cb)">&#8594; Next week focus</div><div class="wr-ai-b">'+he(R.next_week_focus)+'</div></div>':'')+(R.finance_note?'<div class="wr-ai"><div class="wr-ai-t">Finance</div><div class="wr-ai-b">'+he(R.finance_note)+'</div></div>':'')+(R.nature_note?'<div class="wr-ai"><div class="wr-ai-t">Nature</div><div class="wr-ai-b">'+he(R.nature_note)+'</div></div>':'');}
-  else aiH='<div class="wr-ai"><div class="wr-ai-t">AI Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week.</div></div>';
+  else aiH='<div class="wr-ai"><div class="wr-ai-t">Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week. No API or account needed.</div></div>';
   el.innerHTML=hero+stats+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">No entries this week yet.</div>');
 }
 function renderNature(){
@@ -1200,10 +1301,122 @@ function exportCSV(){
   entries.forEach(function(e){rows.push(cols.map(function(c){var v=String(e[c]!==undefined?e[c]:'');if(v.includes(','))v='"'+v.replace(/"/g,'""')+'"';return v;}).join(','));});
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='life-os-export.csv';a.click();
 }
-function openSettings(){var el=document.getElementById('settings-ov');if(!el)return;var k=localStorage.getItem('lifeos_api_key')||'';var inp=document.getElementById('settings-apikey');if(inp)inp.value=k;el.classList.add('open');}
+/* ─────────────────────────────────────────────────────────────────────────
+   CROSS-DEVICE SYNC  (optional — enables "Sign in with Google" in Settings)
+   1. Create a free Firebase project at console.firebase.google.com
+   2. Enable Authentication → Google sign-in provider
+   3. Enable Firestore Database (start in production mode, add rule: allow read, write: if request.auth != null)
+   4. Replace null below with your Firebase config object from Project Settings
+   ─────────────────────────────────────────────────────────────────────────*/
+var FIREBASE_CONFIG=null;
+/* Example:
+var FIREBASE_CONFIG={apiKey:"AIza...",authDomain:"myapp.firebaseapp.com",
+  projectId:"myapp",storageBucket:"myapp.appspot.com",
+  messagingSenderId:"12345",appId:"1:12345:web:abc"};
+*/
+
+/* ─────────────────────────────────────────────────────────────────────────
+   FEEDBACK EMAIL  (optional — routes feedback form to your inbox)
+   1. Go to web3forms.com → enter your email → copy the access key
+   2. Replace YOUR_WEB3FORMS_ACCESS_KEY below with that key
+   ─────────────────────────────────────────────────────────────────────────*/
+var WEB3FORMS_KEY='YOUR_WEB3FORMS_ACCESS_KEY';
+
+var fbAuth=null,fbDB=null,currentUser=null,fbLoaded=false;
+function loadFirebaseSDK(cb){
+  if(fbLoaded){cb();return;}
+  var srcs=['https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js'];
+  var n=0;srcs.forEach(function(src){var s=document.createElement('script');s.src=src;s.onload=function(){if(++n===srcs.length){fbLoaded=true;cb();}};document.head.appendChild(s);});
+}
+function initFirebase(){
+  if(!FIREBASE_CONFIG)return;
+  loadFirebaseSDK(function(){
+    try{
+      if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+      fbAuth=firebase.auth();fbDB=firebase.firestore();
+      fbAuth.onAuthStateChanged(function(user){currentUser=user;updateAuthUI();});
+    }catch(e){console.log('Firebase init:',e);}
+  });
+}
+function updateAuthUI(){
+  var out=document.getElementById('auth-state-signed-out');
+  var inn=document.getElementById('auth-state-signed-in');
+  if(!out||!inn)return;
+  if(currentUser){
+    out.style.display='none';inn.style.display='block';
+    var n=document.getElementById('auth-user-name'),e=document.getElementById('auth-user-email');
+    if(n)n.textContent=currentUser.displayName||'Signed in';
+    if(e)e.textContent=currentUser.email||'';
+  }else{out.style.display='block';inn.style.display='none';}
+}
+function signInGoogle(){
+  if(!FIREBASE_CONFIG){alert('Cross-device sync is not configured yet.\n\nTo enable it, set up a Firebase project and add your config to FIREBASE_CONFIG in the source.');return;}
+  loadFirebaseSDK(function(){
+    try{
+      if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+      fbAuth=firebase.auth();fbDB=firebase.firestore();
+      var provider=new firebase.auth.GoogleAuthProvider();
+      fbAuth.signInWithPopup(provider).then(function(result){
+        currentUser=result.user;updateAuthUI();syncNow();
+      }).catch(function(e){alert('Sign-in failed: '+e.message);});
+    }catch(e){alert('Firebase error: '+e.message);}
+  });
+}
+function signOutUser(){
+  if(fbAuth)fbAuth.signOut().then(function(){currentUser=null;updateAuthUI();});
+}
+function syncNow(){
+  if(!currentUser||!fbDB)return;
+  var ref=fbDB.collection('users').doc(currentUser.uid).collection('data').doc('entries');
+  ref.get().then(function(doc){
+    var cloud=doc.exists&&doc.data().entries?doc.data().entries:[];
+    var localIds=new Set(entries.map(function(e){return e.id;}));
+    var merged=entries.slice();
+    cloud.forEach(function(ce){if(!localIds.has(ce.id))merged.push(ce);});
+    entries=merged;persist();
+    ref.set({entries:entries,updated:new Date().toISOString()});
+    render();
+  }).catch(function(e){console.log('Sync error:',e);});
+}
+function persistCloud(){
+  if(!currentUser||!fbDB)return;
+  fbDB.collection('users').doc(currentUser.uid).collection('data').doc('entries')
+    .set({entries:entries,updated:new Date().toISOString()}).catch(function(){});
+}
+function openSettings(){
+  var el=document.getElementById('settings-ov');if(!el)return;
+  updateAuthUI();el.classList.add('open');
+  if(FIREBASE_CONFIG&&!fbAuth)initFirebase();
+}
 function closeSettings(){var el=document.getElementById('settings-ov');if(el)el.classList.remove('open');}
-function saveSettings(){var inp=document.getElementById('settings-apikey');if(inp){var k=inp.value.trim();if(k)localStorage.setItem('lifeos_api_key',k);else localStorage.removeItem('lifeos_api_key');}closeSettings();}
+function saveSettings(){closeSettings();}
+function openFeedback(){
+  var el=document.getElementById('feedback-ov');if(!el)return;
+  var f=document.getElementById('fb-form'),s=document.getElementById('fb-success');
+  if(f)f.style.display='block';if(s)s.style.display='none';
+  var m=document.getElementById('fb-msg');if(m)m.value='';
+  el.classList.add('open');
+}
+function closeFeedback(){var el=document.getElementById('feedback-ov');if(el)el.classList.remove('open');}
+function submitFeedback(){
+  var msg=(document.getElementById('fb-msg')||{}).value||'';
+  var email=(document.getElementById('fb-email')||{}).value||'';
+  msg=msg.trim();
+  if(!msg){alert('Please enter your feedback.');return;}
+  if(WEB3FORMS_KEY==='YOUR_WEB3FORMS_ACCESS_KEY'){
+    alert('Feedback form not configured yet.\n\nTo enable: go to web3forms.com, enter your email, copy the access key, and set WEB3FORMS_KEY in the source.');return;
+  }
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:'Life OS App Feedback',message:msg,from_name:email?'User: '+email:'Anonymous User',replyto:email||'noreply@lifeos.app'})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.success){var f=document.getElementById('fb-form'),s=document.getElementById('fb-success');if(f)f.style.display='none';if(s)s.style.display='block';}
+      else alert('Could not send. Please try again.');
+    })
+    .catch(function(){alert('Could not send. Check your connection.');});
+}
 window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
+window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
+window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
 window.setF=setF;window.toggleFin=toggleFin;window.setFinType=setFinType;window.saveEntry=saveEntry;
 window.setLF=setLF;window.setFV=setFV;window.setTV=setTV;window.navF=navF;window.navT=navT;
@@ -1211,7 +1424,7 @@ window.askDel=askDel;window.cancelDel=cancelDel;window.doDelete=doDelete;
 window.wn1=wn1;window.wGo=wGo;window.wSave=wSave;window.resetWiz=resetWiz;window.startWiz=startWiz;
 window.wsCat=wsCat;window.wsDur=wsDur;window.wsDir=wsDir;window.wsMode=wsMode;window.wsFric=wsFric;
 window.wsNat=wsNat;window.wsFinT=wsFinT;window.wTogFin=wTogFin;
-window.aiInsights=aiInsights;window.aiWeeklyReview=aiWeeklyReview;
+window.aiInsights=aiInsights;window.localWeeklyReview=localWeeklyReview;
 window.seedData=seedData;window.exportCSV=exportCSV;
 boot();
 
