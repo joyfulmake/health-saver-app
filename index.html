@@ -1135,6 +1135,61 @@ function buildTickers(){
     tk('bs','11 Body<br>Systems',   '#065F46')+
     '</div>';
 }
+function buildMonthlyReflection(){
+  var now=new Date();var mo=now.getMonth(),yr=now.getFullYear();
+  var me=entries.filter(function(e){var d=new Date(e.date+'T00:00:00');return d.getMonth()===mo&&d.getFullYear()===yr;});
+  if(me.length<3)return'<div style="background:linear-gradient(135deg,#0f0f0f,#1a1a2e);border-radius:16px;padding:20px 22px;margin-bottom:14px;color:#fff"><div style="font-size:12px;font-weight:900;letter-spacing:1px;opacity:.5;text-transform:uppercase">Monthly Reflection</div><div style="font-size:14px;font-weight:700;opacity:.5;margin-top:6px">Log '+Math.max(0,3-me.length)+' more entries this month to unlock.</div></div>';
+  var monName=now.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+  var tH=me.reduce(function(s,e){return s+(+e.duration||0);},0);
+  var dH=me.filter(function(e){return e.direction==='directed';}).reduce(function(s,e){return s+(+e.duration||0);},0);
+  var dirPct=tH?Math.round(dH/tH*100):0;
+  var tExp=me.filter(function(e){return e.hasFinance&&e.financeType==='expense';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
+  var tInc=me.filter(function(e){return e.hasFinance&&e.financeType==='income';}).reduce(function(s,e){return s+(+e.financeAmount||0);},0);
+  var nArr=me.filter(function(e){return+e.natureScore>0;});
+  var avgN=nArr.length?Math.round(nArr.reduce(function(s,e){return s+(+e.natureScore||0);},0)/nArr.length*10)/10:0;
+  var hiF=me.filter(function(e){return e.friction==='high';}).length;
+  var frPct=Math.round(hiF/me.length*100);
+  var mTally={};me.forEach(function(e){if(e.mode)mTally[e.mode]=(mTally[e.mode]||0)+1;});
+  var domMode=Object.keys(mTally).sort(function(a,b){return mTally[b]-mTally[a];})[0]||'—';
+  var dArrH={};var dArrC={};var dnms=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  me.forEach(function(e){var d=new Date(e.date+'T00:00:00').getDay();dArrH[d]=(dArrH[d]||0)+(+e.duration||0);dArrC[d]=(dArrC[d]||0)+1;});
+  var peakDay=null,peakV=0;
+  Object.keys(dArrH).forEach(function(d){var a=dArrH[d]/(dArrC[d]||1);if(a>peakV){peakV=a;peakDay=+d;}});
+  var pdName=peakDay!=null?dnms[peakDay]:'—';
+  var narrative=dirPct>=75?'A focused month — most of your time moved in the right direction.':dirPct>=50?'A balanced month with solid directed effort.':dirPct>=30?'A mixed month. Room to channel energy more intentionally.':'A scattered month — worth reflecting on what pulled attention away.';
+  function tile(lb,val,sub,col){return'<div style="background:rgba(255,255,255,0.08);border-radius:12px;padding:12px 13px;flex:1;min-width:68px"><div style="font-size:10px;font-weight:800;letter-spacing:.7px;opacity:.5;text-transform:uppercase;margin-bottom:4px">'+lb+'</div><div style="font-size:19px;font-weight:900;color:'+(col||'#fff')+';line-height:1.1">'+val+'</div>'+(sub?'<div style="font-size:10px;font-weight:700;opacity:.45;margin-top:3px">'+sub+'</div>':'')+'</div>';}
+  var dc=dirPct>=70?'#4ade80':dirPct>=45?'#fbbf24':'#f87171';
+  var tiles='<div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0">'+tile('Hours',fH(tH),me.length+' entries','#e2e8f0')+tile('Directed',dirPct+'%',fH(dH)+' focused',dc)+tile('Nature',avgN>0?avgN+'/5':'—',nArr.length?nArr.length+' logs':'none','#86efac')+tile('Finance',tInc>0?'Rs '+fM(tInc):tExp>0?'−Rs '+fM(tExp):'—',tInc>0?'income':tExp>0?'spent':'not logged','#fde68a')+'</div>';
+  var footer='<div style="display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.1);padding-top:12px">'+
+    '<div><div style="font-size:10px;font-weight:800;opacity:.4;letter-spacing:.6px;text-transform:uppercase">Peak day</div><div style="font-size:15px;font-weight:900;margin-top:3px">'+pdName+'</div></div>'+
+    '<div><div style="font-size:10px;font-weight:800;opacity:.4;letter-spacing:.6px;text-transform:uppercase">Top mode</div><div style="font-size:15px;font-weight:900;margin-top:3px;text-transform:capitalize">'+domMode+'</div></div>'+
+    '<div><div style="font-size:10px;font-weight:800;opacity:.4;letter-spacing:.6px;text-transform:uppercase">High friction</div><div style="font-size:15px;font-weight:900;margin-top:3px;color:'+(frPct>40?'#f87171':frPct>20?'#fbbf24':'#4ade80')+'">'+frPct+'%</div></div>'+
+    '</div>';
+  return'<div style="background:linear-gradient(135deg,#0f0f0f,#1a1a2e);border-radius:16px;padding:20px 22px;margin-bottom:14px;color:#fff"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:12px;font-weight:900;letter-spacing:1px;opacity:.45;text-transform:uppercase">Monthly Reflection</div><div style="font-size:12px;font-weight:800;opacity:.38">'+monName+'</div></div><div style="font-size:15px;font-weight:700;opacity:.88;line-height:1.55">'+narrative+'</div>'+tiles+footer+'</div>';
+}
+function buildRhythmDNA(){
+  if(entries.length<5)return'';
+  var dNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var dm={};
+  entries.forEach(function(e){var js=new Date(e.date+'T00:00:00').getDay();var i=(js+6)%7;if(!dm[i])dm[i]={h:0,dH:0,n:0};dm[i].h+=(+e.duration||0);if(e.direction==='directed')dm[i].dH+=(+e.duration||0);dm[i].n++;});
+  var maxA=0,bestD=-1;
+  for(var i=0;i<7;i++){if(dm[i]){var ai=dm[i].h/dm[i].n;if(ai>maxA){maxA=ai;bestD=i;}}}
+  var bw=40,bh=60,gap=8,pd=6,svgW=7*(bw+gap)-gap+pd*2,svgH=bh+34;
+  var bars='';
+  for(var j=0;j<7;j++){
+    var x=pd+j*(bw+gap);var d=dm[j];
+    if(!d){bars+='<rect x="'+x+'" y="'+(bh-4)+'" width="'+bw+'" height="4" rx="3" fill="rgba(0,0,0,.07)"/><text x="'+(x+bw/2)+'" y="'+(bh+17)+'" text-anchor="middle" font-size="11" font-weight="700" fill="var(--muted)" font-family="Outfit,sans-serif">'+dNames[j]+'</text>';continue;}
+    var avgH=d.h/d.n;var dp=d.h?Math.round(d.dH/d.h*100):0;
+    var barH=Math.max(8,Math.round(bh*Math.min(avgH/4,1)));var barY=bh-barH;
+    var bc=dp>=70?'#16a34a':dp>=45?'#d97706':'#dc2626';var op=j===bestD?'1':'.6';
+    bars+='<rect x="'+x+'" y="'+barY+'" width="'+bw+'" height="'+barH+'" rx="5" fill="'+bc+'" opacity="'+op+'"/>';
+    var lblY=barY>14?barY-4:barY+barH+13;
+    bars+='<text x="'+(x+bw/2)+'" y="'+lblY+'" text-anchor="middle" font-size="10" font-weight="800" fill="'+bc+'" font-family="Outfit,sans-serif">'+dp+'%</text>';
+    bars+='<text x="'+(x+bw/2)+'" y="'+(bh+17)+'" text-anchor="middle" font-size="11" font-weight="'+(j===bestD?'900':'700')+'" fill="'+(j===bestD?'var(--text)':'var(--muted)')+'" font-family="Outfit,sans-serif">'+dNames[j]+'</text>';
+  }
+  var svg='<svg viewBox="0 0 '+svgW+' '+svgH+'" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible">'+bars+'</svg>';
+  return'<div style="border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:13px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)">Rhythm DNA</div><div style="font-size:11px;font-weight:700;color:var(--muted);opacity:.7">Avg hrs · color = directed%</div></div>'+svg+'<div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;align-items:center"><span style="font-size:11px;font-weight:700;color:#16a34a">&#9632; 70%+ directed</span><span style="font-size:11px;font-weight:700;color:#d97706">&#9632; 45–70%</span><span style="font-size:11px;font-weight:700;color:#dc2626">&#9632; &lt;45%</span>'+(bestD>=0?'<span style="font-size:11px;font-weight:900;color:var(--text);margin-left:auto">&#127942; Strongest: '+dNames[bestD]+'</span>':'')+'</div></div>';
+}
 function renderInsights(){
   var el=document.getElementById('p-insights');if(!el)return;
   var L=localAnalysis();
@@ -1169,7 +1224,7 @@ function renderInsights(){
     '<div class="dq-cell"><div class="dq-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+
     '</div>';
   var leftCol=drainQuad+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
-  el.innerHTML=hdr+scores+'<div class="ins-layout"><div class="ins-main">'+leftCol+'</div><div class="ins-side">'+buildTickers()+'</div></div>';
+  el.innerHTML=hdr+scores+buildMonthlyReflection()+buildRhythmDNA()+'<div class="ins-layout"><div class="ins-main">'+leftCol+'</div><div class="ins-side">'+buildTickers()+'</div></div>';
   setTimeout(initTickers,60);
 }
 function renderReview(){
