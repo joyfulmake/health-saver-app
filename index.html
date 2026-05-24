@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Life OS</title>
+<title>Flourish</title>
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Life OS">
-<meta name="description" content="Track finance, time, habits and nature alignment">
+<meta name="apple-mobile-web-app-title" content="Flourish">
+<meta name="description" content="Honest patterns, better days — track habits, finance, time and nature">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f0f0f'/><text y='.9em' font-size='72' x='14'>🧭</text></svg>">
 <link rel="manifest" href="manifest.json">
@@ -36,8 +36,8 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .hdr{padding:22px 0 0;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .hdr-l{display:flex;align-items:center;gap:11px}
 .hdr-logo{width:40px;height:40px;background:#0f0f0f;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
-.hdr-name{font-size:21px;font-weight:900;letter-spacing:-.5px}
-.hdr-sub{font-size:12px;color:var(--faint);font-weight:700;margin-top:1px}
+.hdr-name{font-size:21px;font-weight:900;letter-spacing:-.5px;text-shadow:0 0 22px rgba(0,0,0,0.08)}
+.hdr-sub{font-size:12px;color:var(--muted);font-weight:700;margin-top:1px;text-shadow:0 0 18px rgba(0,0,0,0.06)}
 .hdr-btns{display:flex;gap:7px}
 .btn-pri{background:#0f0f0f;color:#fff;border:none;border-radius:11px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;transition:opacity .15s}
 .btn-pri:hover{opacity:.78}
@@ -47,9 +47,9 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .now-l{display:flex;align-items:center;gap:10px}
 .now-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;animation:pulseA 2.2s ease-in-out infinite}
 @keyframes pulseA{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
-.now-text{font-size:13px;font-weight:800}
-.now-sub{font-size:12px;font-weight:700;color:var(--muted);margin-top:1px}
-.now-time{font-size:13px;font-weight:800;color:var(--faint);white-space:nowrap}
+.now-text{font-size:15px;font-weight:800}
+.now-sub{font-size:14px;font-weight:700;color:var(--muted);margin-top:1px}
+.now-time{font-size:15px;font-weight:800;color:#3a3a3a;white-space:nowrap}
 .tabs{display:flex;border-bottom:1.5px solid var(--border);margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{background:none;border:none;font-family:inherit;font-size:13px;font-weight:800;color:var(--faint);padding:9px 14px;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap;flex-shrink:0;transition:color .15s,border-color .15s;letter-spacing:-.1px}
@@ -91,7 +91,7 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .ki{background:var(--bb);border-left:3px solid var(--cb);border-radius:0 14px 14px 0;padding:13px 15px;margin-bottom:18px;font-size:14px;font-weight:800;color:var(--cb);line-height:1.65;box-shadow:var(--gwb)}
 .ki-lbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:.65;margin-bottom:4px}
 .dsec{margin-bottom:18px}
-.dsec-t{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:8px}
+.dsec-t{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px}
 .dstk{display:flex;flex-direction:column;gap:7px}
 .dc{border-radius:14px;padding:13px 15px 13px 18px;position:relative}
 .dc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
@@ -99,8 +99,8 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .dcm{background:var(--ba);border:1px solid rgba(176,112,32,.14)}.dcm::before{background:var(--ca)}
 .dcl{background:var(--bb);border:1px solid rgba(26,74,140,.1)}.dcl::before{background:var(--cb)}
 .dcok{background:var(--bg2);border:1px solid rgba(26,107,60,.14)}.dcok::before{background:var(--cg)}
-.dc-p{font-size:15px;font-weight:800;margin-bottom:4px}
-.dc-t{font-size:13px;font-weight:700;color:var(--muted);line-height:1.6}
+.dc-p{font-size:17px;font-weight:800;margin-bottom:4px}
+.dc-t{font-size:15px;font-weight:700;color:var(--muted);line-height:1.6}
 .hloop{border-radius:14px;padding:13px 15px;background:var(--bp);border:1px solid rgba(92,42,157,.14);margin-bottom:8px}
 .hloop-h{font-size:14px;font-weight:900;color:var(--cp);margin-bottom:4px}
 .hloop-b{font-size:13px;font-weight:700;color:var(--muted);line-height:1.6}
@@ -167,16 +167,16 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .streak-leg{display:flex;align-items:center;gap:5px;margin-top:7px;font-size:10px;font-weight:700;color:var(--faint)}
 .sl-c{width:10px;height:10px;border-radius:2px}
 .radar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
-.radar-cap{font-size:12px;font-weight:700;color:var(--faint);margin-top:7px;text-align:center}
+.radar-cap{font-size:14px;font-weight:700;color:var(--muted);margin-top:7px;text-align:center}
 .hl-n{background:rgba(26,74,140,.11);color:var(--cb);border-radius:3px;padding:0 4px;font-weight:900}
 .hl-r{background:rgba(184,48,32,.1);color:var(--cr);border-radius:3px;padding:0 4px;font-weight:900}
 .hl-g{background:rgba(26,107,60,.1);color:var(--cg);border-radius:3px;padding:0 4px;font-weight:900}
 .ticker-section{margin-top:0;border-top:none;padding-top:0}
 .ticker-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:10px}
-.ticker-row{display:flex;align-items:stretch;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,.07);background:var(--softer);min-height:62px}
+.ticker-row{display:flex;align-items:stretch;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,.07);background:var(--softer);min-height:90px}
 .ticker-lbl{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;padding:8px 7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:72px;max-width:72px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
 .ticker-track{flex:1;overflow:hidden;display:flex;align-items:center;padding:10px 14px}
-.ticker-text{font-size:12px;font-weight:700;color:var(--text);line-height:1.6;word-break:break-word;will-change:transform,opacity;}
+.ticker-text{font-size:14px;font-weight:700;color:var(--text);line-height:1.6;word-break:break-word;will-change:transform,opacity;}
 .ticker-dev{font-family:'Noto Sans Devanagari',sans-serif;font-size:17px;font-weight:500;color:#1a1a2e;line-height:1.75;letter-spacing:.4px}
 .ticker-text em{font-size:10px;color:var(--muted);font-style:normal;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
 .drain-quad{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
@@ -337,7 +337,7 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
   <div class="hdr">
     <div class="hdr-l">
       <div class="hdr-logo" onclick="sw('quicklog',document.querySelector('.tab'))" style="cursor:pointer" title="Go to Quick Log">🧭</div>
-      <div><div class="hdr-name">Life OS</div><div class="hdr-sub">Finance &middot; Time &middot; Habits &middot; Nature</div></div>
+      <div><div class="hdr-name">Flourish</div><div class="hdr-sub">Honest patterns &middot; Better days</div></div>
     </div>
     <div class="hdr-btns">
       <button class="btn-sec" onclick="openSettings()">⚙ Settings</button>
@@ -383,7 +383,7 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
       <div id="auth-state-signed-out" style="display:block">
         <div style="background:var(--softer);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:12px">
           <div style="font-size:13px;font-weight:900;margin-bottom:4px">Cross-device sync</div>
-          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.65">Sync your entries across all devices securely. This is a <strong style="color:var(--text)">paid feature</strong> — available as an in-app purchase when Life OS launches on Play Store and App Store. Free users always get full local access.</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.65">Sync your entries across all devices securely. This is a <strong style="color:var(--text)">paid feature</strong> — available as an in-app purchase when Flourish launches on Play Store and App Store. Free users always get full local access.</div>
         </div>
         <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#333;opacity:.55" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/></svg>
@@ -431,7 +431,7 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
     <div id="fb-success" style="display:none;text-align:center;padding:32px 0">
       <div style="font-size:32px;margin-bottom:12px">&#10003;</div>
       <div style="font-size:17px;font-weight:900;margin-bottom:6px">Thank you!</div>
-      <div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.6">Your feedback was sent. It genuinely helps improve Life OS.</div>
+      <div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.6">Your feedback was sent. It genuinely helps improve Flourish.</div>
       <button class="bsav" style="margin-top:20px" onclick="closeFeedback()">Close</button>
     </div>
   </div>
@@ -512,10 +512,14 @@ function nowStrip(){
   else if(hr>=17&&hr<19){txt='Nature reset window';sub='Best outdoor time in Telangana right now';col='#1A6B3C';}
   else if(hr>=19&&hr<22){txt='Wind-down period';sub='Light review, reading, social. Limit screens';col='#5C2A9D';}
   else{txt='Rest window';sub='Body repairs and memory consolidates. Protect sleep';col='#B83020';}
+  var glowMap={'#1A6B3C':'rgba(26,107,60,0.1)','#1A4A8C':'rgba(26,74,140,0.1)','#B07020':'rgba(176,112,32,0.1)','#0F6B6B':'rgba(15,107,107,0.1)','#5C2A9D':'rgba(92,42,157,0.1)','#B83020':'rgba(184,48,32,0.1)'};
+  var glow=glowMap[col]||'rgba(0,0,0,0.07)';
   el.style.display='flex';
+  el.style.boxShadow='0 0 28px '+glow;
+  el.style.borderColor=glow.replace(',0.1)',',0.18)');
   document.getElementById('now-dot').style.background=col;
-  document.getElementById('now-text').textContent=txt;
-  document.getElementById('now-sub').textContent=sub;
+  var nt=document.getElementById('now-text');nt.textContent=txt;nt.style.color=col;nt.style.textShadow='0 0 18px '+glow;
+  var ns=document.getElementById('now-sub');ns.textContent=sub;ns.style.color=col;ns.style.opacity='0.88';
   document.getElementById('now-time').textContent=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
 }
 function barChart(rows){
@@ -571,7 +575,7 @@ function buildRadar(scores){
   for(var i=0;i<N;i++){var ep=pt(i*(2*Math.PI/N),R);axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+ep.x+'" y2="'+ep.y+'" stroke="rgba(0,0,0,.07)" stroke-width="1"/>';}
   var off=[{x:0,y:-16},{x:18,y:5},{x:0,y:19},{x:-18,y:5}];
   var lbls='';
-  labels.forEach(function(l,i){var ep=pt(i*(2*Math.PI/N),R+22);var score=Math.round(scores[i]);var sc2=score>=70?'var(--cg)':(score>=40?'var(--ca)':'var(--cr)');lbls+='<text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y)+'" text-anchor="middle" font-size="11" font-weight="800" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+l+'</text><text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y+14)+'" text-anchor="middle" font-size="12" font-weight="900" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+score+'</text>';});
+  labels.forEach(function(l,i){var ep=pt(i*(2*Math.PI/N),R+22);var score=Math.round(scores[i]);var sc2=score>=70?'var(--cg)':(score>=40?'var(--ca)':'var(--cr)');lbls+='<text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y)+'" text-anchor="middle" font-size="13" font-weight="800" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+l+'</text><text x="'+(ep.x+off[i].x)+'" y="'+(ep.y+off[i].y+16)+'" text-anchor="middle" font-size="14" font-weight="900" fill="'+colors[i]+'" font-family="Outfit,sans-serif">'+score+'</text>';});
   return'<div class="radar-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'">'+grid+pctLbls+axes+'<polygon points="'+poly+'" fill="rgba(26,74,140,.14)" stroke="#1A4A8C" stroke-width="2.5" stroke-linejoin="round"/>'+lbls+'</svg><div class="radar-cap">Life balance snapshot &nbsp;&#183;&nbsp; Higher = healthier pattern</div></div>';
 }
 function buildClock(){
@@ -591,12 +595,12 @@ function buildClock(){
   var segH=segs.map(function(s){
     var mid=(s.s+s.e)/2;
     var lp=ptA(mid,(R+iR)/2);
-    return'<path d="'+arc(s.s,s.e,R,iR)+'" fill="'+s.color+'"/><text x="'+lp.x+'" y="'+lp.y+'" text-anchor="middle" dominant-baseline="middle" font-size="8.5" font-weight="900" fill="rgba(0,0,0,.5)" font-family="Outfit,sans-serif">'+s.label+'</text>';
+    return'<path d="'+arc(s.s,s.e,R,iR)+'" fill="'+s.color+'"/><text x="'+lp.x+'" y="'+lp.y+'" text-anchor="middle" dominant-baseline="middle" font-size="10.5" font-weight="900" fill="rgba(0,0,0,.55)" font-family="Outfit,sans-serif">'+s.label+'</text>';
   }).join('');
   var ticks=[0,6,12,18].map(function(h){
     var p1=ptA(h,R+2),p2=ptA(h,R+10),pl=ptA(h,R+22);
     var lbl=h===0?'12am':(h===12?'12pm':h+'h');
-    return'<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="rgba(0,0,0,.25)" stroke-width="2"/><text x="'+pl.x+'" y="'+pl.y+'" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="900" fill="rgba(0,0,0,.7)" font-family="Outfit,sans-serif">'+lbl+'</text>';
+    return'<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="rgba(0,0,0,.25)" stroke-width="2"/><text x="'+pl.x+'" y="'+pl.y+'" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="900" fill="rgba(0,0,0,.72)" font-family="Outfit,sans-serif">'+lbl+'</text>';
   }).join('');
   var np=ptA(hr+mn/60,iR-4),npo=ptA(hr+mn/60,R+4);
   var ts=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
@@ -608,7 +612,7 @@ function buildClock(){
     {c:'rgba(15,107,107,.55)',l:'Creative flow'},
     {c:'rgba(92,42,157,.3)',l:'Wind-down'}
   ].map(function(x){return'<div class="circ-leg-item"><div class="circ-dot" style="background:'+x.c+'"></div>'+x.l+'</div>';}).join('')+'</div>';
-  return'<div class="circ-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="rgba(0,0,0,.07)" stroke-width="1.5"/><circle cx="'+cx+'" cy="'+cy+'" r="'+iR+'" fill="var(--softer)" stroke="rgba(0,0,0,.06)" stroke-width="1"/>'+segH+ticks+'<line x1="'+np.x+'" y1="'+np.y+'" x2="'+npo.x+'" y2="'+npo.y+'" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#0f0f0f"/><text x="'+cx+'" y="'+(cy-8)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#0f0f0f" font-family="Outfit,sans-serif">'+ts+'</text><text x="'+cx+'" y="'+(cy+9)+'" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(0,0,0,.4)" font-family="Outfit,sans-serif">Now</text></svg>'+legend+'<div class="circ-cap" style="margin-top:9px">Circadian window map &nbsp;&#183;&nbsp; Each colour = your body\'s natural operating mode</div></div>';
+  return'<div class="circ-wrap"><svg width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="rgba(0,0,0,.07)" stroke-width="1.5"/><circle cx="'+cx+'" cy="'+cy+'" r="'+iR+'" fill="var(--softer)" stroke="rgba(0,0,0,.06)" stroke-width="1"/>'+segH+ticks+'<line x1="'+np.x+'" y1="'+np.y+'" x2="'+npo.x+'" y2="'+npo.y+'" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#0f0f0f"/><text x="'+cx+'" y="'+(cy-8)+'" text-anchor="middle" font-size="14" font-weight="900" fill="#0f0f0f" font-family="Outfit,sans-serif">'+ts+'</text><text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" font-size="11" font-weight="700" fill="rgba(0,0,0,.5)" font-family="Outfit,sans-serif">Now</text></svg>'+legend+'<div class="circ-cap" style="margin-top:9px">Circadian window map &nbsp;&#183;&nbsp; Each colour = your body\'s natural operating mode</div></div>';
 }
 function localAnalysis(){
   var R={finance:[],health:[],learning:[],nature:[],habits:[],strengths:[],energyScore:50,alignScore:50,finScore:50,healthScore:50};
@@ -835,7 +839,7 @@ function seedData(){
 }
 function renderQuickLog(){
   var el=document.getElementById('p-quicklog');if(!el)return;
-  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Your Life OS</div><div class="wwsub">3 taps per entry. Finance drains, attention leaks, habit loops, and nature misalignment surface automatically from your own data.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Dashboard</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Balance, streaks, active drains</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Habit Loops</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Cross-domain pattern detection</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 Weekly Review</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Local pattern review, no API needed</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Nature Alignment</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Circadian and seasonal guide</div></div></div><button class="wwstart" onclick="startWiz()">Start logging</button><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
+  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">3 taps per entry. Finance drains, attention leaks, habit loops, and nature misalignment surface automatically from your own data.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Dashboard</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Balance, streaks, active drains</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Habit Loops</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Cross-domain pattern detection</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 Weekly Review</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Weekly pattern review</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Nature Alignment</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Circadian and seasonal guide</div></div></div><button class="wwstart" onclick="startWiz()">Start logging</button><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
   if(wizDone){var m=MODES[WD.mode]||MODES.doing;el.innerHTML='<div class="wsuccess"><div class="wsicon">'+m.emoji+'</div><div class="wstitle">Logged.</div><div class="wssub"><strong>'+he(WD.activity)+'</strong><br>'+(WD.direction==='directed'?'Directed':'Distractor')+' &middot; '+m.label+' &middot; '+NATICONS[WD.natureScore]+' '+WD.natureScore+'/5'+(WD.hasFinance&&WD.financeAmount>0?'<br>'+(WD.financeType==='expense'?'Spent':'Earned')+' Rs '+fM(WD.financeAmount):'')+' </div><div class="wsbtns"><button class="wsbtn" style="background:var(--soft);color:#444" onclick="resetWiz()">Log another</button><button class="wsbtn" style="background:var(--cb);color:#fff" onclick="sw(&#39;dashboard&#39;,document.querySelectorAll(&#39;.tab&#39;)[1])">Dashboard</button><button class="wsbtn" style="background:#0f0f0f;color:#fff" onclick="sw(&#39;insights&#39;,document.querySelectorAll(&#39;.tab&#39;)[2])">Insights</button></div></div>';return;}
   var pct=[0,33,66][wizStep-1]||99;
   var names=['What and How Long','How It Felt','Context'];
@@ -1125,7 +1129,7 @@ function renderReview(){
   else if(reviewData&&reviewData._empty)aiH='<div class="wr-ai"><div class="wr-ai-t">Not enough data this week</div><div class="wr-ai-b">Log a few more entries this week before running the AI review.</div></div>';
   else if(reviewData&&reviewData._error)aiH='<div class="wr-ai"><div class="wr-ai-t">Review error</div><div class="wr-ai-b">Check connection and try again.</div></div>';
   else if(reviewData){var R=reviewData;aiH=(R.summary?'<div class="wr-ai"><div class="wr-ai-t">This week in summary</div><div class="wr-ai-b">'+he(R.summary)+'</div></div>':'')+(R.win?'<div class="wr-ai" style="background:var(--bg2);border:1px solid rgba(26,107,60,.14)"><div class="wr-ai-t" style="color:var(--cg)">&#10022; Biggest Win</div><div class="wr-ai-b">'+he(R.win)+'</div></div>':'')+(R.miss?'<div class="wr-ai" style="background:var(--ba);border:1px solid rgba(176,112,32,.14)"><div class="wr-ai-t" style="color:var(--ca)">&#9650; Watch this</div><div class="wr-ai-b">'+he(R.miss)+'</div></div>':'')+(R.next_week_focus?'<div class="wr-ai" style="background:var(--bb);border:1px solid rgba(26,74,140,.12)"><div class="wr-ai-t" style="color:var(--cb)">&#8594; Next week focus</div><div class="wr-ai-b">'+he(R.next_week_focus)+'</div></div>':'')+(R.finance_note?'<div class="wr-ai"><div class="wr-ai-t">Finance</div><div class="wr-ai-b">'+he(R.finance_note)+'</div></div>':'')+(R.nature_note?'<div class="wr-ai"><div class="wr-ai-t">Nature</div><div class="wr-ai-b">'+he(R.nature_note)+'</div></div>':'');}
-  else aiH='<div class="wr-ai"><div class="wr-ai-t">Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week. No API or account needed.</div></div>';
+  else aiH='<div class="wr-ai"><div class="wr-ai-t">Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week.</div></div>';
   el.innerHTML=hero+stats+'</div>'+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">No entries this week yet.</div>');
 }
 function renderNature(){
@@ -1412,7 +1416,7 @@ function submitFeedback(){
   if(WEB3FORMS_KEY==='YOUR_WEB3FORMS_ACCESS_KEY'){
     alert('Feedback form not configured yet.\n\nTo enable: go to web3forms.com, enter your email, copy the access key, and set WEB3FORMS_KEY in the source.');return;
   }
-  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:'Life OS App Feedback',message:msg,from_name:email?'User: '+email:'Anonymous User',replyto:email||'noreply@lifeos.app'})})
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:'Flourish App Feedback',message:msg,from_name:email?'User: '+email:'Anonymous User',replyto:email||'noreply@lifeos.app'})})
     .then(function(r){return r.json();})
     .then(function(d){
       if(d.success){var f=document.getElementById('fb-form'),s=document.getElementById('fb-success');if(f)f.style.display='none';if(s)s.style.display='block';}
