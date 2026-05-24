@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f0f0f'/><text y='.9em' font-size='72' x='14'>🧭</text></svg>">
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
@@ -176,11 +177,12 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .ticker-lbl{font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;padding:8px 6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:50px;max-width:50px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
 .ticker-track{flex:1;overflow:hidden;display:flex;align-items:center;padding:9px 10px}
 .ticker-text{font-size:11px;font-weight:700;color:var(--text);line-height:1.55;word-break:break-word;will-change:transform,opacity;}
-.ticker-dev{font-size:14px;font-weight:400;color:#111;line-height:1.65;letter-spacing:.2px}
+.ticker-dev{font-family:'Noto Sans Devanagari',sans-serif;font-size:15px;font-weight:500;color:#1a1a2e;line-height:1.75;letter-spacing:.4px}
+.ticker-text em{font-size:9px;color:var(--muted);font-style:normal;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
 .drain-quad{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
 .dq-cell{border-radius:14px;padding:11px 12px;background:var(--softer);border:1px solid var(--border)}
 .dq-t{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--faint);margin-bottom:8px}
-.ins-layout{display:grid;grid-template-columns:1fr clamp(175px,20vw,260px);gap:18px;align-items:start}
+.ins-layout{display:grid;grid-template-columns:1fr 2fr;gap:20px;align-items:start}
 .ins-main{min-width:0}
 .ins-side{position:sticky;top:14px;max-height:calc(100vh - 70px);overflow-y:auto;scrollbar-width:thin}
 .ins-side::-webkit-scrollbar{width:3px}
@@ -870,30 +872,18 @@ function buildTickers(){
     'Blue light suppresses melatonin 3× more than other frequencies after dusk'
   ];
   _TD['vi']=[
-    '<span class="ticker-dev">योगश्चित्तवृत्तिनिरोधः</span><br><em>Yoga Sutras 1.2</em>',
-    'योग: from युज् — to yoke/unite. Yoga = cessation of mind\'s restlessness. Union of finite self with infinite source.',
-    '<span class="ticker-dev">तत्त्वमसि</span><br><em>Chandogya Upanishad 6.8.7</em>',
-    'तत् (That — absolute) + त्वम् (you) + असि (ARE). Not shall become. Already are. The distance between self and truth is linguistic, not real.',
-    '<span class="ticker-dev">अहं ब्रह्मास्मि</span><br><em>Brihadaranyaka Upanishad 1.4.10</em>',
-    'ब्रह्मन्: from बृह् — to expand infinitely. Identity with the boundless removes the root of all depletion and anxiety.',
-    '<span class="ticker-dev">स्वस्थस्य स्वास्थ्यरक्षणम्</span><br><em>Charaka Sutrasthana 1.1</em>',
-    'स्वास्थ्य (Svasthya): स्व (luminous Higher Self) + स्थ (rooted in). Health = the state of being anchored in one\'s true nature.',
-    '<span class="ticker-dev">सर्वं खल्विदं ब्रह्म</span><br><em>Chandogya Upanishad 3.14.1</em>',
-    'खलु: from खेल — to flow freely. All this flows as one undivided Brahman. The boundary between self and world is the root disease.',
-    '<span class="ticker-dev">धियो यो नः प्रचोदयात्</span><br><em>Rigveda 3.62.10 — Gayatri</em>',
-    'धी (Dhi): luminous intellect receiving light beyond the mind. ध्यान (Dhyana): धी (wisdom) + यान (vehicle) — the vehicle toward ultimate knowing.',
-    '<span class="ticker-dev">प्रज्ञानं ब्रह्म</span><br><em>Aitareya Upanishad 3.3</em>',
-    'प्रज्ञान: प्र (forward excellence) + ज्ञान (knowing). Consciousness is not produced by the brain. The brain appears within consciousness.',
-    '<span class="ticker-dev">न जायते म्रियते वा कदाचित्</span><br><em>Bhagavad Gita 2.20</em>',
-    'न-जायते: never born, cannot die. Knowing the deathless nature of awareness dissolves the anxiety depleting all 11 body systems.',
-    '<span class="ticker-dev">तदा द्रष्टुः स्वरूपेऽवस्थानम्</span><br><em>Yoga Sutras 1.3</em>',
-    'द्रष्टृ: from दृश् — to see. When modifications cease, the seer abides in its own pure nature. This is the root of all Svasthya.',
-    '<span class="ticker-dev">शान्तिः शान्तिः शान्तिः</span><br><em>All Upanishads — triple invocation</em>',
-    'शान्ति: from शम् — to quieten. Three-fold: body (adhibhautika), mind (adhidaivika), spirit (adhyatmika). Svasthya requires all three.',
-    '<span class="ticker-dev">श्रद्धावान् लभते ज्ञानम्</span><br><em>Bhagavad Gita 4.39</em>',
-    'श्रद्धा (Shraddha): श्रत् (heart recognising soul source) + धा (to establish firmly). The self becoming rooted in its deepest truth.',
-    '<span class="ticker-dev">यत्र विश्वमिदं भाति कल्पितं रज्जुसर्पवत्</span><br><em>Ashtavakra Gita 2.6</em>',
-    'रज्जुसर्पवत् — like a snake in a rope. The world\'s complexity is misperception of the unchanging. Viveka (discernment) ends the imagined snake.'
+    '<span class="ticker-dev">योगश्चित्तवृत्तिनिरोधः</span><br><em>Yoga Sutras 1.2</em><br>When the mind stops chasing its own turbulence, what remains is not emptiness — it is the source from which all genuine healing arises.',
+    '<span class="ticker-dev">तत्त्वमसि</span><br><em>Chandogya Upanishad 6.8.7</em><br>Thou art That — not as aspiration, but as present fact. The gap you feel between yourself and wellbeing is held in thought, not in reality.',
+    '<span class="ticker-dev">स्वस्थस्य स्वास्थ्यरक्षणम्</span><br><em>Charaka Sutrasthana 1.1</em><br>Svasthya — being rooted in one\'s true Self. Ancient medicine placed this before all treatment: real health is the presence of your deepest nature.',
+    '<span class="ticker-dev">अहं ब्रह्मास्मि</span><br><em>Brihadaranyaka Upanishad 1.4.10</em><br>I am the boundless. When this is lived rather than believed, the chronic contraction — the sense of lack and hurry driving all depletion — dissolves.',
+    '<span class="ticker-dev">सर्वं खल्विदं ब्रह्म</span><br><em>Chandogya Upanishad 3.14.1</em><br>All this is Brahman. Your finances, sleep, food, morning walk — none of it is separate from the one intelligence organising all life.',
+    '<span class="ticker-dev">न जायते म्रियते वा कदाचित्</span><br><em>Bhagavad Gita 2.20</em><br>That which animates you was never born and cannot be depleted. Exhaustion reaches the body — not the awareness that witnesses it. Rest in the witness.',
+    '<span class="ticker-dev">धियो यो नः प्रचोदयात्</span><br><em>Rigveda 3.62.10 — Gayatri</em><br>May that luminous intelligence guide our discernment. This is not prayer to an outer deity — it is the invocation of your own highest knowing.',
+    '<span class="ticker-dev">तदा द्रष्टुः स्वरूपेऽवस्थानम्</span><br><em>Yoga Sutras 1.3</em><br>Then the seer abides in its own nature. Every habit drain pulls toward noise; every genuine pause returns you here. The gap between the two is where growth lives.',
+    '<span class="ticker-dev">शान्तिः शान्तिः शान्तिः</span><br><em>Upanishads — triple invocation</em><br>Peace — three times — for body, environment, and spirit simultaneously. You cannot heal one sustainably while the other two remain disturbed.',
+    '<span class="ticker-dev">प्रज्ञानं ब्रह्म</span><br><em>Aitareya Upanishad 3.3</em><br>Consciousness is Brahman — not produced by the brain but the ground it appears within. The awareness reading this is the same that keeps your heart beating.',
+    '<span class="ticker-dev">यत्र विश्वमिदं भाति कल्पितं रज्जुसर्पवत्</span><br><em>Ashtavakra Gita 2.6</em><br>The world appears like a snake seen in a rope at dusk. Viveka — discernment — reveals the unchanging beneath every perceived urgency and complexity.',
+    '<span class="ticker-dev">श्रद्धावान् लभते ज्ञानम्</span><br><em>Bhagavad Gita 4.39</em><br>One established in the heart\'s deepest conviction receives knowing. Not blind faith — but the unwavering recognition of what is real before argument begins.'
   ];
   _TD['w1']=[
     'India: 38% gig workforce — income volatility disrupts the routine that regulated sleep and eating',
@@ -978,8 +968,8 @@ function renderInsights(){
   var L=localAnalysis();
   var ts=lastAnalyzed?new Date(lastAnalyzed).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}):null;
   var hdr='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px"><div><div style="font-size:21px;font-weight:900;letter-spacing:-.4px">Habit Drains</div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:2px">'+(ts?'Scanned: '+ts:'Tap Scan to detect cross-domain patterns in your data.')+'</div></div><button style="background:#0f0f0f;color:#fff;border:none;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;opacity:'+(insightLoading?.45:1)+';pointer-events:'+(insightLoading?'none':'auto')+'" onclick="aiInsights()">&#10022; Scan</button></div>';
-  if(insightLoading){el.innerHTML='<div class="ins-layout"><div class="ins-main">'+hdr+'<div style="text-align:center;padding:42px;color:var(--muted);font-size:14px;font-weight:700"><span class="spin">&#8635;</span> Scanning patterns...</div></div><div class="ins-side">'+buildTickers()+'</div></div>';setTimeout(initTickers,60);return;}
-  if(entries.length<2){el.innerHTML='<div class="ins-layout"><div class="ins-main">'+hdr+'<div style="text-align:center;padding:52px 20px;color:var(--faint);font-size:14px;font-weight:700;line-height:1.9">&#128202;<br><br>Log 2+ entries to see your patterns.<br>Start with <strong>&#9889; Quick Log</strong>.<br><span style="font-size:12px;opacity:.7">Finance, health, learning and nature patterns<br>all surface automatically from your entries.</span></div></div><div class="ins-side">'+buildTickers()+'</div></div>';setTimeout(initTickers,60);return;}
+  if(insightLoading){el.innerHTML=hdr+'<div class="ins-layout"><div class="ins-main"><div style="text-align:center;padding:42px;color:var(--muted);font-size:14px;font-weight:700"><span class="spin">&#8635;</span> Scanning patterns...</div></div><div class="ins-side">'+buildTickers()+'</div></div>';setTimeout(initTickers,60);return;}
+  if(entries.length<2){el.innerHTML=hdr+'<div class="ins-layout"><div class="ins-main"><div style="text-align:center;padding:52px 20px;color:var(--faint);font-size:14px;font-weight:700;line-height:1.9">&#128202;<br><br>Log 2+ entries to see your patterns.<br>Start with <strong>&#9889; Quick Log</strong>.<br><span style="font-size:12px;opacity:.7">Finance, health, learning and nature patterns<br>all surface automatically from your entries.</span></div></div><div class="ins-side">'+buildTickers()+'</div></div>';setTimeout(initTickers,60);return;}
   var useAI=insightData&&!insightData._error;
   var fin=useAI?insightData.finance_drains:L.finance;
   var hlt=useAI?insightData.health_drains:L.health;
@@ -1006,8 +996,8 @@ function renderInsights(){
     '<div class="dq-cell"><div class="dq-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div>'+
     '<div class="dq-cell"><div class="dq-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+
     '</div>';
-  var mainCol=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+drainQuad+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
-  el.innerHTML='<div class="ins-layout"><div class="ins-main">'+mainCol+'</div><div class="ins-side">'+buildTickers()+'</div></div>';
+  var leftCol=drainQuad+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
+  el.innerHTML=hdr+scores+'<div class="ins-layout"><div class="ins-main">'+leftCol+'</div><div class="ins-side">'+buildTickers()+'</div></div>';
   setTimeout(initTickers,60);
 }
 function renderReview(){
