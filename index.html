@@ -414,11 +414,10 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
         <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;padding:2px 8px;border-radius:20px;background:#0f0f0f;color:#fff">Pro</span>
       </div>
       <div id="auth-state-signed-out" style="display:block">
-        <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:#555;opacity:.5" onclick="signInGoogle()">
-          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58Z" fill="#EA4335"/></svg>
-          Sign in with Google &mdash; Coming soon
-        </button>
-        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-top:8px;line-height:1.6;text-align:center">All features work free &amp; offline. Real-time sync is the only paid add-on.</div>
+        <div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.65;margin-bottom:10px">Pro access is invite-only and unlocks cross-device sync. Enter your pro key below.</div>
+        <input id="pro-key-input" type="password" class="fi" placeholder="Enter pro key..." style="margin-bottom:8px;width:100%;box-sizing:border-box">
+        <button style="width:100%;padding:11px;border-radius:10px;border:none;background:#0f0f0f;color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer" onclick="unlockPro()">&#10022; Unlock Pro Access</button>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-top:8px;line-height:1.6;text-align:center">All core features are free &amp; offline. Pro = sync + early features.</div>
       </div>
       <div id="auth-state-signed-in" style="display:none">
         <div style="background:var(--bg2);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,107,60,.14);margin-bottom:12px">
@@ -453,8 +452,8 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
           <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">Optionally share a weekly summary with one person you trust. Growth is quieter with a witness.</div>
         </div>
         <div style="background:var(--bb);border-radius:12px;padding:12px 14px;border:1px solid rgba(26,74,140,.1)">
-          <div style="font-size:13px;font-weight:900;color:var(--cb);margin-bottom:3px">&#127908; Voice logging</div>
-          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">Speak your entry in 10 seconds. Friction removed, honesty kept.</div>
+          <div style="font-size:13px;font-weight:900;color:var(--cb);margin-bottom:3px">&#128203; Habit coaching letter</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.55">A short monthly letter derived purely from your patterns — no generics, no advice you didn't earn.</div>
         </div>
       </div>
     </div>
@@ -519,10 +518,10 @@ var CATCOLS=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D
 var entries=[],activeTab='quicklog',fView='monthly',tView='monthly';
 var fRef=null,tRef=null,logFilter=null,delId=null,editId=null;
 var wizStep=1,wizDone=false,wizWelcome=true;
-var WD={activity:'',category:'Work',duration:1,direction:'directed',mode:'doing',friction:'low',hasFinance:false,financeType:'expense',financeAmount:0,financeCategory:'Food',natureScore:3};
+var WD={activity:'',category:'Work',duration:1,direction:'directed',mode:'doing',friction:'low',hasFinance:false,financeType:'expense',financeAmount:0,financeCategory:'Food',natureScore:3,note:''};
 var F={date:'',activity:'',category:'Work',duration:0,direction:'directed',mode:'doing',friction:'low',hasFinance:false,financeType:'expense',financeAmount:0,financeCategory:'Food',note:''};
 var insightData=null,insightLoading=false,lastAnalyzed=null;
-var reviewData=null,reviewLoading=false,lastReview=null;
+var reviewData=null,reviewLoading=false,lastReview=null,reviewWeekMon=null,reviewWeekSun=null;
 
 function persist(){var j=JSON.stringify(entries);if(window.storage&&window.storage.set)window.storage.set('lifeos_v5',j).catch(function(){try{localStorage.setItem('lifeos_v5',j);}catch(e){}});else try{localStorage.setItem('lifeos_v5',j);}catch(e){}persistCloud();}
 function sfBar(t){var i=document.getElementById('sf-icon'),x=document.getElementById('sf-text');if(!i||!x)return;if(t==='cloud'){i.textContent='☁️';x.innerHTML='<strong>Session Storage</strong> Data persists in this Claude session.';}else if(t==='local'){i.textContent='💾';x.innerHTML='<strong>Local Storage</strong> Saved in this browser.';}else{i.textContent='⚠️';x.innerHTML='<strong>No persistent storage</strong>';}}
@@ -540,6 +539,7 @@ async function boot(){
   nowStrip();setInterval(nowStrip,60000);
   document.body.className=(document.body.className+' tab-'+activeTab).trim();
   render();
+  updateAuthUI();
   if(FIREBASE_CONFIG)initFirebase();
 }
 function today(){var d=new Date();d.setHours(0,0,0,0);return d;}
@@ -802,6 +802,12 @@ function localWeeklyReview(){
   reviewLoading=true;renderReview();
   var mo=getMon(today()),su=getSun(today());
   var wk=entries.filter(function(e){var d=new Date(e.date+'T00:00:00');return d>=mo&&d<=su;});
+  if(wk.length<2&&entries.length>=2){
+    var latest=entries.slice().sort(function(a,b){return b.date.localeCompare(a.date);})[0];
+    var ld=new Date(latest.date+'T00:00:00');mo=getMon(ld);su=getSun(ld);
+    wk=entries.filter(function(e){var d=new Date(e.date+'T00:00:00');return d>=mo&&d<=su;});
+  }
+  reviewWeekMon=mo;reviewWeekSun=su;
   if(wk.length<2){reviewData={_empty:true};reviewLoading=false;renderReview();return;}
   var tH=wk.reduce(function(s,e){return s+(+e.duration||0);},0);
   var dH=wk.filter(function(e){return e.direction==='directed';}).reduce(function(s,e){return s+(+e.duration||0);},0);
@@ -923,7 +929,7 @@ function w3(){
   var nats=[1,2,3,4,5].map(function(n){var on=WD.natureScore===n;return'<button class="wnatbtn '+(on?'on':'')+'" onclick="wsNat('+n+')" title="'+NATLBL[n]+'">'+NATICONS[n]+'<span class="wns">'+n+'/5</span><span class="wnl">'+NATLBL[n].replace(/ /g,' ')+'</span></button>';}).join('');
   var fCats=WD.financeType==='expense'?ECATS:ICATS;
   var fb='<div class="wfinbody '+(WD.hasFinance?'open':'')+'" id="wiz-finbody"><div class="w3g" style="margin-bottom:10px"><button class="wfb '+(WD.financeType==='expense'?'on':'')+'" style="'+(WD.financeType==='expense'?'background:#B83020;color:#fff;border-color:#B83020':'')+'" onclick="wsFinT(\'expense\')">Expense</button><button class="wfb '+(WD.financeType==='income'?'on':'')+'" style="'+(WD.financeType==='income'?'background:#1A6B3C;color:#fff;border-color:#1A6B3C':'')+'" onclick="wsFinT(\'income\')">Income</button><div></div></div><input id="wiz-amt" class="winp" type="number" inputmode="decimal" placeholder="Amount Rs" value="'+(WD.financeAmount||'')+'" style="margin-bottom:9px"><select id="wiz-fcat" class="winp">'+fCats.map(function(c){return'<option value="'+c+'"'+(WD.financeCategory===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>';
-  return'<div class="wcard"><div class="wq" style="font-size:16px">Nature alignment?</div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:13px">1 = screen-only &nbsp; 5 = fully outdoors and embodied</div><div class="wnatrow">'+nats+'</div></div><div class="wfintog" onclick="wTogFin()"><div class="wfintog-l">&#8377; Attach finance entry?</div><input type="checkbox" class="ckb" '+(WD.hasFinance?'checked':'')+' onclick="event.stopPropagation();wTogFin()"></div>'+fb+'<div class="wnav"><button class="wback" onclick="wGo(2)">&lsaquo; Back</button><button class="wnext" onclick="wSave()">Log it &#10003;</button></div>';
+  return'<div class="wcard"><div class="wq" style="font-size:16px">Nature alignment?</div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:13px">1 = screen-only &nbsp; 5 = fully outdoors and embodied</div><div class="wnatrow">'+nats+'</div></div><div class="wfintog" onclick="wTogFin()"><div class="wfintog-l">&#8377; Attach finance entry?</div><input type="checkbox" class="ckb" '+(WD.hasFinance?'checked':'')+' onclick="event.stopPropagation();wTogFin()"></div>'+fb+'<div class="wcard" style="padding:12px 14px"><div style="font-size:13px;font-weight:800;margin-bottom:8px;color:var(--muted)">Note <span style="font-weight:700;opacity:.7">(optional)</span></div><div style="display:flex;gap:7px;align-items:center"><input id="wiz-note" class="winp" type="text" style="flex:1" placeholder="Quick thought, context, outcome..." value="'+he(WD.note||'')+'"><button id="mic-btn-wiz-note" onclick="voiceNote(\'wiz-note\')" title="Voice note" style="padding:8px 10px;border-radius:9px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:17px;line-height:1;flex-shrink:0">🎤</button></div></div><div class="wnav"><button class="wback" onclick="wGo(2)">&lsaquo; Back</button><button class="wnext" onclick="wSave()">Log it &#10003;</button></div>';
 }
 function wReadFin(){var a=document.getElementById('wiz-amt'),f=document.getElementById('wiz-fcat');if(a)WD.financeAmount=parseFloat(a.value)||0;if(f)WD.financeCategory=f.value;}
 function wn1(){var a=document.getElementById('wiz-act');if(a)WD.activity=a.value.trim();if(!WD.activity){alert('What did you do? Fill that in.');return;}wGo(2);}
@@ -937,8 +943,8 @@ function wsFric(f){WD.friction=f;renderQuickLog();}
 function wsNat(n){WD.natureScore=n;renderQuickLog();}
 function wsFinT(t){wReadFin();WD.financeType=t;WD.financeCategory=(t==='expense'?ECATS[0]:ICATS[0]);renderQuickLog();}
 function wTogFin(){wReadFin();WD.hasFinance=!WD.hasFinance;renderQuickLog();}
-function wSave(){wReadFin();entries.push({id:uid(),date:dstr(today()),activity:WD.activity,category:WD.category,duration:WD.duration,direction:WD.direction,mode:WD.mode,friction:WD.friction,hasFinance:!!WD.hasFinance,financeType:WD.financeType,financeAmount:WD.hasFinance?WD.financeAmount:0,financeCategory:WD.financeCategory,natureScore:WD.natureScore||3,note:''});persist();wizDone=true;renderQuickLog();}
-function resetWiz(){wizStep=1;wizDone=false;WD={activity:'',category:'Work',duration:1,direction:'directed',mode:'doing',friction:'low',hasFinance:false,financeType:'expense',financeAmount:0,financeCategory:'Food',natureScore:3};renderQuickLog();}
+function wSave(){wReadFin();var nEl=document.getElementById('wiz-note');if(nEl)WD.note=nEl.value.trim();entries.push({id:uid(),date:dstr(today()),activity:WD.activity,category:WD.category,duration:WD.duration,direction:WD.direction,mode:WD.mode,friction:WD.friction,hasFinance:!!WD.hasFinance,financeType:WD.financeType,financeAmount:WD.hasFinance?WD.financeAmount:0,financeCategory:WD.financeCategory,natureScore:WD.natureScore||3,note:WD.note||''});persist();wizDone=true;renderQuickLog();}
+function resetWiz(){wizStep=1;wizDone=false;WD={activity:'',category:'Work',duration:1,direction:'directed',mode:'doing',friction:'low',hasFinance:false,financeType:'expense',financeAmount:0,financeCategory:'Food',natureScore:3,note:''};renderQuickLog();}
 function hlP(str){
   return he(str)
     .replace(/(\d+[\.,]?\d*\s*%)/g,'<span class="hl-n">$1</span>')
@@ -1135,6 +1141,22 @@ function buildTickers(){
     tk('bs','11 Body<br>Systems',   '#065F46')+
     '</div>';
 }
+function voiceNote(targetId){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Voice input is not supported in this browser. Try Chrome on Android or desktop.');return;}
+  var btn=document.getElementById('mic-btn-'+targetId);
+  var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
+  r.onstart=function(){if(btn){btn.textContent='🔴';btn.style.background='rgba(184,48,32,.1)';}};
+  r.onresult=function(e){
+    var t=e.results[0][0].transcript;
+    var inp=document.getElementById(targetId);
+    if(inp){inp.value=(inp.value?inp.value+'. ':'')+t.charAt(0).toUpperCase()+t.slice(1);}
+    if(btn){btn.textContent='🎤';btn.style.background='';}
+  };
+  r.onerror=function(){if(btn){btn.textContent='🎤';btn.style.background='';}};
+  r.onend=function(){if(btn){btn.textContent='🎤';btn.style.background='';}};
+  r.start();
+}
 function buildMonthlyReflection(){
   var now=new Date();var mo=now.getMonth(),yr=now.getFullYear();
   var me=entries.filter(function(e){var d=new Date(e.date+'T00:00:00');return d.getMonth()===mo&&d.getFullYear()===yr;});
@@ -1229,7 +1251,7 @@ function renderInsights(){
 }
 function renderReview(){
   var el=document.getElementById('p-review');if(!el)return;
-  var mo=getMon(today()),su=getSun(today());
+  var mo=reviewWeekMon||getMon(today()),su=reviewWeekSun||getSun(today());
   var wk=entries.filter(function(e){var d=new Date(e.date+'T00:00:00');return d>=mo&&d<=su;});
   var tH=wk.reduce(function(s,e){return s+(+e.duration||0);},0);
   var dH=wk.filter(function(e){return e.direction==='directed';}).reduce(function(s,e){return s+(+e.duration||0);},0);
@@ -1428,7 +1450,7 @@ function syncDOM(){
 function renderForm(){
   var mf=document.getElementById('modal-form');if(!mf)return;
   var fC=F.financeType==='income'?ICATS:ECATS;
-  mf.innerHTML='<div class="fg"><label class="fl">Date</label><input id="fi-date" class="fi" type="date" value="'+he(F.date)+'"></div><div class="fg"><label class="fl">Activity</label><input id="fi-act" class="fi" type="text" value="'+he(F.activity)+'" placeholder="e.g. deep work, gym, team call..."></div><div class="fg"><label class="fl">Category</label><select id="fi-cat" class="fi">'+CATS.map(function(c){return'<option value="'+c+'"'+(F.category===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div class="fg"><label class="fl">Duration (hours)</label><input id="fi-dur" class="fi" type="number" step="0.25" min="0" max="24" value="'+F.duration+'"></div><div class="fg"><label class="fl">Direction</label><div class="tgg"><button class="tgb" style="'+(F.direction==='directed'?'background:#1A4A8C;color:#fff':'')+'" onclick="setF(&#39;direction&#39;,&#39;directed&#39;)">🎯 Directed</button><button class="tgb" style="'+(F.direction==='distractor'?'background:#C06520;color:#fff':'')+'" onclick="setF(&#39;direction&#39;,&#39;distractor&#39;)">💨 Distractor</button></div></div><div class="fg"><label class="fl">Mode</label><div class="tgg">'+Object.keys(MODES).map(function(k){var m=MODES[k];return'<button class="tgb" style="'+(F.mode===k?'background:'+m.color+';color:#fff':'')+'" onclick="setF(&#39;mode&#39;,&#39;'+k+'&#39;)">'+m.emoji+' '+m.label+'</button>';}).join('')+'</div></div><div class="fg"><label class="fl">Friction</label><div class="tgg">'+Object.keys(FRICS).map(function(k){var fr=FRICS[k];return'<button class="tgb" style="'+(F.friction===k?'background:'+fr.color+';color:#fff':'')+'" onclick="setF(&#39;friction&#39;,&#39;'+k+'&#39;)">'+fr.emoji+' '+fr.label+'</button>';}).join('')+'</div></div><div class="fg"><label class="fl">Note (optional)</label><input id="fi-note" class="fi" type="text" value="'+he(F.note)+'" placeholder="Context, blockers, outcomes..."></div><div class="divider"></div><div class="ftog" onclick="toggleFin()"><div class="ftog-l">&#8377; Attach finance entry</div><input class="ckb" type="checkbox" '+(F.hasFinance?'checked':'')+' onclick="event.stopPropagation();toggleFin()"></div><div class="fin-sec '+(F.hasFinance?'open':'')+'" id="fin-sec"><div class="fg"><label class="fl">Type</label><div class="tgg"><button class="tgb" style="'+(F.financeType==='expense'?'background:#B83020;color:#fff':'')+'" onclick="setFinType(&#39;expense&#39;)">Expense</button><button class="tgb" style="'+(F.financeType==='income'?'background:#1A6B3C;color:#fff':'')+'" onclick="setFinType(&#39;income&#39;)">Income</button></div></div><div class="fg"><label class="fl">Amount (Rs)</label><input id="fi-amt" class="fi" type="number" step="1" min="0" value="'+(F.financeAmount||'')+'" placeholder="0"></div><div class="fg"><label class="fl">Category</label><select id="fi-fcat" class="fi">'+fC.map(function(c){return'<option value="'+c+'"'+(F.financeCategory===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div></div><div class="fact"><button class="bcnl" onclick="closeModal()">Cancel</button><button class="bsav" onclick="saveEntry()">'+(editId?'Save':'Add Entry')+'</button></div>';
+  mf.innerHTML='<div class="fg"><label class="fl">Date</label><input id="fi-date" class="fi" type="date" value="'+he(F.date)+'"></div><div class="fg"><label class="fl">Activity</label><input id="fi-act" class="fi" type="text" value="'+he(F.activity)+'" placeholder="e.g. deep work, gym, team call..."></div><div class="fg"><label class="fl">Category</label><select id="fi-cat" class="fi">'+CATS.map(function(c){return'<option value="'+c+'"'+(F.category===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div class="fg"><label class="fl">Duration (hours)</label><input id="fi-dur" class="fi" type="number" step="0.25" min="0" max="24" value="'+F.duration+'"></div><div class="fg"><label class="fl">Direction</label><div class="tgg"><button class="tgb" style="'+(F.direction==='directed'?'background:#1A4A8C;color:#fff':'')+'" onclick="setF(&#39;direction&#39;,&#39;directed&#39;)">🎯 Directed</button><button class="tgb" style="'+(F.direction==='distractor'?'background:#C06520;color:#fff':'')+'" onclick="setF(&#39;direction&#39;,&#39;distractor&#39;)">💨 Distractor</button></div></div><div class="fg"><label class="fl">Mode</label><div class="tgg">'+Object.keys(MODES).map(function(k){var m=MODES[k];return'<button class="tgb" style="'+(F.mode===k?'background:'+m.color+';color:#fff':'')+'" onclick="setF(&#39;mode&#39;,&#39;'+k+'&#39;)">'+m.emoji+' '+m.label+'</button>';}).join('')+'</div></div><div class="fg"><label class="fl">Friction</label><div class="tgg">'+Object.keys(FRICS).map(function(k){var fr=FRICS[k];return'<button class="tgb" style="'+(F.friction===k?'background:'+fr.color+';color:#fff':'')+'" onclick="setF(&#39;friction&#39;,&#39;'+k+'&#39;)">'+fr.emoji+' '+fr.label+'</button>';}).join('')+'</div></div><div class="fg"><label class="fl">Note (optional)</label><div style="display:flex;gap:7px;align-items:center"><input id="fi-note" class="fi" type="text" style="flex:1" value="'+he(F.note)+'" placeholder="Context, blockers, outcomes..."><button id="mic-btn-fi-note" onclick="voiceNote(\'fi-note\')" title="Voice note" style="padding:8px 10px;border-radius:9px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:17px;line-height:1;flex-shrink:0">🎤</button></div></div><div class="divider"></div><div class="ftog" onclick="toggleFin()"><div class="ftog-l">&#8377; Attach finance entry</div><input class="ckb" type="checkbox" '+(F.hasFinance?'checked':'')+' onclick="event.stopPropagation();toggleFin()"></div><div class="fin-sec '+(F.hasFinance?'open':'')+'" id="fin-sec"><div class="fg"><label class="fl">Type</label><div class="tgg"><button class="tgb" style="'+(F.financeType==='expense'?'background:#B83020;color:#fff':'')+'" onclick="setFinType(&#39;expense&#39;)">Expense</button><button class="tgb" style="'+(F.financeType==='income'?'background:#1A6B3C;color:#fff':'')+'" onclick="setFinType(&#39;income&#39;)">Income</button></div></div><div class="fg"><label class="fl">Amount (Rs)</label><input id="fi-amt" class="fi" type="number" step="1" min="0" value="'+(F.financeAmount||'')+'" placeholder="0"></div><div class="fg"><label class="fl">Category</label><select id="fi-fcat" class="fi">'+fC.map(function(c){return'<option value="'+c+'"'+(F.financeCategory===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div></div><div class="fact"><button class="bcnl" onclick="closeModal()">Cancel</button><button class="bsav" onclick="saveEntry()">'+(editId?'Save':'Add Entry')+'</button></div>';
 }
 function saveEntry(){
   syncDOM();
@@ -1446,7 +1468,14 @@ function exportCSV(){
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='life-os-export.csv';a.click();
 }
 /* ─────────────────────────────────────────────────────────────────────────
-   CROSS-DEVICE SYNC  (optional — enables "Sign in with Google" in Settings)
+   PRO ACCESS KEY  — change this to your own secret phrase.
+   Anyone with this key can unlock pro features in Settings.
+   Since this file is public, keep it something only you would guess.
+   ─────────────────────────────────────────────────────────────────────────*/
+var FLOURISH_PRO_KEY='flourish2025';
+
+/* ─────────────────────────────────────────────────────────────────────────
+   CROSS-DEVICE SYNC  (optional — enables Firebase cloud sync)
    1. Create a free Firebase project at console.firebase.google.com
    2. Enable Authentication → Google sign-in provider
    3. Enable Firestore Database (start in production mode, add rule: allow read, write: if request.auth != null)
@@ -1466,7 +1495,8 @@ var FIREBASE_CONFIG={apiKey:"AIza...",authDomain:"myapp.firebaseapp.com",
    ─────────────────────────────────────────────────────────────────────────*/
 var WEB3FORMS_KEY='YOUR_WEB3FORMS_ACCESS_KEY';
 
-var fbAuth=null,fbDB=null,currentUser=null,fbLoaded=false;
+var fbAuth=null,fbDB=null,fbLoaded=false;
+var currentUser=(function(){try{var s=localStorage.getItem('flourish_pro');return s?JSON.parse(s):null;}catch(e){return null;}})();
 function loadFirebaseSDK(cb){
   if(fbLoaded){cb();return;}
   var srcs=['https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js'];
@@ -1493,8 +1523,19 @@ function updateAuthUI(){
     if(e)e.textContent=currentUser.email||'';
   }else{out.style.display='block';inn.style.display='none';}
 }
+function unlockPro(){
+  var k=document.getElementById('pro-key-input');if(!k)return;
+  if(k.value.trim()===FLOURISH_PRO_KEY){
+    currentUser={name:'Sriram',email:'sriram.c76@gmail.com',role:'pro'};
+    try{localStorage.setItem('flourish_pro',JSON.stringify(currentUser));}catch(e){}
+    k.value='';updateAuthUI();
+  }else{
+    k.style.borderColor='var(--cr)';k.style.background='rgba(184,48,32,.05)';
+    setTimeout(function(){k.style.borderColor='';k.style.background='';},1600);
+  }
+}
 function signInGoogle(){
-  if(!FIREBASE_CONFIG){alert('Cross-device sync is not configured yet.\n\nTo enable it, set up a Firebase project and add your config to FIREBASE_CONFIG in the source.');return;}
+  if(!FIREBASE_CONFIG){return;}
   loadFirebaseSDK(function(){
     try{
       if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
@@ -1507,10 +1548,14 @@ function signInGoogle(){
   });
 }
 function signOutUser(){
-  if(fbAuth)fbAuth.signOut().then(function(){currentUser=null;updateAuthUI();});
+  currentUser=null;
+  try{localStorage.removeItem('flourish_pro');}catch(e){}
+  if(fbAuth)fbAuth.signOut().catch(function(){});
+  updateAuthUI();
 }
 function syncNow(){
-  if(!currentUser||!fbDB)return;
+  if(!currentUser)return;
+  if(!fbDB){alert('Cloud sync requires Firebase setup.\n\nUse "Generate Backup Code" in Your Data section to transfer entries between devices.');return;}
   var ref=fbDB.collection('users').doc(currentUser.uid).collection('data').doc('entries');
   ref.get().then(function(doc){
     var cloud=doc.exists&&doc.data().entries?doc.data().entries:[];
@@ -1594,7 +1639,7 @@ function submitFeedback(){
 window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
 window.genBackupCode=genBackupCode;window.copyBackupCode=copyBackupCode;window.restoreFromCode=restoreFromCode;
 window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
-window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;
+window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;window.unlockPro=unlockPro;window.voiceNote=voiceNote;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
 window.setF=setF;window.toggleFin=toggleFin;window.setFinType=setFinType;window.saveEntry=saveEntry;
 window.setLF=setLF;window.setFV=setFV;window.setTV=setTV;window.navF=navF;window.navT=navT;
