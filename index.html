@@ -170,14 +170,15 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .hl-n{background:rgba(26,74,140,.11);color:var(--cb);border-radius:3px;padding:0 4px;font-weight:900}
 .hl-r{background:rgba(184,48,32,.1);color:var(--cr);border-radius:3px;padding:0 4px;font-weight:900}
 .hl-g{background:rgba(26,107,60,.1);color:var(--cg);border-radius:3px;padding:0 4px;font-weight:900}
-.ticker-section{margin-top:26px;border-top:1.5px solid var(--border);padding-top:20px}
-.ticker-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:12px}
-.ticker-row{display:flex;align-items:stretch;overflow:hidden;border-radius:10px;margin-bottom:7px;border:1px solid rgba(0,0,0,.07);background:var(--softer);height:38px}
-.ticker-lbl{font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;padding:0 9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:64px;max-width:64px;text-align:center;line-height:1.4}
-.ticker-track{flex:1;overflow:hidden;display:flex;align-items:center}
-.ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;animation:tickerScroll var(--spd,72s) linear infinite;font-size:11.5px;font-weight:700;color:var(--text);padding-left:14px}
-.ticker-sep{margin:0 16px;color:var(--faint);opacity:.5;font-size:11px}
-@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-section{margin-top:0;border-top:none;padding-top:0}
+.ticker-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);margin-bottom:10px}
+.ticker-row{display:flex;align-items:stretch;border-radius:10px;margin-bottom:7px;border:1px solid rgba(0,0,0,.07);background:var(--softer);min-height:52px}
+.ticker-lbl{font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;padding:8px 9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;min-width:62px;max-width:62px;text-align:center;line-height:1.45;border-radius:10px 0 0 10px}
+.ticker-track{flex:1;overflow:hidden;display:flex;align-items:center;padding:10px 13px}
+.ticker-text{font-size:12px;font-weight:700;color:var(--text);line-height:1.5;transition:opacity .4s ease;word-break:break-word}
+.drain-quad{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.dq-cell{border-radius:14px;padding:11px 12px;background:var(--softer);border:1px solid var(--border)}
+.dq-t{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--faint);margin-bottom:8px}
 .ins-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
 .ins-main{min-width:0}
 .ins-side{position:sticky;top:14px;max-height:calc(100vh - 70px);overflow-y:auto;scrollbar-width:thin}
@@ -771,33 +772,126 @@ function hlP(str){
     .replace(/(high friction|distracted time|spending exceeds|drops|below)/gi,'<span class="hl-r">$1</span>')
     .replace(/(directed time|flow state|low.*friction|strength|momentum)/gi,'<span class="hl-g">$1</span>');
 }
+var _TD={},_TT=[];
+function _clearTickers(){_TT.forEach(function(t){clearTimeout(t);});_TT=[];}
+function initTickers(){
+  _clearTickers();
+  Object.keys(_TD).forEach(function(key){
+    var el=document.getElementById('tk-'+key);
+    if(!el)return;
+    var sents=_TD[key];
+    var idx=Math.floor(Math.random()*sents.length);
+    (function cycle(){
+      var el2=document.getElementById('tk-'+key);
+      if(!el2)return;
+      var s=sents[idx];
+      var dur=Math.max(3200,Math.min(5800,s.length*46));
+      el2.style.opacity='0';
+      _TT.push(setTimeout(function(){
+        var el3=document.getElementById('tk-'+key);
+        if(!el3)return;
+        el3.innerHTML=s;
+        el3.style.opacity='1';
+        _TT.push(setTimeout(function(){
+          var el4=document.getElementById('tk-'+key);
+          if(!el4)return;
+          el4.style.opacity='0';
+          idx=(idx+1)%sents.length;
+          _TT.push(setTimeout(cycle,460));
+        },dur));
+      },320));
+    })();
+  });
+}
 function buildTickers(){
-  function tk(lbl,bg,spd,content){
-    var c=content+'<span class="ticker-sep">&#9670;</span>'+content+'<span class="ticker-sep">&#9670;</span>';
-    return'<div class="ticker-row"><div class="ticker-lbl" style="background:'+bg+'">'+lbl+'</div><div class="ticker-track"><div class="ticker-inner" style="--spd:'+spd+'s">'+c+'</div></div></div>';
+  _TD['sm']=[
+    'Attention is finite: the prefrontal cortex depletes under chronic distraction, reducing executive function by up to 30%',
+    '90-minute deep work blocks protect ultradian rhythms — your brain naturally cycles between high and low focus',
+    'Dopamine from social media spikes and crashes within 20 minutes, creating withdrawal cycles that impair sustained focus',
+    'Sleep consolidates learning: 7-9 hours of uninterrupted sleep increases skill retention by 40% vs 6 hours',
+    'Exercise upregulates BDNF, the brain\'s growth factor — 30 minutes of movement daily measurably improves learning speed',
+    'Morning cortisol peaks 30-45 minutes after waking: this is your biological performance window, not your phone window'
+  ];
+  _TD['sh']=[
+    'Habits form through cue-routine-reward loops — changing your environment is 5× more effective than willpower alone',
+    'Financial decisions under stress show 23% higher impulsivity: automate savings before spending windows open each week',
+    'Social contagion is real — your income, health and habits trend toward the average of your closest 5 contacts within 3 years',
+    'Purpose-aligned work activates intrinsic motivation circuits, reducing perceived effort by up to 40%',
+    'Refining without shipping loops energy back on itself — real feedback from the world is irreplaceable by internal iteration',
+    'Rest cycles are not wasted time: they are when the nervous system consolidates pattern recognition and restores prefrontal capacity'
+  ];
+  _TD['sn']=[
+    'Humans are the only species disrupting all 11 physiological systems simultaneously through artificial light, processed food, sedentary living and social fragmentation',
+    'A single 90-minute walk in nature lowers rumination in the prefrontal cortex more than 90 minutes of urban walking',
+    'Plants release phytoncides that raise natural killer cell activity in humans by 50% after just 2 days in forests',
+    'Biodiversity loss in cities directly correlates with reduced immune diversity in urban residents',
+    'Noise pollution above 65 dB raises cortisol and increases cardiovascular risk — a widespread but invisible urban drain',
+    'Diffuse natural light (even on overcast days) is 10-100× brighter than indoor lighting and irreplaceable for circadian anchoring'
+  ];
+  _TD['vi']=[
+    'Ayurveda maps the day: Kapha (6-10am) for movement, Pitta (10am-2pm) for focused transformation, Vata (2-6pm) for creativity and communication',
+    'Brahma Muhurta — 90 minutes before sunrise — is the clearest learning window, matching modern data on cortisol and memory encoding',
+    'Ritucharya (seasonal living) prescribes different foods and routines every 2 months, mirroring chronobiology findings on metabolic adaptation',
+    'Dharma (purpose-aligned action) maps precisely to neuroscience\'s intrinsic motivation: both reduce friction and increase flow states',
+    'Prakriti (individual constitution) means there is no universal optimal schedule — the best routine is calibrated to your specific nature',
+    'The Vedic concept of Ama (accumulated toxin) parallels modern allostatic load — unprocessed stress accumulates silently before manifesting as breakdown'
+  ];
+  _TD['w1']=[
+    'India\'s gig economy employs 38% of the workforce in freelance roles — income volatility removes structural routine that previously regulated sleep, eating and social connection',
+    'Hyderabad grows by 500+ new residents daily, straining water, air quality and green space — all of which directly affect cognition and wellbeing',
+    'Urban heat island effect makes Hyderabad summers 3-5°C hotter than surrounding areas, compressing the outdoor activity window to before 9am and after 6pm',
+    'Telangana\'s groundwater has dropped 40% in 20 years — water scarcity already affects food prices, stress levels and daily routines across the state',
+    '60% of India\'s new jobs since 2015 require sustained cognitive output — yet only 12% of workplaces have any formal cognitive load management practice'
+  ];
+  _TD['w2']=[
+    'The average Indian knowledge worker logs 52 hours per week, against a science-backed optimal of 38-42 hours for sustained performance',
+    'Telangana\'s IT sector reports India\'s highest burnout rates, driven by US-timezone demands that chronically disrupt circadian rhythms',
+    'Hyderabad commutes average 90 minutes per day — time subtracted from sleep, exercise and family — the largest untracked energy drain in urban India',
+    'India\'s urban food inflation means mid-income households spend 35-40% of income on food, compressing all other discretionary and recovery choices',
+    'India loses an estimated Rs 18,000 crore annually to burnout — yet less than 2% of that is reinvested in preventive wellbeing infrastructure'
+  ];
+  _TD['r1']=[
+    'India wastes 40% of its food between farm and consumer, mostly at storage and market stage, while 190 million remain food insecure',
+    'Screen time in India averages 7.3 hours per day, displacing physical activity, face-to-face connection and creative thinking for 40% of urban youth',
+    'Water to produce 1 kg of beef: 15,000 litres. Water for 1 kg of lentils: 900 litres. India\'s dietary shift compresses water reserves 4× faster than population growth',
+    'Corporate wellness budgets average Rs 800 per employee per year — less than one gym visit — while burnout costs the economy Rs 18,000 crore annually',
+    'Indoor artificial light after sunset suppresses melatonin for 90+ minutes per session, compounding into a population-scale sleep deficit across millions'
+  ];
+  _TD['r2']=[
+    'Regenerative farming on 15% of Indian farmland could sequester 200 million tons of carbon annually while improving soil nutrition and farmer income',
+    '4-day compressed work weeks (32 hours) in 60+ global pilots showed equal or higher output with 26% lower burnout rates',
+    'Community learning spaces reduce educational inequality 6× more cost-effectively than private tutoring — with far wider reach',
+    'India has 250 million volunteer hours per year — enough, if coordinated, to deliver basic literacy to 50 million adults within 24 months',
+    'Each hour of daily outdoor activity replaces roughly 20 minutes of clinical mental health support cost for mild anxiety — at zero marginal cost'
+  ];
+  _TD['cr']=[
+    'The body\'s master clock (suprachiasmatic nucleus) synchronises all 11 physiological systems — a 1-hour sleep timing shift disrupts insulin sensitivity for 48 hours',
+    'Melatonin production begins 2 hours before habitual sleep onset — blue light after 9pm delays it by 90+ minutes, compressing recovery every single night',
+    'Cortisol peaks 30-45 minutes after waking and should be used for high-stakes thinking, not passive phone scrolling',
+    'Gut microbiome follows a 24-hour cycle — late-night eating disrupts microbial diversity within 7 days, directly affecting mood, immunity and metabolic rate',
+    'Light exposure in the first 30 minutes after waking anchors the circadian clock for the next 24 hours, more powerfully than any supplement'
+  ];
+  _TD['bs']=[
+    'Nervous system requires 7-9 hours of uninterrupted sleep for glymphatic waste clearance — chronic undersleep measurably accelerates neurodegenerative risk',
+    'Digestive system hosts 80% of immune function — gut barrier integrity is maintained by diverse fibre intake, not probiotic supplements alone',
+    'Musculoskeletal system needs resistance load (2× per week) and daily joint mobility to prevent the 1% per year muscle loss that begins at age 30',
+    'Endocrine disruption occurs within 3 days of shift work, irregular eating or chronic stress — full recovery takes 2-4 weeks of consistent habits',
+    'Lymphatic system has no pump of its own: physical movement and deep breathing are its only drivers — sitting 4+ hours shuts lymph flow to a trickle'
+  ];
+  function tk(id,lbl,bg){
+    return'<div class="ticker-row"><div class="ticker-lbl" style="background:'+bg+'">'+lbl+'</div><div class="ticker-track"><div class="ticker-text" id="tk-'+id+'" style="opacity:0">&#8635;</div></div></div>';
   }
-  var sep='<span class="ticker-sep">&#9670;</span>';
-  var s1='Attention is finite: the prefrontal cortex depletes under chronic distraction, reducing executive function by up to 30%'+sep+'90-minute deep work blocks protect ultradian rhythms — your brain naturally cycles between high and low focus'+sep+'Dopamine from social media spikes and crashes within 20 minutes, creating withdrawal cycles that impair sustained focus'+sep+'Sleep consolidates learning: 7-9 hours of uninterrupted sleep increases skill retention by 40% vs 6 hours'+sep+'Exercise upregulates BDNF, the brain\'s growth factor — 30 minutes of movement daily measurably improves learning speed'+sep+'Morning cortisol peaks 30-45 minutes after waking: this is your biological performance window, not your phone window';
-  var s2='Habits form through cue-routine-reward loops — changing your environment is 5× more effective than willpower alone'+sep+'Financial decisions under stress show 23% higher impulsivity: automate savings before spending windows open each week'+sep+'Social contagion is real — your income, health and habits trend toward the average of your closest 5 contacts within 3 years'+sep+'Purpose-aligned work activates intrinsic motivation circuits, reducing perceived effort by up to 40%'+sep+'Refining without shipping loops energy back on itself — real feedback from the world is irreplaceable by internal iteration'+sep+'Rest cycles are not wasted time: they are when the nervous system consolidates pattern recognition and restores prefrontal capacity';
-  var s3='Humans are the only species disrupting all 11 physiological systems simultaneously — through artificial light, processed food, sedentary living and social fragmentation'+sep+'A single 90-minute walk in nature lowers rumination in the prefrontal cortex more than 90 minutes of urban walking'+sep+'Plants release phytoncides that raise natural killer cell activity in humans by 50% after just 2 days in forests'+sep+'Biodiversity loss in cities directly correlates with reduced immune diversity in urban residents'+sep+'Noise pollution above 65 dB raises cortisol and increases cardiovascular risk — a widespread but invisible urban drain'+sep+'Diffuse natural light (even on overcast days) is 10-100× brighter than indoor lighting and is irreplaceable for circadian anchoring';
-  var v1='Ayurveda maps the day into doshas: Kapha (6-10am) for movement, Pitta (10am-2pm) for focused digestion and transformation, Vata (2-6pm) for creativity and communication'+sep+'Brahma Muhurta — 90 minutes before sunrise — is described as the clearest learning window, matching modern data on cortisol and memory encoding'+sep+'Ritucharya (seasonal living) prescribes different foods and routines every 2 months, mirroring chronobiology findings on metabolic adaptation'+sep+'Dharma (purpose-aligned action) maps precisely to what neuroscience calls intrinsic motivation — both reduce friction and increase flow states'+sep+'Prakriti (individual constitution) means there is no universal optimal schedule — the best routine is the one calibrated to your specific nature and life context'+sep+'The Vedic concept of Ama (accumulated toxin) parallels modern understanding of allostatic load — unprocessed stress and poor inputs that accumulate silently before manifesting as breakdown';
-  var w1='India\'s gig economy employs 38% of the workforce in freelance or contract roles — income volatility removes the structural routine that previously regulated sleep, eating and social connection'+sep+'Hyderabad grows by 500+ new residents daily, straining water, air quality and green space — all of which directly affect cognition and wellbeing'+sep+'Urban heat island effect makes Hyderabad summers 3-5°C hotter than surrounding rural areas, compressing the outdoor activity window to before 9am and after 6pm'+sep+'Telangana\'s groundwater has dropped 40% in 20 years — water scarcity already affects food prices, stress levels and daily routines across the state'+sep+'60% of India\'s new jobs since 2015 are in services requiring sustained cognitive output — yet only 12% of Indian workplaces have any formal cognitive load management practice';
-  var w2='The average Indian knowledge worker logs 52 hours per week, against a science-backed optimal of 38-42 hours for sustained performance'+sep+'Telangana\'s IT sector reports the highest burnout rates in India, driven by US-timezone demands that chronically disrupt circadian rhythms'+sep+'Hyderabad commutes average 90 minutes per day — time subtracted from sleep, exercise and family — the largest untracked energy drain in urban India'+sep+'India\'s urban food inflation means mid-income households spend 35-40% of income on food, compressing all other discretionary and recovery choices'+sep+'India loses an estimated Rs 18,000 crore annually in productivity to burnout — yet less than 2% of that is reinvested in preventive wellbeing infrastructure';
-  var r1='India wastes 40% of its food between farm and consumer, mostly at storage and market stage, while 190 million remain food insecure'+sep+'Screen time in India averages 7.3 hours per day, displacing physical activity, face-to-face connection and unstructured creative thinking for 40% of urban youth'+sep+'Water to produce 1 kg of beef: 15,000 litres. Water to produce 1 kg of lentils: 900 litres. India\'s dietary shift compresses water reserves 4× faster than population growth alone'+sep+'Corporate wellness budgets in Indian firms average Rs 800 per employee per year — less than one gym visit — while burnout costs the economy Rs 18,000 crore annually'+sep+'Bright indoor artificial light used after sunset suppresses melatonin for 90+ minutes per session, compounding across millions of people into a population-scale sleep deficit';
-  var r2='Regenerative farming on 15% of Indian farmland could sequester 200 million tons of carbon annually while improving soil nutrition and farmer income simultaneously'+sep+'4-day compressed work weeks (32 hours) in 60+ global pilot programmes showed equal or higher output with 26% lower burnout rates'+sep+'Community learning spaces reduce educational inequality 6× more cost-effectively than private tutoring infrastructure — with far wider reach'+sep+'India has 250 million volunteer hours per year — enough, if coordinated, to deliver basic literacy and numeracy to 50 million adults within 24 months'+sep+'Each hour of outdoor activity daily is estimated to replace roughly 20 minutes of clinical mental health support cost for mild anxiety — at zero marginal cost';
-  var c1='The body\'s master clock (suprachiasmatic nucleus) synchronises all 11 physiological systems — even a 1-hour shift in sleep timing disrupts insulin sensitivity for 48 hours'+sep+'Melatonin production begins 2 hours before habitual sleep onset — blue light exposure after 9pm delays it by 90+ minutes, compressing recovery time each night'+sep+'Cortisol peaks 30-45 minutes after waking and should be used for high-stakes thinking, not passive phone scrolling'+sep+'Gut microbiome follows a 24-hour cycle — late-night eating disrupts microbial diversity within 7 days, directly affecting mood, immunity and metabolic rate'+sep+'Light exposure in the first 30 minutes after waking anchors the circadian clock for the next 24 hours, more powerfully than any supplement available';
-  var c2='Nervous system requires 7-9 hours of uninterrupted sleep for glymphatic waste clearance — chronic undersleep measurably accelerates neurodegenerative risk over time'+sep+'Digestive system hosts 80% of immune function — gut barrier integrity is maintained by diverse fibre intake, not probiotic supplements alone'+sep+'Musculoskeletal system needs both resistance load (2× per week) and daily joint mobility to prevent the 1% per year muscle loss that begins silently at age 30'+sep+'Endocrine system disruption occurs within 3 days of shift work, irregular eating or chronic stress — full recovery takes 2-4 weeks of consistent habits, not a single rest day'+sep+'Lymphatic system has no pump of its own: physical movement and deep breathing are its only drivers — sitting 4+ hours continuously shuts lymph flow to a trickle';
-  return'<div class="ticker-section"><div class="ticker-title">&#128225; Life Intelligence Feed &mdash; science, Vedic wisdom &amp; living systems</div>'+
-    tk('Science<br>Mind',     '#1A4A8C', 80, s1)+
-    tk('Science<br>Habits',   '#5C2A9D', 90, s2)+
-    tk('Science<br>Nature',   '#1A6B3C', 85, s3)+
-    tk('Vedic<br>Insights',   '#92400E', 95, v1)+
-    tk('World to<br>Local 1', '#0F6B6B', 88, w1)+
-    tk('World to<br>Local 2', '#1E3A8A', 82, w2)+
-    tk('Resources<br>Misused', '#B83020', 92, r1)+
-    tk('Resources<br>Used Well','#166534',86, r2)+
-    tk('Circadian<br>Rhythms', '#4C1D95', 98, c1)+
-    tk('11 Body<br>Systems',  '#065F46', 94, c2)+
+  return'<div class="ticker-section"><div class="ticker-title">&#128225; Life Intelligence Feed</div>'+
+    tk('sm','Science<br>Mind',    '#1A4A8C')+
+    tk('sh','Science<br>Habits',  '#5C2A9D')+
+    tk('sn','Science<br>Nature',  '#1A6B3C')+
+    tk('vi','Vedic<br>Insights',  '#92400E')+
+    tk('w1','World to<br>Local 1','#0F6B6B')+
+    tk('w2','World to<br>Local 2','#1E3A8A')+
+    tk('r1','Resources<br>Drained','#B83020')+
+    tk('r2','Resources<br>Restored','#166534')+
+    tk('cr','Circadian<br>Rhythms','#4C1D95')+
+    tk('bs','11 Body<br>Systems', '#065F46')+
     '</div>';
 }
 function renderInsights(){
@@ -824,10 +918,18 @@ function renderInsights(){
     if(!arr||!arr.length)return'<div style="color:var(--faint);font-size:13px;font-weight:700;padding:6px 0">Nothing flagged here.</div>';
     return'<div class="dstk">'+arr.map(function(item){var cls=ok?'dcok':(item.severity==='high'?'dch':(item.severity==='medium'?'dcm':'dcl'));return'<div class="dc '+cls+'"><div class="dc-p">'+hlP(item.pattern)+'</div>'+(item.tip?'<div class="dc-t">'+hlP(item.tip)+'</div>':'')+' </div>';}).join('')+'</div>';
   }
+  _clearTickers();
   var habHtml='';
   if(habs&&habs.length)habHtml='<div class="dsec"><div class="dsec-t">&#128257; Habit Loops</div>'+habs.map(function(h){return'<div class="hloop"><div class="hloop-h">'+he(h.head||h.pattern||'')+'</div><div class="hloop-b">'+he(h.body||h.tip||'')+'</div></div>';}).join('')+'</div>';
-  var mainCol=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+'<div class="dsec"><div class="dsec-t">&#128184; Finance Drains</div>'+cards(fin,false)+'</div><div class="dsec"><div class="dsec-t">&#9889; Health and Attention Drains</div>'+cards(hlt,false)+'</div><div class="dsec"><div class="dsec-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div><div class="dsec"><div class="dsec-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
+  var drainQuad='<div class="drain-quad">'+
+    '<div class="dq-cell"><div class="dq-t">&#128184; Finance Drains</div>'+cards(fin,false)+'</div>'+
+    '<div class="dq-cell"><div class="dq-t">&#9889; Health &amp; Attention</div>'+cards(hlt,false)+'</div>'+
+    '<div class="dq-cell"><div class="dq-t">&#128218; Learning Drains</div>'+cards(lrn,false)+'</div>'+
+    '<div class="dq-cell"><div class="dq-t">&#127807; Nature Drains</div>'+cards(nat,false)+'</div>'+
+    '</div>';
+  var mainCol=hdr+scores+buildRadar([fS,hS,eS,aS])+(tip?'<div class="ki"><div class="ki-lbl">Key Insight</div>'+hlP(tip)+'</div>':'')+habHtml+drainQuad+(str&&str.length?'<div class="dsec"><div class="dsec-t">&#10022; What Is Working</div>'+cards(str,true)+'</div>':'')+(insightData&&insightData._error?'<div style="background:var(--br);border-radius:14px;padding:13px 15px;font-size:13px;font-weight:700;color:var(--cr);margin-top:12px">AI scan error. Check connection and try again.</div>':'');
   el.innerHTML='<div class="ins-layout"><div class="ins-main">'+mainCol+'</div><div class="ins-side">'+buildTickers()+'</div></div>';
+  setTimeout(initTickers,60);
 }
 function renderReview(){
   var el=document.getElementById('p-review');if(!el)return;
