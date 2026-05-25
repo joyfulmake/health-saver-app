@@ -1883,8 +1883,8 @@ function updateAuthUI(){
                        sets currentUser and persists pro status.
    ─────────────────────────────────────────────────────────────────────── */
 var _payOTP=null,_payEmail=null,_payStep=null;
-function openPay(){document.getElementById('pay-ov').classList.add('on');_renderPayStep('email');}
-function closePay(){document.getElementById('pay-ov').classList.remove('on');_payOTP=null;_payEmail=null;}
+function openPay(){document.getElementById('pay-ov').classList.add('open');_renderPayStep('email');}
+function closePay(){document.getElementById('pay-ov').classList.remove('open');_payOTP=null;_payEmail=null;}
 function _renderPayStep(step){
   _payStep=step;
   var el=document.getElementById('pay-content');if(!el)return;
@@ -1893,9 +1893,9 @@ function _renderPayStep(step){
       '<div style="background:linear-gradient(135deg,#0f0f0f,#1a1a2e);border-radius:14px;padding:18px 20px;color:#fff;margin-bottom:16px">'+
         '<div style="font-size:26px;font-weight:900">&#8377;100 <span style="font-size:13px;font-weight:700;opacity:.55">one-time &nbsp;&bull;&nbsp; &asymp; $1.20</span></div>'+
         '<div style="margin-top:13px;display:flex;flex-direction:column;gap:7px">'+
-          '<div style="font-size:13px;font-weight:700">&#127908;&nbsp; Voice logging across entire app</div>'+
-          '<div style="font-size:13px;font-weight:700">&#9729;&nbsp; Cross-device sync (your own cloud)</div>'+
-          '<div style="font-size:13px;font-weight:700">&#127942;&nbsp; Early access to new features</div>'+
+          '<div style="font-size:13px;font-weight:700">&#9729;&#65039;&nbsp; Cross-device sync &mdash; your entries follow you</div>'+
+          '<div style="font-size:13px;font-weight:700">&#127942;&nbsp; Early access to every feature we build</div>'+
+          '<div style="font-size:13px;font-weight:700;opacity:.6">&#127908;&nbsp; Voice logging &mdash; already free for everyone</div>'+
         '</div>'+
       '</div>'+
       '<div class="fg" style="margin-bottom:10px">'+
