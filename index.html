@@ -1,4 +1,33 @@
 <!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  FLOURISH  ·  Honest patterns · Better days                             ║
+  ║  flourish.is-a.dev  |  github.com/joyfulmake/health-saver-app           ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  Single-file HTML/CSS/JS app — no build step, no server, no framework   ║
+  ║  All data lives in localStorage (key: lifeos_v5) or Claude session      ║
+  ║  storage. Nothing is sent to any server unless Firebase is configured.  ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  TABS (each maps to a pane id="p-{name}"):                               ║
+  ║    quicklog  · dashboard  · insights  · nature                          ║
+  ║    review    · finance    · time                                         ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  KEY DATA SHAPE (entries[]):                                             ║
+  ║    { id, date, activity, category, duration, direction, mode,           ║
+  ║      friction, hasFinance, financeType, financeAmount, financeCategory, ║
+  ║      natureScore, note }                                                ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  PRO FEATURES (requires FLOURISH_PRO_KEY or UPI payment):               ║
+  ║    · Voice logging (SpeechRecognition API, no audio stored)             ║
+  ║    · Cross-device sync (optional Firebase — user's own cloud)           ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  CONFIGURATION SECTION  (search "RAZORPAY" to jump there):              ║
+  ║    RAZORPAY_KEY    — UPI/GPay payment gateway key                       ║
+  ║    FLOURISH_PRO_KEY — direct pro unlock passphrase                      ║
+  ║    FIREBASE_CONFIG — optional cloud sync object                         ║
+  ║    WEB3FORMS_KEY   — routes feedback + OTP emails to your inbox         ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -15,9 +44,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+/* ── Reset & base ───────────────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
 body{overscroll-behavior-y:contain}
+
+/* ── Design tokens ──────────────────────────────────────────────────────
+   Domain palette:  cb=blue  cg=green  ca=amber  cr=red  cp=purple  ct=teal
+   Light tints:     bb/bg2/ba/br/bp  (8–9% opacity backgrounds)
+   Glow shadows:    gwb/gwg/gwr/gwa  (used on score values + now-strip)
+   ─────────────────────────────────────────────────────────────────────── */
 :root{
   --bg:#fff;--text:#0f0f0f;--muted:#6b7280;--faint:#9ca3af;
   --soft:#f5f4f1;--softer:#f9f8f6;--border:rgba(0,0,0,.08);
@@ -512,7 +548,30 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
 </div>
 <div class="sfooter"><span id="sf-icon">&#9203;</span><span id="sf-text">Loading...</span><span style="color:var(--border);margin-left:4px">v4.0</span><button class="sf-btn" onclick="exportCSV()">Export CSV</button></div>
 <script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   FLOURISH  ·  Main application script
+   All logic lives here — no external JS dependencies.
+   Sections in order:
+     1. Constants & lookup tables
+     2. App state variables
+     3. Persistence helpers (persist, boot)
+     4. Date / formatting utilities
+     5. Quick Log wizard  (w1 / w2 / w3 / wSave)
+     6. Insight builders  (buildMonthlyReflection, buildRhythmDNA)
+     7. Render functions  (renderQuickLog → renderFinance)
+     8. Analysis engine   (localAnalysis, localWeeklyReview)
+     9. Nature / clock    (renderNature, buildClock, _clockTick)
+    10. Tab switcher      (sw)
+    11. Modal / entry CRUD (openModal, saveEntry, doDelete)
+    12. Pro & payment     (unlockPro, openPay, verifyPayOTP)
+    13. Firebase / sync   (initFirebase, syncNow, persistCloud)
+    14. Settings & feedback (openSettings, submitFeedback)
+    15. CSV export
+    16. Window exports     (exposes functions to inline onclick handlers)
+    17. Boot              (boot — entry point, called at end of script)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
+/* ── 1. Constants & lookup tables ───────────────────────────────────────── */
 var CATS=['Work','Learning','Health','Social','Creative','Admin','Personal'];
 var ECATS=['Food','Transport','Housing','Health','Shopping','Entertainment','Utilities','Education','Business','Other'];
 var ICATS=['Salary','Freelance','Business','Investment','Gift','Other'];
@@ -531,6 +590,14 @@ var DUR=[{l:'15m',v:.25},{l:'30m',v:.5},{l:'45m',v:.75},{l:'1h',v:1},{l:'1.5h',v
 var NATICONS=['','🏙️','📱','🌿','🌳','☀️'];
 var NATLBL=['','Fully urban','Mixed indoor','Some nature','Mostly outdoor','Fully natural'];
 var CATCOLS=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16','#F97316','#6B7280'];
+/* ── 2. App state variables ──────────────────────────────────────────────
+   entries[]   — the canonical dataset; persisted to localStorage/cloud
+   activeTab   — currently visible pane name
+   fView/tView — finance / time view granularity ('daily'|'weekly'|'monthly')
+   fRef/tRef   — reference date for finance / time navigation
+   WD          — wizard draft (cleared on resetWiz)
+   F           — modal edit draft (loaded in openModal, cleared on close)
+   ─────────────────────────────────────────────────────────────────────── */
 var entries=[],activeTab='quicklog',fView='monthly',tView='monthly';
 var fRef=null,tRef=null,logFilter=null,delId=null,editId=null;
 var wizStep=1,wizDone=false,wizWelcome=true;
@@ -539,6 +606,11 @@ var F={date:'',activity:'',category:'Work',duration:0,direction:'directed',mode:
 var insightData=null,insightLoading=false,lastAnalyzed=null;
 var reviewData=null,reviewLoading=false,lastReview=null,reviewWeekMon=null,reviewWeekSun=null;
 
+/* ── 3. Persistence helpers ──────────────────────────────────────────────
+   persist()   — writes entries[] to localStorage AND cloud (if signed in)
+   boot()      — async entry point: loads data, sets initial tab, calls render
+   sfBar()     — updates the storage status indicator in the footer
+   ─────────────────────────────────────────────────────────────────────── */
 function persist(){var j=JSON.stringify(entries);if(window.storage&&window.storage.set)window.storage.set('lifeos_v5',j).catch(function(){try{localStorage.setItem('lifeos_v5',j);}catch(e){}});else try{localStorage.setItem('lifeos_v5',j);}catch(e){}persistCloud();}
 function sfBar(t){var i=document.getElementById('sf-icon'),x=document.getElementById('sf-text');if(!i||!x)return;if(t==='cloud'){i.textContent='☁️';x.innerHTML='<strong>Session Storage</strong> Data persists in this Claude session.';}else if(t==='local'){i.textContent='💾';x.innerHTML='<strong>Local Storage</strong> Saved in this browser.';}else{i.textContent='⚠️';x.innerHTML='<strong>No persistent storage</strong>';}}
 async function boot(){
@@ -558,6 +630,17 @@ async function boot(){
   updateAuthUI();
   if(FIREBASE_CONFIG)initFirebase();
 }
+/* ── 4. Date & formatting utilities ─────────────────────────────────────
+   today()     — midnight Date for today
+   dstr()      — Date → 'YYYY-MM-DD' string
+   fM()        — number → Indian locale currency string (e.g. "1,23,456.00")
+   fH()        — hours float → compact string ("2h", "1.5h")
+   he()        — HTML-escape a string (used before injecting user text)
+   sc()        — score 0-100 → CSS color variable (green/amber/red)
+   sg()        — score → matching glow shadow CSS value
+   getMon/getSun — get Monday/Sunday of the week containing a Date
+   rangeEntries — filter entries[] by view + reference date
+   ─────────────────────────────────────────────────────────────────────── */
 function today(){var d=new Date();d.setHours(0,0,0,0);return d;}
 function dstr(d){return new Date(d).toISOString().slice(0,10);}
 function fM(n){return Math.abs(+n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
@@ -814,6 +897,15 @@ function aiInsights(){
   try{localStorage.setItem('lifeos_ins_v2',JSON.stringify({data:insightData,ts:lastAnalyzed}));}catch(e){}
   renderInsights();
 }
+/* ── 8. Analysis engine ──────────────────────────────────────────────────
+   localAnalysis()      — derives scores, drains, strengths, habits from
+                          entries[] without any AI call. Used as fallback
+                          when insightData is absent or stale.
+   localWeeklyReview()  — synchronously generates a full weekly review
+                          object (summary, win, miss, focus, scores).
+                          Falls back to the most recent week with data
+                          when the current week has < 2 entries.
+   ─────────────────────────────────────────────────────────────────────── */
 function localWeeklyReview(){
   reviewLoading=true;renderReview();
   var mo=getMon(today()),su=getSun(today());
@@ -920,6 +1012,19 @@ function seedData(){
   });
   persist();wizWelcome=false;render();
 }
+/* ── 7. Render functions ─────────────────────────────────────────────────
+   Each render function owns one pane (id="p-{name}").
+   They are called by render() whenever the active tab changes or
+   data is mutated. They rebuild innerHTML from scratch — no virtual DOM.
+
+   renderQuickLog  — 3-step wizard: What/How Long → How It Felt → Context
+   renderDashboard — balance radar, streaks, score ring, category bars
+   renderInsights  — drain quadrant, habit loops, monthly reflection, rhythm DNA
+   renderReview    — weekly review card + entry list
+   renderNature    — circadian clock SVG + nature tickers
+   renderFinance   — income/expense charts + transaction list
+   renderTime      — time-allocation charts + log list
+   ─────────────────────────────────────────────────────────────────────── */
 function renderQuickLog(){
   var el=document.getElementById('p-quicklog');if(!el)return;
   if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">3 taps per entry. Finance drains, attention leaks, habit loops, and nature misalignment surface automatically from your own data.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Dashboard</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Balance, streaks, active drains</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Habit Loops</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Cross-domain pattern detection</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 Weekly Review</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Weekly pattern review</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Nature Alignment</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Circadian and seasonal guide</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><button class="wwstart" onclick="startWiz()" style="margin:0">&#9889; Text log</button><button class="wwstart" onclick="startVoiceLog()" style="margin:0;background:'+(currentUser?'#0f0f0f':'var(--soft)')+';color:'+(currentUser?'#fff':'var(--muted)')+'">&#127908; Voice log'+(currentUser?'':' &#8599;')+'</button></div><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
@@ -1311,6 +1416,15 @@ function renderReview(){
   else aiH='<div class="wr-ai"><div class="wr-ai-t">Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week.</div></div>';
   el.innerHTML=hero+stats+'</div>'+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">No entries this week yet.</div>');
 }
+/* ── 9. Nature tab / circadian clock ────────────────────────────────────
+   buildClock()       — returns an SVG string of the 24-hour circadian clock.
+                        Segments are color-coded by period (sleep/dawn/etc.).
+                        id="clock-hand" on the hour line and
+                        id="clock-time-txt" on the time label enable live ticking.
+   _startClockTick()  — setInterval (1 s) that repositions the hand and
+                        updates the time text. Started by renderNature().
+   _stopClockTick()   — clears the interval. Called by sw() when leaving Nature tab.
+   ─────────────────────────────────────────────────────────────────────── */
 var _clockTick=null;
 function _startClockTick(){
   if(_clockTick)return;
@@ -1454,6 +1568,13 @@ function render(){
   if(activeTab==='finance')renderFinance();
   if(activeTab==='time')renderTime();
 }
+/* ── 10. Tab switcher ────────────────────────────────────────────────────
+   sw(tab, el) — activates a tab by:
+     · removing .on from all .tab buttons and .pane divs
+     · adding body.tab-{name} for per-tab background gradient
+     · stopping the clock tick if leaving Nature
+     · calling render() to refresh the new pane's content
+   ─────────────────────────────────────────────────────────────────────── */
 function sw(tab,el){
   activeTab=tab;
   if(tab!=='nature')_stopClockTick();
@@ -1472,6 +1593,12 @@ function navT(d){tRef=navRef(tRef,tView,d);renderTime();}
 function askDel(id){delId=id;render();}
 function cancelDel(){delId=null;render();}
 function doDelete(id){entries=entries.filter(function(e){return e.id!==id;});persist();delId=null;render();}
+/* ── 11. Modal / entry CRUD ──────────────────────────────────────────────
+   openModal(id)  — opens the add/edit entry modal. id=null → new entry,
+                    id=string → loads that entry into F for editing.
+   saveEntry()    — reads F from DOM inputs, upserts into entries[], persists.
+   askDel / doDelete — two-step delete confirmation.
+   ─────────────────────────────────────────────────────────────────────── */
 function openModal(id){
   editId=id;
   var e=id?entries.find(function(x){return x.id===id;}):null;
@@ -1502,6 +1629,7 @@ function saveEntry(){
   if(editId)entries=entries.map(function(e){return e.id===editId?entry:e;});else entries.push(entry);
   persist();closeModal();render();
 }
+/* ── 15. CSV export ──────────────────────────────────────────────────── */
 function exportCSV(){
   var cols=['id','date','activity','category','duration','direction','mode','friction','financeType','financeAmount','financeCategory','natureScore','note'];
   var rows=[cols.join(',')];
@@ -1544,6 +1672,16 @@ var FIREBASE_CONFIG={apiKey:"AIza...",authDomain:"myapp.firebaseapp.com",
    ─────────────────────────────────────────────────────────────────────────*/
 var WEB3FORMS_KEY='YOUR_WEB3FORMS_ACCESS_KEY';
 
+/* ── 13. Firebase / cloud sync (optional) ───────────────────────────────
+   Only active when FIREBASE_CONFIG is set (not null).
+   initFirebase()   — lazy-loads Firebase SDK scripts, initialises app,
+                      attaches onAuthStateChanged → updateAuthUI().
+   signInGoogle()   — Google popup sign-in (requires FIREBASE_CONFIG).
+   syncNow()        — merge-fetches cloud entries into local entries[],
+                      then writes merged set back to Firestore.
+   persistCloud()   — one-way push of entries[] to Firestore after mutations.
+   Data path: users/{uid}/data/entries  (user's own Firestore document)
+   ─────────────────────────────────────────────────────────────────────── */
 var fbAuth=null,fbDB=null,fbLoaded=false;
 var currentUser=(function(){try{var s=localStorage.getItem('flourish_pro');return s?JSON.parse(s):null;}catch(e){return null;}})();
 function loadFirebaseSDK(cb){
@@ -1572,6 +1710,18 @@ function updateAuthUI(){
     if(e)e.textContent=currentUser.email||'';
   }else{out.style.display='block';inn.style.display='none';}
 }
+/* ── 12. Pro & payment ───────────────────────────────────────────────────
+   unlockPro()       — validates FLOURISH_PRO_KEY entered in Settings;
+                       saves currentUser to localStorage on match.
+   openPay()         — opens the UPI payment modal (3-step state machine).
+   _renderPayStep()  — renders 'email' | 'otp' | 'done' step content.
+   startUPIPay()     — validates email + consent, loads Razorpay SDK,
+                       opens checkout popup. Requires RAZORPAY_KEY.
+   _onPaySuccess()   — generates a 6-digit OTP, emails it via Web3Forms,
+                       advances modal to 'otp' step.
+   verifyPayOTP()    — compares entered OTP against _payOTP; on match
+                       sets currentUser and persists pro status.
+   ─────────────────────────────────────────────────────────────────────── */
 var _payOTP=null,_payEmail=null,_payStep=null;
 function openPay(){document.getElementById('pay-ov').classList.add('on');_renderPayStep('email');}
 function closePay(){document.getElementById('pay-ov').classList.remove('on');_payOTP=null;_payEmail=null;}
@@ -1752,6 +1902,13 @@ function restoreFromCode(){
     render();
   }catch(e){alert('Invalid backup code. Please check and try again.');}
 }
+/* ── 14. Settings, feedback & backup ────────────────────────────────────
+   openSettings / closeSettings — slide-up modal
+   genBackupCode()  — serialises entries[] to base64; shows in textarea
+   copyBackupCode() — copies code to clipboard with visual confirmation
+   restoreFromCode()— decodes pasted code, confirms, replaces entries[]
+   openFeedback / submitFeedback — Web3Forms-powered feedback email
+   ─────────────────────────────────────────────────────────────────────── */
 function openSettings(){
   var el=document.getElementById('settings-ov');if(!el)return;
   updateAuthUI();el.classList.add('open');
@@ -1783,6 +1940,10 @@ function submitFeedback(){
     })
     .catch(function(){alert('Could not send. Check your connection.');});
 }
+/* ── 16. Window exports ──────────────────────────────────────────────────
+   Inline onclick="" handlers in the HTML cannot see module-scoped vars.
+   Every function referenced in HTML must be explicitly attached to window.
+   ─────────────────────────────────────────────────────────────────────── */
 window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
 window.genBackupCode=genBackupCode;window.copyBackupCode=copyBackupCode;window.restoreFromCode=restoreFromCode;
 window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
@@ -1796,6 +1957,7 @@ window.wsCat=wsCat;window.wsDur=wsDur;window.wsDir=wsDir;window.wsMode=wsMode;wi
 window.wsNat=wsNat;window.wsFinT=wsFinT;window.wTogFin=wTogFin;
 window.aiInsights=aiInsights;window.localWeeklyReview=localWeeklyReview;
 window.seedData=seedData;window.exportCSV=exportCSV;
+/* ── 17. Entry point ────────────────────────────────────────────────── */
 boot();
 
 </script>

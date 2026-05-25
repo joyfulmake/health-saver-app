@@ -1,0 +1,6 @@
+# Python dependencies for flourish-deck.pptx generation
+# Run:  pip install -r requirements.txt
+# Then: python3 make_deck.py
+
+python-pptx>=1.0.0
+lxml>=4.9.0
