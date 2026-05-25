@@ -370,19 +370,22 @@ body.tab-log{background:radial-gradient(ellipse at 90% 0%,rgba(0,0,0,.025) 0%,#f
 @keyframes tickPulse{0%,100%{opacity:.85}50%{opacity:.2}}
 .clock-tick-dot{animation:tickPulse 1s ease-in-out infinite}
 /* ── Story banner ───────────────────────────────────────────────────────── */
-@keyframes storyFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes storyIn{from{transform:translateX(28px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes storyOut{from{transform:translateX(0);opacity:1}to{transform:translateX(-28px);opacity:0}}
+@keyframes storyProg{from{width:0%}to{width:100%}}
 .story-wrap{background:linear-gradient(160deg,#faf9f7 0%,#f1efe9 100%);border-radius:14px;padding:14px 16px 11px;margin-bottom:14px;border:1px solid rgba(0,0,0,.07);cursor:pointer;position:relative;overflow:hidden;user-select:none;-webkit-user-select:none}
 .story-wrap:active{opacity:.88}
 .story-leaf{position:absolute;top:-6px;right:0px;font-size:64px;opacity:.06;pointer-events:none;transform:rotate(20deg);line-height:1;filter:grayscale(1)}
-.story-body{font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.8;min-height:54px;transition:opacity .45s ease}
-.story-body.sfade{opacity:0}
+.story-body{font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.8;min-height:54px}
+.story-body.sin{animation:storyIn .52s cubic-bezier(.22,1,.36,1) both}
+.story-body.sout{animation:storyOut .38s ease both}
 .story-meta{margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .story-src{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.3px;flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.story-link{font-size:10px;font-weight:800;color:var(--cb);text-decoration:none;flex-shrink:0}
-.story-link:hover{text-decoration:underline}
-.story-dots{display:flex;gap:4px;margin-top:9px;justify-content:center;align-items:center}
-.sdot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.12);transition:all .35s;flex-shrink:0}
-.sdot.on{background:rgba(0,0,0,.48);width:14px;border-radius:3px}
+.story-link{font-size:10px;font-weight:800;color:var(--cb);text-decoration:none;flex-shrink:0;opacity:.8}
+.story-link:hover{opacity:1;text-decoration:underline}
+.story-prog{height:2px;background:rgba(0,0,0,.07);border-radius:1px;margin-top:10px;overflow:hidden}
+.story-prog-bar{height:100%;background:linear-gradient(90deg,rgba(26,107,60,.3),rgba(26,107,60,.55));border-radius:1px;width:0}
+.story-prog-bar.run{animation:storyProg 15s linear both}
 select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 .fi{font-size:16px}
 .pb{width:44px;height:44px;font-size:20px}
@@ -408,12 +411,12 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
   </div>
   <div class="story-wrap" id="story-wrap" onclick="_storyNext()">
     <div class="story-leaf">🌿</div>
-    <div class="story-body" id="story-body"></div>
+    <div class="story-body sin" id="story-body"></div>
     <div class="story-meta">
       <span class="story-src" id="story-src"></span>
       <a class="story-link" id="story-link" href="#" target="_blank" rel="noopener" onclick="event.stopPropagation()">read →</a>
     </div>
-    <div class="story-dots" id="story-dots"></div>
+    <div class="story-prog"><div class="story-prog-bar" id="story-prog-bar"></div></div>
   </div>
   <div id="now-strip" class="now-strip" style="display:none">
     <div class="now-l"><div class="now-dot" id="now-dot"></div><div><div class="now-text" id="now-text"></div><div class="now-sub" id="now-sub"></div></div></div>
@@ -640,49 +643,104 @@ function sfBar(t){var i=document.getElementById('sf-icon'),x=document.getElement
    12 short stories on self-knowledge, flow, and presence. Rotate every 15s.
    Each: {t: text, r: reference label, u: url}
    ──────────────────────────────────────────────────────────────────────── */
+/* 50 curated stories on self-knowledge, flow, and presence.
+   Rotate every 15 s; no story repeats within a 3-hour window (tracked in localStorage). */
 var STORIES=[
-  {t:'Thoreau kept journals for 24 years — not to track habits, but to learn the shape of his own attention. He called it living deliberately.',r:'Walden · Henry David Thoreau, 1854',u:'https://gutenberg.org/ebooks/205'},
-  {t:'Marcus Aurelius wrote Meditations entirely to himself. It was never meant to be published. Knowing your patterns of thought — not fixing them — was the whole practice.',r:'Meditations · Marcus Aurelius, ~170 AD',u:'https://gutenberg.org/ebooks/2680'},
-  {t:'Feynman wrote everything down not to remember, but because writing is thinking. His notebooks are full of half-questions, wrong turns, and sudden clarity.',r:'Surely You\'re Joking, Mr. Feynman · 1985',u:'https://caltech.edu/feynman'},
-  {t:'Flow — complete absorption in what you\'re doing — requires knowing your own patterns well enough to stop monitoring yourself. You can\'t enter flow in a fog.',r:'Flow · Mihaly Csikszentmihalyi, 1990',u:'https://www.goodreads.com/book/show/66354'},
-  {t:'Darwin walked his thinking path at Down House every morning. Same loop, same pace. He solved most questions in motion, not at his desk.',r:'Darwin\'s Down House · Natural History Museum, London',u:'https://www.nhm.ac.uk/visit/darwin-centre.html'},
-  {t:'Knowing others is wisdom. Knowing yourself is enlightenment. Two thousand years of minds across every culture have agreed on this one thing.',r:'Tao Te Ching Ch. 33 · Lao Tzu, ~600 BCE',u:'https://ctext.org/dao-de-jing'},
-  {t:'Leonardo kept 13,000 pages of notebooks — birds, water, bones, shadows, jokes. Not a system. Just a person curious about everything, noting what he saw.',r:'Leonardo\'s Notebooks · Royal Collection Trust, Windsor',u:'https://www.royalcollection.org.uk/the-collection/themes/leonardo-da-vinci'},
-  {t:'Japanese researchers found 20 minutes in trees measurably lowers cortisol and clears cognitive fog. Shinrin-yoku — forest bathing. No meditation required.',r:'Miyazaki · Nippon Medical School Journal, 2009',u:'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2793346/'},
-  {t:'The Upanishadic practice of atma-vichara — who am I? — is not about finding an answer. It is about noticing what stays present when distractions fall away.',r:'Mandukya Upanishad · ~700 BCE',u:'https://sacred-texts.com/hin/upan/index.htm'},
-  {t:'Tagore wrote in the early morning — not to produce, but to stay close to what was true in him. The small truth has words that are clear; the great truth has great silence.',r:'Stray Birds · Rabindranath Tagore, 1916',u:'https://gutenberg.org/ebooks/5223'},
-  {t:'Basho walked thousands of miles and wrote haiku about what he noticed. The discipline was not the writing. It was the noticing. The writing just proved it happened.',r:'Narrow Road to the Deep North · Basho, 1689',u:'https://gutenberg.org/ebooks/7073'},
-  {t:'The Bhagavad Gita\'s central question is not what should I do? but who is asking? Self-knowledge is not a destination — it is the quality of attention you bring.',r:'Bhagavad Gita Ch. 2-3 · ~200 BCE',u:'https://sacred-texts.com/hin/gita/index.htm'}
+  {t:'Thoreau kept journals for 24 years — not to track habits, but to learn the shape of his own attention. He called it living deliberately.',r:'Walden · Thoreau, 1854',u:'https://gutenberg.org/ebooks/205'},
+  {t:'Marcus Aurelius wrote Meditations to himself, never for others. Knowing your patterns of thought — not fixing them — was the whole practice.',r:'Meditations · Marcus Aurelius, ~170 AD',u:'https://gutenberg.org/ebooks/2680'},
+  {t:'Feynman wrote everything down not to remember, but because writing is thinking. His notebooks are full of wrong turns and sudden clarity.',r:'Feynman Lectures · Caltech Archives',u:'https://www.feynmanlectures.caltech.edu/'},
+  {t:'Flow requires knowing your patterns well enough to stop monitoring yourself. You cannot enter flow in a fog.',r:'Flow · Csikszentmihalyi, 1990',u:'https://www.goodreads.com/book/show/66354'},
+  {t:'Darwin walked his thinking path at Down House every morning. Same loop, same pace. He solved most questions in motion, not at his desk.',r:'Darwin\'s Down House · Natural History Museum',u:'https://www.nhm.ac.uk/visit/darwin-centre.html'},
+  {t:'Knowing others is wisdom. Knowing yourself is enlightenment.',r:'Tao Te Ching Ch. 33 · Lao Tzu, ~600 BCE',u:'https://ctext.org/dao-de-jing'},
+  {t:'Leonardo kept 13,000 pages of notebooks — birds, water, bones, shadows, jokes. Not a system. Just a person curious about everything, noting what he saw.',r:'Leonardo\'s Notebooks · Royal Collection Trust',u:'https://www.royalcollection.org.uk/the-collection/themes/leonardo-da-vinci'},
+  {t:'20 minutes in trees measurably lowers cortisol and clears cognitive fog. Shinrin-yoku — forest bathing. No meditation required.',r:'Miyazaki · Nippon Medical School Journal, 2009',u:'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2793346/'},
+  {t:'Atma-vichara — who am I? — is not about finding an answer. It is about noticing what stays when distractions fall away.',r:'Mandukya Upanishad · ~700 BCE',u:'https://sacred-texts.com/hin/upan/index.htm'},
+  {t:'The small truth has words that are clear; the great truth has great silence.',r:'Stray Birds · Rabindranath Tagore, 1916',u:'https://gutenberg.org/ebooks/5223'},
+  {t:'Basho walked thousands of miles and noted what he saw. The discipline was not the writing. It was the noticing.',r:'Narrow Road to the Deep North · Basho, 1689',u:'https://gutenberg.org/ebooks/7073'},
+  {t:'The Bhagavad Gita\'s central question is not what should I do, but who is asking. Self-knowledge is not a destination.',r:'Bhagavad Gita Ch. 2 · ~200 BCE',u:'https://sacred-texts.com/hin/gita/index.htm'},
+  {t:'Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.',r:'Masnavi · Rumi, 13th century',u:'https://gutenberg.org/ebooks/23700'},
+  {t:'Seneca: One who is everywhere is nowhere. Find one thing each day that deserves your full presence.',r:'Letters to Lucilius · Seneca, ~62 AD',u:'https://gutenberg.org/ebooks/3794'},
+  {t:'Montaigne invented the essay to study himself. He called himself the subject of his own book — not out of vanity, but curiosity.',r:'Essays · Montaigne, 1580',u:'https://gutenberg.org/ebooks/3600'},
+  {t:'Attention is the rarest and purest form of generosity. First give it to yourself — then you can give it to anything.',r:'Gravity and Grace · Simone Weil, 1952',u:'https://www.goodreads.com/book/show/99370'},
+  {t:'Frankl found that people survive suffering not by escaping it, but by the meaning they assign to it.',r:'Man\'s Search for Meaning · Frankl, 1946',u:'https://www.goodreads.com/book/show/4069'},
+  {t:'Keats called it negative capability: being comfortable in uncertainty without reaching for fact or reason. The ground of all creativity.',r:'Letter to George Keats · Keats, 1817',u:'https://www.poetryfoundation.org/poets/john-keats'},
+  {t:'Einstein\'s best ideas came from thought experiments — purely imagined scenarios held in the mind. He rarely worked from data first.',r:'Ideas and Opinions · Einstein, 1954',u:'https://www.goodreads.com/book/show/27036'},
+  {t:'Ramanujan said his theorems came in dreams. Whether or not true, he wrote them down on waking — and they were correct.',r:'The Man Who Knew Infinity · Kanigel, 1991',u:'https://www.goodreads.com/book/show/106139'},
+  {t:'Kabir: Look within — the secret is inside you. He wrote this in the 15th century. Most people are still looking elsewhere.',r:'Kabir: Ecstatic Poems · tr. Bly, 2004',u:'https://www.goodreads.com/book/show/182041'},
+  {t:'The cure for all ills and wrongs lies in the knowledge of self. Written in Tamil, 2,000 years ago.',r:'Thirukkural · Thiruvalluvar, ~300 CE',u:'https://www.projectmadurai.org/pm_etexts/utf8/pmuni0007.html'},
+  {t:'The greatest sin is to think yourself weak. Strength is life; weakness is death.',r:'Complete Works Vol. 2 · Swami Vivekananda, 1896',u:'https://cwsv.belurmath.org/'},
+  {t:'All of humanity\'s problems stem from man\'s inability to sit quietly in a room alone.',r:'Pensées · Pascal, 1670',u:'https://gutenberg.org/ebooks/18269'},
+  {t:'Wordsworth composed poetry by walking — up to 14 miles a day. His sister Dorothy wrote down what he said aloud. The walk was the composition.',r:'Grasmere Journals · Dorothy Wordsworth, 1800',u:'https://gutenberg.org/ebooks/42856'},
+  {t:'Goethe kept journals of everything — travel, color, heartbreak. He called the purpose Steigerung: becoming clearer about what you already are.',r:'Italian Journey · Goethe, 1816',u:'https://gutenberg.org/ebooks/17363'},
+  {t:'Even after all this time, the sun never says to the earth: you owe me. Look what happens with a love like that.',r:'The Gift · Hafiz, tr. Ladinsky, 1999',u:'https://www.goodreads.com/book/show/183219'},
+  {t:'Your task is not to seek love, but to find all the barriers within yourself that you have built against it.',r:'Masnavi · Rumi, 13th century',u:'https://gutenberg.org/ebooks/23700'},
+  {t:'Truth is a pathless land. You cannot approach it by any religion, any method, any teacher.',r:'Dissolution Speech · Krishnamurti, 1929',u:'https://www.jkrishnamurti.org/content/dissolution-speech'},
+  {t:'Muddy water, let stand, becomes clear. This is not effort — it is the absence of effort.',r:'The Tao of Philosophy · Alan Watts',u:'https://www.goodreads.com/book/show/8949'},
+  {t:'Zhuangzi dreamed he was a butterfly, then woke. Now he did not know: was he a man dreaming of a butterfly, or a butterfly dreaming of a man?',r:'Zhuangzi Ch. 2 · ~300 BCE',u:'https://ctext.org/zhuangzi'},
+  {t:'Yoga is the stilling of the fluctuations of the mind. Then the seer abides in their own nature.',r:'Yoga Sutras I.2-3 · Patanjali, ~400 CE',u:'https://sacred-texts.com/hin/yogasutr.htm'},
+  {t:'Confucius: I examine myself on three points daily — faithfulness to others, sincerity with friends, and mastery of what I have learned.',r:'Analects I.4 · Confucius, ~500 BCE',u:'https://ctext.org/analects'},
+  {t:'What you resist not only persists but grows in size. The shadow grows larger the more you ignore it.',r:'Collected Works · C.G. Jung',u:'https://www.goodreads.com/author/show/26539.C_G_Jung'},
+  {t:'Human beings, by changing their inner attitudes of mind, can change the outer aspects of their lives.',r:'The Principles of Psychology · William James, 1890',u:'https://gutenberg.org/ebooks/57628'},
+  {t:'Some things are in our control and others are not. Making this distinction is the beginning of philosophy.',r:'Enchiridion · Epictetus, ~125 AD',u:'https://gutenberg.org/ebooks/45109'},
+  {t:'You cannot step into the same river twice, for it is not the same river and you are not the same person.',r:'Fragments · Heraclitus, ~500 BCE',u:'https://www.goodreads.com/book/show/38653'},
+  {t:'Tell me, what is it you plan to do with your one wild and precious life?',r:'The Summer Day · Mary Oliver, 1992',u:'https://www.poetryfoundation.org/poems/133390'},
+  {t:'Live the questions now. Perhaps someday, without noticing it, you will live your way into the answer.',r:'Letters to a Young Poet · Rilke, 1903',u:'https://gutenberg.org/ebooks/7686'},
+  {t:'Consciousness is not what you are aware of — it is what you are aware with. The witness does not change; only the content does.',r:'Brihadaranyaka Upanishad · ~700 BCE',u:'https://sacred-texts.com/hin/sbe15/index.htm'},
+  {t:'We suffer more in imagination than in reality. Fear is pain from what might happen — and most things do not happen.',r:'Letters to Lucilius · Seneca, ~62 AD',u:'https://gutenberg.org/ebooks/3794'},
+  {t:'Be still and know. Not the knowing of information — the knowing of presence. Still water shows the sky.',r:'Sermons · Meister Eckhart, ~1300 CE',u:'https://www.goodreads.com/book/show/151878'},
+  {t:'The butterfly counts not months but moments, and has time enough.',r:'Fireflies · Rabindranath Tagore, 1928',u:'https://gutenberg.org/ebooks/5223'},
+  {t:'Before enlightenment, chop wood, carry water. After enlightenment, chop wood, carry water. The activity changes nothing. The attention changes everything.',r:'Zen Proverb',u:'https://www.goodreads.com/quotes/102396-before-enlightenment-chop-wood-carry-water'},
+  {t:'Boethius wrote The Consolation of Philosophy while awaiting execution. Fortune, he realized, is never truly yours — but reason is.',r:'Consolation of Philosophy · Boethius, 524 CE',u:'https://gutenberg.org/ebooks/14328'},
+  {t:'You are not the body, not the mind, not the senses. You are the pure awareness that witnesses all of these.',r:'Vivekachudamani · Adi Shankaracharya, ~8th cent CE',u:'https://sacred-texts.com/hin/sbe8/index.htm'},
+  {t:'The one who has no wound — how will they know the healer? Each mark you carry is a teacher.',r:'Sufi Wisdom · attributed to Rumi',u:'https://www.goodreads.com/quotes/tag/rumi'},
+  {t:'Do not attach yourself to any one creed so that you disbelieve all the rest. God is too vast and too generous for that.',r:'The Bezels of Wisdom · Ibn Arabi, 1229 CE',u:'https://www.goodreads.com/book/show/313793'},
+  {t:'Emptiness does not mean nothing exists. It means nothing exists independently. Everything arises in relation to everything else.',r:'Mulamadhyamakakarika · Nagarjuna, ~150 CE',u:'https://www.goodreads.com/book/show/1258685'},
+  {t:'Our hearts are restless until they rest in thee. Augustine spent decades as a restless man before writing this — which is why it rings true.',r:'Confessions · Augustine, ~400 CE',u:'https://gutenberg.org/ebooks/3296'},
+  {t:'To know what you know and know what you do not know — that is knowledge.',r:'Analects II.17 · Confucius, ~500 BCE',u:'https://ctext.org/analects/wei-zheng'}
 ];
-var _storyIdx=0,_storyTimer=null;
-function _storyShow(idx){
+var _storyTimer=null;
+
+function _pickStory(){
+  var THREE_HRS=10800000,now=Date.now(),shown;
+  try{shown=JSON.parse(localStorage.getItem('flourish_slog')||'[]');}catch(e){shown=[];}
+  shown=shown.filter(function(s){return now-s.t<THREE_HRS;});
+  var used=shown.map(function(s){return s.i;});
+  var pool=STORIES.map(function(_,i){return i;}).filter(function(i){return used.indexOf(i)===-1;});
+  if(!pool.length){shown=[];pool=STORIES.map(function(_,i){return i;});}
+  var idx=pool[Math.floor(Math.random()*pool.length)];
+  shown.push({i:idx,t:now});
+  try{localStorage.setItem('flourish_slog',JSON.stringify(shown));}catch(e){}
+  return idx;
+}
+function _applyStory(s){
   var el=document.getElementById('story-body');
   var sr=document.getElementById('story-src');
   var sl=document.getElementById('story-link');
-  var dots=document.getElementById('story-dots');
+  var pb=document.getElementById('story-prog-bar');
   if(!el)return;
-  var s=STORIES[idx];
-  el.classList.add('sfade');
-  setTimeout(function(){
-    el.textContent=s.t;
-    sr.textContent=s.r;
-    sl.href=s.u;
-    el.classList.remove('sfade');
-    if(dots){
-      dots.innerHTML=STORIES.map(function(_,i){return'<span class="sdot'+(i===idx?' on':'')+'"></span>';}).join('');
-    }
-  },460);
+  el.textContent=s.t;
+  if(sr)sr.textContent=s.r;
+  if(sl)sl.href=s.u;
+  if(pb){pb.classList.remove('run');void pb.offsetWidth;pb.classList.add('run');}
+  el.classList.remove('sin','sout');
+  void el.offsetWidth;
+  el.classList.add('sin');
 }
 function _storyNext(){
   clearTimeout(_storyTimer);
-  _storyIdx=(_storyIdx+1)%STORIES.length;
-  _storyShow(_storyIdx);
-  _storyTimer=setTimeout(_storyNext,15000);
+  var el=document.getElementById('story-body');
+  if(el&&el.textContent){
+    el.classList.remove('sin');
+    el.classList.add('sout');
+    setTimeout(function(){_applyStory(STORIES[_pickStory()]);},400);
+  } else {
+    _applyStory(STORIES[_pickStory()]);
+  }
+  _storyTimer=setTimeout(_storyNext,15500);
 }
 function _startStories(){
-  _storyIdx=Math.floor(Math.random()*STORIES.length);
-  _storyShow(_storyIdx);
-  _storyTimer=setTimeout(_storyNext,15000);
+  _applyStory(STORIES[_pickStory()]);
+  _storyTimer=setTimeout(_storyNext,15500);
 }
 async function boot(){
   var loaded=false;
