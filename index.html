@@ -17,8 +17,8 @@
   ║      friction, hasFinance, financeType, financeAmount, financeCategory, ║
   ║      natureScore, note }                                                ║
   ╠══════════════════════════════════════════════════════════════════════════╣
-  ║  PRO FEATURES (requires FLOURISH_PRO_KEY or UPI payment):               ║
-  ║    · Voice logging (SpeechRecognition API, no audio stored)             ║
+  ║  FREE: all logging, dashboard, insights, weekly review, voice logging   ║
+  ║  PRO (FLOURISH_PRO_KEY or UPI payment — ₹100 one-time):                ║
   ║    · Cross-device sync (optional Firebase — user's own cloud)           ║
   ╠══════════════════════════════════════════════════════════════════════════╣
   ║  CONFIGURATION SECTION  (search "RAZORPAY" to jump there):              ║
@@ -478,8 +478,11 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
       <div id="auth-state-signed-out" style="display:block">
         <button style="width:100%;padding:14px;border-radius:13px;border:none;background:linear-gradient(135deg,#0f0f0f,#1a1a2e);color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;margin-bottom:12px;letter-spacing:-.2px" onclick="openPay()">&#127941; Get Pro</button>
         <div style="background:var(--softer);border-radius:11px;padding:10px 13px;margin-bottom:12px;border:1px solid var(--border)">
-          <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:5px">Pro includes</div>
-          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.8">&#127908; Voice logging throughout the app<br>&#9729; Cross-device sync via your own cloud<br>&#127942; Early access to new features</div>
+          <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:5px">Pro — what it unlocks today</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.9">&#9729;&#65039; Cross-device sync via your own cloud</div>
+          <div style="height:1px;background:var(--border);margin:9px 0"></div>
+          <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:5px">Coming for Pro members</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);line-height:1.9">&#129504; AI weekly narrative — richer than the report<br>&#128196; Export as PDF — shareable insight snapshot<br>&#128101; Accountability partner — share your rhythm<br>&#128197; Calendar sync — see time blocks in context<br>&#128200; Correlation insights — what actually moves you</div>
         </div>
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
           <div style="flex:1;height:1px;background:var(--border)"></div>
@@ -1157,7 +1160,7 @@ function seedData(){
    ─────────────────────────────────────────────────────────────────────── */
 function renderQuickLog(){
   var el=document.getElementById('p-quicklog');if(!el)return;
-  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">Noting is the discipline — not sticking to it.<br>Write what happened. The patterns are already in you.<br>This just helps you see them.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Your Day&#39;s Shape</div><div style="font-size:11px;font-weight:700;color:var(--muted)">At a glance, without judgement</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Patterns You Miss</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Loops that surface across domains</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 This Week, Plainly</div><div style="font-size:11px;font-weight:700;color:var(--muted)">No score — just what was</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Where You Were</div><div style="font-size:11px;font-weight:700;color:var(--muted)">How nature shaped your week</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><button class="wwstart" onclick="startWiz()" style="margin:0">&#9889; Text log</button><button class="wwstart" onclick="startVoiceLog()" style="margin:0;background:'+(currentUser?'#0f0f0f':'var(--soft)')+';color:'+(currentUser?'#fff':'var(--muted)')+'">&#127908; Voice log'+(currentUser?'':' &#8599;')+'</button></div><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
+  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">Noting is the discipline — not sticking to it.<br>Write what happened. The patterns are already in you.<br>This just helps you see them.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Your Day&#39;s Shape</div><div style="font-size:11px;font-weight:700;color:var(--muted)">At a glance, without judgement</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Patterns You Miss</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Loops that surface across domains</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 This Week, Plainly</div><div style="font-size:11px;font-weight:700;color:var(--muted)">No score — just what was</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Where You Were</div><div style="font-size:11px;font-weight:700;color:var(--muted)">How nature shaped your week</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><button class="wwstart" onclick="startWiz()" style="margin:0">&#9889; Text log</button><button class="wwstart" onclick="startVoiceLog()" style="margin:0">&#127908; Voice log</button></div><button class="wwseed" onclick="seedData()">Load sample data to explore</button><div style="margin-top:18px;background:var(--bg2);border-radius:11px;padding:10px 13px;border:1px solid rgba(26,107,60,.13);text-align:left"><div style="font-size:11px;font-weight:900;color:var(--cg);margin-bottom:3px">&#128274; Your data never leaves your device</div><div style="font-size:11px;font-weight:700;color:var(--muted);line-height:1.75">No account required. Nothing is sent to any server. No tracking, no analytics, no ads. Your notes stay on your phone or browser — always. The only exception is cross-device sync, which uses <em>your own</em> cloud account and is entirely optional.</div></div></div>';return;}
   if(wizDone){var m=MODES[WD.mode]||MODES.doing;el.innerHTML='<div class="wsuccess"><div class="wsicon">'+m.emoji+'</div><div class="wstitle">Logged.</div><div class="wssub"><strong>'+he(WD.activity)+'</strong><br>'+(WD.direction==='directed'?'Directed':'Distractor')+' &middot; '+m.label+' &middot; '+NATICONS[WD.natureScore]+' '+WD.natureScore+'/5'+(WD.hasFinance&&WD.financeAmount>0?'<br>'+(WD.financeType==='expense'?'Spent':'Earned')+' Rs '+fM(WD.financeAmount):'')+' </div><div class="wsbtns"><button class="wsbtn" style="background:var(--soft);color:#444" onclick="resetWiz()">Log another</button><button class="wsbtn" style="background:var(--cb);color:#fff" onclick="sw(&#39;dashboard&#39;,document.querySelectorAll(&#39;.tab&#39;)[1])">Dashboard</button><button class="wsbtn" style="background:#0f0f0f;color:#fff" onclick="sw(&#39;insights&#39;,document.querySelectorAll(&#39;.tab&#39;)[2])">Insights</button></div></div>';return;}
   var pct=[0,33,66][wizStep-1]||99;
   var names=['What and How Long','How It Felt','Context'];
@@ -1168,7 +1171,7 @@ function renderQuickLog(){
 function w1(){
   var chips=CATS.map(function(c){return'<button class="wchip '+(WD.category===c?'on':'')+'" onclick="wsCat(&#39;'+c+'&#39;)">'+c+'</button>';}).join('');
   var durs=DUR.map(function(d){return'<button class="wdb '+(WD.duration===d.v?'on':'')+'" onclick="wsDur('+d.v+')">'+d.l+'</button>';}).join('');
-  var micBtn=currentUser?'<button onclick="startVoiceLog()" title="Switch to voice log" style="padding:7px 11px;border-radius:8px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:15px;flex-shrink:0">&#127908;</button>':'';
+  var micBtn='<button onclick="startVoiceLog()" title="Switch to voice log" style="padding:7px 11px;border-radius:8px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:15px;flex-shrink:0">&#127908;</button>';
   return'<div class="wcard-hi"><div class="wq">What did you just do?</div><div class="wqdim">One line. Specific enough to recognize later.</div><div style="display:flex;gap:7px;align-items:center"><input id="wiz-act" class="winp" type="text" placeholder="e.g. deep work, gym, team call, reading..." value="'+he(WD.activity||'')+'" autocomplete="off" style="flex:1">'+micBtn+'</div><div class="wslbl">Category</div><div class="wchips">'+chips+'</div></div><div class="wcard"><div class="wq" style="font-size:16px">How long?</div><div class="wdurgrid">'+durs+'</div></div><div class="wnav"><button class="wnext" style="flex:1" onclick="wn1()">Next &rsaquo;</button></div>';
 }
 function w2(){
@@ -1394,10 +1397,6 @@ function buildTickers(){
     '</div>';
 }
 function voiceNote(targetId){
-  if(!currentUser){
-    if(confirm('Voice logging is a Pro feature (₹100 one-time).\n\nOpen Settings to upgrade?')){closeModal&&closeModal();openSettings();}
-    return;
-  }
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){alert('Voice input is not supported in this browser. Try Chrome on Android or desktop.');return;}
   var btn=document.getElementById('mic-btn-'+targetId);
@@ -1414,10 +1413,6 @@ function voiceNote(targetId){
   r.start();
 }
 function startVoiceLog(){
-  if(!currentUser){
-    if(confirm('Voice Log is a Pro feature (₹100 one-time).\n\nOpen Settings to upgrade?')){openSettings();}
-    return;
-  }
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){alert('Voice input not supported in this browser. Try Chrome.');return;}
   var el=document.getElementById('p-quicklog');if(!el)return;

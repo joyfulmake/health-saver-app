@@ -1,0 +1,60 @@
+Flourish — Personal Use License
+Copyright (c) 2025–present Sriram (joyfulmake)
+
+────────────────────────────────────────────────────────────────────────────
+
+WHAT THIS LICENSE GRANTS
+
+You are free to:
+
+  · Use this software for personal, non-commercial purposes — on your own
+    device, for your own self-reflection, habit tracking, and personal growth.
+
+  · Study the source code, learn from it, and adapt it for your own personal
+    use. Curiosity and learning are always welcome.
+
+  · Share a link to the original repository with others who might benefit.
+
+────────────────────────────────────────────────────────────────────────────
+
+WHAT THIS LICENSE DOES NOT ALLOW
+
+  · Commercial use — you may not sell, sublicense, or use this software or
+    any derivative of it to generate revenue without explicit written
+    permission from the copyright holder.
+
+  · Redistribution — you may not publish, host, or distribute copies of this
+    software (modified or unmodified) as your own product or service.
+
+  · Misrepresentation — you may not remove or alter this license notice,
+    copyright attribution, or claim authorship of the original work.
+
+────────────────────────────────────────────────────────────────────────────
+
+DATA & PRIVACY — PLAIN LANGUAGE STATEMENT
+
+This software is designed with one principle: your data belongs to you.
+
+  · Nothing you log is ever sent to the developer or any third party.
+  · The app stores all your notes and entries on your own device (localStorage).
+  · No analytics, no tracking scripts, no advertising infrastructure exists
+    in this code. There is nothing to sell and no one collecting it.
+  · Optional cross-device sync, if enabled, uses a Firebase project that YOU
+    configure with YOUR own account. The developer never has access to it.
+  · Payment processing (if used) goes through Razorpay. The developer
+    receives only the payment notification — not your card details.
+
+You are safe to use this app as a private journal. The code is open so you
+can verify these claims yourself.
+
+────────────────────────────────────────────────────────────────────────────
+
+DISCLAIMER
+
+This software is provided "as is", without warranty of any kind. The author
+makes no guarantees about fitness for any particular purpose. Use it
+thoughtfully, back up your data, and be kind to yourself.
+
+────────────────────────────────────────────────────────────────────────────
+
+For permissions beyond this license, contact: sriram.c76@gmail.com
