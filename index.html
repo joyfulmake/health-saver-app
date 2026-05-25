@@ -369,6 +369,20 @@ body.tab-quicklog{background:radial-gradient(ellipse at 90% 0%,rgba(26,107,60,.0
 body.tab-log{background:radial-gradient(ellipse at 90% 0%,rgba(0,0,0,.025) 0%,#fff 52%)}
 @keyframes tickPulse{0%,100%{opacity:.85}50%{opacity:.2}}
 .clock-tick-dot{animation:tickPulse 1s ease-in-out infinite}
+/* ── Story banner ───────────────────────────────────────────────────────── */
+@keyframes storyFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.story-wrap{background:linear-gradient(160deg,#faf9f7 0%,#f1efe9 100%);border-radius:14px;padding:14px 16px 11px;margin-bottom:14px;border:1px solid rgba(0,0,0,.07);cursor:pointer;position:relative;overflow:hidden;user-select:none;-webkit-user-select:none}
+.story-wrap:active{opacity:.88}
+.story-leaf{position:absolute;top:-6px;right:0px;font-size:64px;opacity:.06;pointer-events:none;transform:rotate(20deg);line-height:1;filter:grayscale(1)}
+.story-body{font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.8;min-height:54px;transition:opacity .45s ease}
+.story-body.sfade{opacity:0}
+.story-meta{margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.story-src{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.3px;flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.story-link{font-size:10px;font-weight:800;color:var(--cb);text-decoration:none;flex-shrink:0}
+.story-link:hover{text-decoration:underline}
+.story-dots{display:flex;gap:4px;margin-top:9px;justify-content:center;align-items:center}
+.sdot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.12);transition:all .35s;flex-shrink:0}
+.sdot.on{background:rgba(0,0,0,.48);width:14px;border-radius:3px}
 select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 .fi{font-size:16px}
 .pb{width:44px;height:44px;font-size:20px}
@@ -384,13 +398,22 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
   <div class="hdr">
     <div class="hdr-l">
       <div class="hdr-logo" onclick="sw('quicklog',document.querySelector('.tab'))" style="cursor:pointer" title="Go to Quick Log">🧭</div>
-      <div><div class="hdr-name">Flourish</div><div class="hdr-sub">Honest patterns &middot; Better days</div></div>
+      <div><div class="hdr-name">Flourish</div><div class="hdr-sub">Note &middot; Know yourself &middot; Flow</div></div>
     </div>
     <div class="hdr-btns">
       <button class="btn-sec" onclick="openSettings()">⚙ Settings</button>
       <button class="btn-sec" onclick="exportCSV()">Export CSV</button>
       <button class="btn-pri" onclick="openModal(null)">+ Log</button>
     </div>
+  </div>
+  <div class="story-wrap" id="story-wrap" onclick="_storyNext()">
+    <div class="story-leaf">🌿</div>
+    <div class="story-body" id="story-body"></div>
+    <div class="story-meta">
+      <span class="story-src" id="story-src"></span>
+      <a class="story-link" id="story-link" href="#" target="_blank" rel="noopener" onclick="event.stopPropagation()">read →</a>
+    </div>
+    <div class="story-dots" id="story-dots"></div>
   </div>
   <div id="now-strip" class="now-strip" style="display:none">
     <div class="now-l"><div class="now-dot" id="now-dot"></div><div><div class="now-text" id="now-text"></div><div class="now-sub" id="now-sub"></div></div></div>
@@ -613,6 +636,54 @@ var reviewData=null,reviewLoading=false,lastReview=null,reviewWeekMon=null,revie
    ─────────────────────────────────────────────────────────────────────── */
 function persist(){var j=JSON.stringify(entries);if(window.storage&&window.storage.set)window.storage.set('lifeos_v5',j).catch(function(){try{localStorage.setItem('lifeos_v5',j);}catch(e){}});else try{localStorage.setItem('lifeos_v5',j);}catch(e){}persistCloud();}
 function sfBar(t){var i=document.getElementById('sf-icon'),x=document.getElementById('sf-text');if(!i||!x)return;if(t==='cloud'){i.textContent='☁️';x.innerHTML='<strong>Session Storage</strong> Data persists in this Claude session.';}else if(t==='local'){i.textContent='💾';x.innerHTML='<strong>Local Storage</strong> Saved in this browser.';}else{i.textContent='⚠️';x.innerHTML='<strong>No persistent storage</strong>';}}
+/* ── Stories ─────────────────────────────────────────────────────────────
+   12 short stories on self-knowledge, flow, and presence. Rotate every 15s.
+   Each: {t: text, r: reference label, u: url}
+   ──────────────────────────────────────────────────────────────────────── */
+var STORIES=[
+  {t:'Thoreau kept journals for 24 years — not to track habits, but to learn the shape of his own attention. He called it living deliberately.',r:'Walden · Henry David Thoreau, 1854',u:'https://gutenberg.org/ebooks/205'},
+  {t:'Marcus Aurelius wrote Meditations entirely to himself. It was never meant to be published. Knowing your patterns of thought — not fixing them — was the whole practice.',r:'Meditations · Marcus Aurelius, ~170 AD',u:'https://gutenberg.org/ebooks/2680'},
+  {t:'Feynman wrote everything down not to remember, but because writing is thinking. His notebooks are full of half-questions, wrong turns, and sudden clarity.',r:'Surely You\'re Joking, Mr. Feynman · 1985',u:'https://caltech.edu/feynman'},
+  {t:'Flow — complete absorption in what you\'re doing — requires knowing your own patterns well enough to stop monitoring yourself. You can\'t enter flow in a fog.',r:'Flow · Mihaly Csikszentmihalyi, 1990',u:'https://www.goodreads.com/book/show/66354'},
+  {t:'Darwin walked his thinking path at Down House every morning. Same loop, same pace. He solved most questions in motion, not at his desk.',r:'Darwin\'s Down House · Natural History Museum, London',u:'https://www.nhm.ac.uk/visit/darwin-centre.html'},
+  {t:'Knowing others is wisdom. Knowing yourself is enlightenment. Two thousand years of minds across every culture have agreed on this one thing.',r:'Tao Te Ching Ch. 33 · Lao Tzu, ~600 BCE',u:'https://ctext.org/dao-de-jing'},
+  {t:'Leonardo kept 13,000 pages of notebooks — birds, water, bones, shadows, jokes. Not a system. Just a person curious about everything, noting what he saw.',r:'Leonardo\'s Notebooks · Royal Collection Trust, Windsor',u:'https://www.royalcollection.org.uk/the-collection/themes/leonardo-da-vinci'},
+  {t:'Japanese researchers found 20 minutes in trees measurably lowers cortisol and clears cognitive fog. Shinrin-yoku — forest bathing. No meditation required.',r:'Miyazaki · Nippon Medical School Journal, 2009',u:'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2793346/'},
+  {t:'The Upanishadic practice of atma-vichara — who am I? — is not about finding an answer. It is about noticing what stays present when distractions fall away.',r:'Mandukya Upanishad · ~700 BCE',u:'https://sacred-texts.com/hin/upan/index.htm'},
+  {t:'Tagore wrote in the early morning — not to produce, but to stay close to what was true in him. The small truth has words that are clear; the great truth has great silence.',r:'Stray Birds · Rabindranath Tagore, 1916',u:'https://gutenberg.org/ebooks/5223'},
+  {t:'Basho walked thousands of miles and wrote haiku about what he noticed. The discipline was not the writing. It was the noticing. The writing just proved it happened.',r:'Narrow Road to the Deep North · Basho, 1689',u:'https://gutenberg.org/ebooks/7073'},
+  {t:'The Bhagavad Gita\'s central question is not what should I do? but who is asking? Self-knowledge is not a destination — it is the quality of attention you bring.',r:'Bhagavad Gita Ch. 2-3 · ~200 BCE',u:'https://sacred-texts.com/hin/gita/index.htm'}
+];
+var _storyIdx=0,_storyTimer=null;
+function _storyShow(idx){
+  var el=document.getElementById('story-body');
+  var sr=document.getElementById('story-src');
+  var sl=document.getElementById('story-link');
+  var dots=document.getElementById('story-dots');
+  if(!el)return;
+  var s=STORIES[idx];
+  el.classList.add('sfade');
+  setTimeout(function(){
+    el.textContent=s.t;
+    sr.textContent=s.r;
+    sl.href=s.u;
+    el.classList.remove('sfade');
+    if(dots){
+      dots.innerHTML=STORIES.map(function(_,i){return'<span class="sdot'+(i===idx?' on':'')+'"></span>';}).join('');
+    }
+  },460);
+}
+function _storyNext(){
+  clearTimeout(_storyTimer);
+  _storyIdx=(_storyIdx+1)%STORIES.length;
+  _storyShow(_storyIdx);
+  _storyTimer=setTimeout(_storyNext,15000);
+}
+function _startStories(){
+  _storyIdx=Math.floor(Math.random()*STORIES.length);
+  _storyShow(_storyIdx);
+  _storyTimer=setTimeout(_storyNext,15000);
+}
 async function boot(){
   var loaded=false;
   if(window.storage&&window.storage.get){
@@ -628,6 +699,7 @@ async function boot(){
   document.body.className=(document.body.className+' tab-'+activeTab).trim();
   render();
   updateAuthUI();
+  _startStories();
   if(FIREBASE_CONFIG)initFirebase();
 }
 /* ── 4. Date & formatting utilities ─────────────────────────────────────
@@ -1027,7 +1099,7 @@ function seedData(){
    ─────────────────────────────────────────────────────────────────────── */
 function renderQuickLog(){
   var el=document.getElementById('p-quicklog');if(!el)return;
-  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">3 taps per entry. Finance drains, attention leaks, habit loops, and nature misalignment surface automatically from your own data.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Dashboard</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Balance, streaks, active drains</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Habit Loops</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Cross-domain pattern detection</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 Weekly Review</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Weekly pattern review</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Nature Alignment</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Circadian and seasonal guide</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><button class="wwstart" onclick="startWiz()" style="margin:0">&#9889; Text log</button><button class="wwstart" onclick="startVoiceLog()" style="margin:0;background:'+(currentUser?'#0f0f0f':'var(--soft)')+';color:'+(currentUser?'#fff':'var(--muted)')+'">&#127908; Voice log'+(currentUser?'':' &#8599;')+'</button></div><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
+  if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">Noting is the discipline — not sticking to it.<br>Write what happened. The patterns are already in you.<br>This just helps you see them.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Your Day's Shape</div><div style="font-size:11px;font-weight:700;color:var(--muted)">At a glance, without judgement</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Patterns You Miss</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Loops that surface across domains</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 This Week, Plainly</div><div style="font-size:11px;font-weight:700;color:var(--muted)">No score — just what was</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Where You Were</div><div style="font-size:11px;font-weight:700;color:var(--muted)">How nature shaped your week</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><button class="wwstart" onclick="startWiz()" style="margin:0">&#9889; Text log</button><button class="wwstart" onclick="startVoiceLog()" style="margin:0;background:'+(currentUser?'#0f0f0f':'var(--soft)')+';color:'+(currentUser?'#fff':'var(--muted)')+'">&#127908; Voice log'+(currentUser?'':' &#8599;')+'</button></div><button class="wwseed" onclick="seedData()">Load sample data to explore</button></div>';return;}
   if(wizDone){var m=MODES[WD.mode]||MODES.doing;el.innerHTML='<div class="wsuccess"><div class="wsicon">'+m.emoji+'</div><div class="wstitle">Logged.</div><div class="wssub"><strong>'+he(WD.activity)+'</strong><br>'+(WD.direction==='directed'?'Directed':'Distractor')+' &middot; '+m.label+' &middot; '+NATICONS[WD.natureScore]+' '+WD.natureScore+'/5'+(WD.hasFinance&&WD.financeAmount>0?'<br>'+(WD.financeType==='expense'?'Spent':'Earned')+' Rs '+fM(WD.financeAmount):'')+' </div><div class="wsbtns"><button class="wsbtn" style="background:var(--soft);color:#444" onclick="resetWiz()">Log another</button><button class="wsbtn" style="background:var(--cb);color:#fff" onclick="sw(&#39;dashboard&#39;,document.querySelectorAll(&#39;.tab&#39;)[1])">Dashboard</button><button class="wsbtn" style="background:#0f0f0f;color:#fff" onclick="sw(&#39;insights&#39;,document.querySelectorAll(&#39;.tab&#39;)[2])">Insights</button></div></div>';return;}
   var pct=[0,33,66][wizStep-1]||99;
   var names=['What and How Long','How It Felt','Context'];
@@ -1414,7 +1486,7 @@ function renderReview(){
   else if(reviewData&&reviewData._error)aiH='<div class="wr-ai"><div class="wr-ai-t">Review error</div><div class="wr-ai-b">Check connection and try again.</div></div>';
   else if(reviewData){var R=reviewData;aiH=(R.summary?'<div class="wr-ai"><div class="wr-ai-t">This week in summary</div><div class="wr-ai-b">'+he(R.summary)+'</div></div>':'')+(R.win?'<div class="wr-ai" style="background:var(--bg2);border:1px solid rgba(26,107,60,.14)"><div class="wr-ai-t" style="color:var(--cg)">&#10022; Biggest Win</div><div class="wr-ai-b">'+he(R.win)+'</div></div>':'')+(R.miss?'<div class="wr-ai" style="background:var(--ba);border:1px solid rgba(176,112,32,.14)"><div class="wr-ai-t" style="color:var(--ca)">&#9650; Watch this</div><div class="wr-ai-b">'+he(R.miss)+'</div></div>':'')+(R.next_week_focus?'<div class="wr-ai" style="background:var(--bb);border:1px solid rgba(26,74,140,.12)"><div class="wr-ai-t" style="color:var(--cb)">&#8594; Next week focus</div><div class="wr-ai-b">'+he(R.next_week_focus)+'</div></div>':'')+(R.finance_note?'<div class="wr-ai"><div class="wr-ai-t">Finance</div><div class="wr-ai-b">'+he(R.finance_note)+'</div></div>':'')+(R.nature_note?'<div class="wr-ai"><div class="wr-ai-t">Nature</div><div class="wr-ai-b">'+he(R.nature_note)+'</div></div>':'');}
   else aiH='<div class="wr-ai"><div class="wr-ai-t">Weekly Review</div><div class="wr-ai-b">Hit the button above for a sharp, specific review of your week. Wins, misses, cross-domain patterns, and one clear focus for next week.</div></div>';
-  el.innerHTML=hero+stats+'</div>'+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">No entries this week yet.</div>');
+  el.innerHTML=hero+stats+'</div>'+btn+aiH+'<div class="slbl" style="margin-top:8px">Week Entries <span class="cnt">'+wkEntries.length+'</span></div>'+(wkEntries.length?'<div class="elist">'+wkEntries.map(entryCard).join('')+'</div>':'<div class="empty">Nothing noted this week yet. One entry is enough to begin.</div>');
 }
 /* ── 9. Nature tab / circadian clock ────────────────────────────────────
    buildClock()       — returns an SVG string of the 24-hour circadian clock.
@@ -1505,10 +1577,10 @@ function renderDashboard(){
   var avgN=natE.length?Math.round(natE.reduce(function(s,e){return s+(+e.natureScore||3);},0)/natE.length*10)/10:null;
   var mRows=Object.keys(mH).map(function(k){return[MODES[k].label,mH[k],fH(mH[k]),MODES[k].color];}).sort(function(a,b){return b[1]-a[1];});
   var parts=[];
-  if(!tE.length)parts.push('No entries today. Use <strong>Quick Log</strong>.');
+  if(!tE.length)parts.push('Nothing logged today yet. <strong>Quick Log</strong> takes 30 seconds.');
   else{if(tH>0)parts.push('<strong>'+fH(tH)+'</strong> logged today, <strong>'+dirPct+'%</strong> directed.');if(mTot>0)parts.push('Top mode: <strong>'+MODES[domK].label+'</strong> '+MODES[domK].emoji);}
   if(wH>0)parts.push('Week: <strong>'+fH(wH)+'</strong>, Rs '+fM(wIn)+' in, Rs '+fM(wOut)+' out.');
-  el.innerHTML='<div class="bal '+(bal>=0?'pos':'neg')+'"><div class="bal-lbl">Running Balance</div><div class="bal-amt">'+(bal<0?'-':'')+'&#8377;'+fM(bal)+'</div><div class="bal-sub">All time &nbsp; &#8377;'+fM(allIn)+' in &nbsp; &#8377;'+fM(allOut)+' out &nbsp; '+entries.length+' entries</div></div><div class="m3"><div class="mc mcpu"><div class="mc-lbl">Today Hours</div><div class="mc-val">'+fH(tH)+'</div><div class="mc-sub">'+tE.length+' entr'+(tE.length===1?'y':'ies')+'</div></div><div class="mc '+(dirPct>=50?'mcp':'mcn')+'"><div class="mc-lbl">Directed</div><div class="mc-val">'+dirPct+'%</div><div class="mc-sub">Today</div></div><div class="mc mct"><div class="mc-lbl">Nature Avg</div><div class="mc-val">'+(avgN?avgN+'/5':'--')+'</div><div class="mc-sub">'+(avgN?NATICONS[Math.round(avgN)]+' '+NATLBL[Math.round(avgN)]:'Start logging')+'</div></div></div>'+(drains.length?'<div class="dsec"><div class="dsec-t">Active Drains</div>'+drains.map(function(d){return'<div class="dc dch"><div class="dc-p">'+he(d.pattern)+'</div>'+(d.tip?'<div class="dc-t">'+he(d.tip)+'</div>':'')+'</div>';}).join('')+'</div>':'')+(parts.length?'<div class="insight">'+parts.join(' &nbsp; ')+'</div>':'')+buildStreak()+'<div class="slbl">Operating Modes</div><div class="mode-grid">'+Object.keys(MODES).map(function(k){var m=MODES[k],pct=mTot?Math.round(mH[k]/mTot*100):0;return'<div class="mode-tile" style="background:'+m.bg+'"><div class="mode-tile-t" style="color:'+m.color+'">'+m.emoji+' '+m.label+' ('+pct+'%)</div><div class="mode-tile-d" style="color:'+m.color+'">'+m.desc+'</div></div>';}).join('')+'</div><div class="ccard" style="margin-bottom:16px"><div class="ctitle">Mode Time Split</div>'+barChart(mRows)+'</div><div class="slbl">Recent Entries</div>'+(recent.length?'<div class="elist">'+recent.map(entryCard).join('')+'</div>':'<div class="empty">No entries yet. Start with Quick Log.</div>');
+  el.innerHTML='<div class="bal '+(bal>=0?'pos':'neg')+'"><div class="bal-lbl">Running Balance</div><div class="bal-amt">'+(bal<0?'-':'')+'&#8377;'+fM(bal)+'</div><div class="bal-sub">All time &nbsp; &#8377;'+fM(allIn)+' in &nbsp; &#8377;'+fM(allOut)+' out &nbsp; '+entries.length+' entries</div></div><div class="m3"><div class="mc mcpu"><div class="mc-lbl">Today Hours</div><div class="mc-val">'+fH(tH)+'</div><div class="mc-sub">'+tE.length+' entr'+(tE.length===1?'y':'ies')+'</div></div><div class="mc '+(dirPct>=50?'mcp':'mcn')+'"><div class="mc-lbl">Directed</div><div class="mc-val">'+dirPct+'%</div><div class="mc-sub">Today</div></div><div class="mc mct"><div class="mc-lbl">Nature Avg</div><div class="mc-val">'+(avgN?avgN+'/5':'--')+'</div><div class="mc-sub">'+(avgN?NATICONS[Math.round(avgN)]+' '+NATLBL[Math.round(avgN)]:'Start logging')+'</div></div></div>'+(drains.length?'<div class="dsec"><div class="dsec-t">Active Drains</div>'+drains.map(function(d){return'<div class="dc dch"><div class="dc-p">'+he(d.pattern)+'</div>'+(d.tip?'<div class="dc-t">'+he(d.tip)+'</div>':'')+'</div>';}).join('')+'</div>':'')+(parts.length?'<div class="insight">'+parts.join(' &nbsp; ')+'</div>':'')+buildStreak()+'<div class="slbl">Operating Modes</div><div class="mode-grid">'+Object.keys(MODES).map(function(k){var m=MODES[k],pct=mTot?Math.round(mH[k]/mTot*100):0;return'<div class="mode-tile" style="background:'+m.bg+'"><div class="mode-tile-t" style="color:'+m.color+'">'+m.emoji+' '+m.label+' ('+pct+'%)</div><div class="mode-tile-d" style="color:'+m.color+'">'+m.desc+'</div></div>';}).join('')+'</div><div class="ccard" style="margin-bottom:16px"><div class="ctitle">Mode Time Split</div>'+barChart(mRows)+'</div><div class="slbl">Recent Entries</div>'+(recent.length?'<div class="elist">'+recent.map(entryCard).join('')+'</div>':'<div class="empty">Your first note starts the pattern. Begin anywhere.</div>');
 }
 function renderLog(){
   var el=document.getElementById('p-log');if(!el)return;
@@ -1517,7 +1589,7 @@ function renderLog(){
   else if(logFilter==='distractor')arr=arr.filter(function(e){return e.direction==='distractor';});
   else if(logFilter==='finance')arr=arr.filter(function(e){return e.hasFinance&&e.financeAmount>0;});
   else if(logFilter&&MODES[logFilter])arr=arr.filter(function(e){return e.mode===logFilter;});
-  el.innerHTML='<div class="fbar"><button class="fchip '+(!logFilter?'on':'')+'" onclick="setLF(null)">All<span class="cnt">'+entries.length+'</span></button><button class="fchip '+(logFilter==='directed'?'on':'')+'" onclick="setLF(\'directed\')">Directed</button><button class="fchip '+(logFilter==='distractor'?'on':'')+'" onclick="setLF(\'distractor\')">Distractor</button>'+Object.keys(MODES).map(function(k){return'<button class="fchip '+(logFilter===k?'on':'')+'" onclick="setLF(&#39;'+k+'&#39;)">'+MODES[k].emoji+' '+MODES[k].label+'</button>';}).join('')+'<button class="fchip '+(logFilter==='finance'?'on':'')+'" onclick="setLF(\'finance\')">&#8377; Finance</button></div>'+(arr.length?'<div class="elist">'+arr.map(entryCard).join('')+'</div>':'<div class="empty">No entries match this filter.</div>');
+  el.innerHTML='<div class="fbar"><button class="fchip '+(!logFilter?'on':'')+'" onclick="setLF(null)">All<span class="cnt">'+entries.length+'</span></button><button class="fchip '+(logFilter==='directed'?'on':'')+'" onclick="setLF(\'directed\')">Directed</button><button class="fchip '+(logFilter==='distractor'?'on':'')+'" onclick="setLF(\'distractor\')">Distractor</button>'+Object.keys(MODES).map(function(k){return'<button class="fchip '+(logFilter===k?'on':'')+'" onclick="setLF(&#39;'+k+'&#39;)">'+MODES[k].emoji+' '+MODES[k].label+'</button>';}).join('')+'<button class="fchip '+(logFilter==='finance'?'on':'')+'" onclick="setLF(\'finance\')">&#8377; Finance</button></div>'+(arr.length?'<div class="elist">'+arr.map(entryCard).join('')+'</div>':'<div class="empty">Nothing here with that filter.</div>');
 }
 function renderFinance(){
   var el=document.getElementById('p-finance');if(!el||!fRef)return;
@@ -1947,7 +2019,7 @@ function submitFeedback(){
 window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
 window.genBackupCode=genBackupCode;window.copyBackupCode=copyBackupCode;window.restoreFromCode=restoreFromCode;
 window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
-window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;window.unlockPro=unlockPro;window.voiceNote=voiceNote;window.openPay=openPay;window.closePay=closePay;window.startUPIPay=startUPIPay;window.verifyPayOTP=verifyPayOTP;window._renderPayStep=_renderPayStep;window.startVoiceLog=startVoiceLog;window.cancelVoiceLog=cancelVoiceLog;
+window._storyNext=_storyNext;window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;window.unlockPro=unlockPro;window.voiceNote=voiceNote;window.openPay=openPay;window.closePay=closePay;window.startUPIPay=startUPIPay;window.verifyPayOTP=verifyPayOTP;window._renderPayStep=_renderPayStep;window.startVoiceLog=startVoiceLog;window.cancelVoiceLog=cancelVoiceLog;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
 window.setF=setF;window.toggleFin=toggleFin;window.setFinType=setFinType;window.saveEntry=saveEntry;
 window.setLF=setLF;window.setFV=setFV;window.setTV=setTV;window.navF=navF;window.navT=navT;
