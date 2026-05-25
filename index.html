@@ -375,6 +375,8 @@ body.is-pro .qbar{border-color:rgba(176,112,32,.2);box-shadow:0 1px 10px rgba(17
 body.is-pro .hdr-logo{box-shadow:0 0 0 2px rgba(176,112,32,.25),0 0 18px rgba(176,112,32,.1)}
 @keyframes tickPulse{0%,100%{opacity:.85}50%{opacity:.2}}
 .clock-tick-dot{animation:tickPulse 1s ease-in-out infinite}
+@keyframes listeningPulse{0%,100%{box-shadow:0 0 0 3px rgba(184,48,32,.08),0 0 0 1px rgba(184,48,32,.28)}50%{box-shadow:0 0 0 7px rgba(184,48,32,.04),0 0 0 1px rgba(184,48,32,.5)}}
+.winp.listening{border-color:rgba(184,48,32,.5)!important;background:rgba(184,48,32,.025)!important;animation:listeningPulse 1s ease-in-out infinite}
 /* ── Story banner ───────────────────────────────────────────────────────── */
 @keyframes storyIn{from{transform:translateX(28px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes storyOut{from{transform:translateX(0);opacity:1}to{transform:translateX(-28px);opacity:0}}
@@ -1211,7 +1213,20 @@ function seedData(){
 function renderQuickLog(){
   var el=document.getElementById('p-quicklog');if(!el)return;
   if(wizWelcome){el.innerHTML='<div class="wwelcome"><div class="wwicon">🧭</div><div class="wwtitle">Flourish</div><div class="wwsub">Noting is the discipline — not sticking to it.<br>Write what happened. The patterns are already in you.<br>This just helps you see them.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;text-align:left"><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">📊 Your Day&#39;s Shape</div><div style="font-size:11px;font-weight:700;color:var(--muted)">At a glance, without judgement</div></div><div style="background:var(--bp);border-radius:12px;padding:11px 13px;border:1px solid rgba(92,42,157,.14)"><div style="font-size:12px;font-weight:900;color:var(--cp);margin-bottom:3px">🔁 Patterns You Miss</div><div style="font-size:11px;font-weight:700;color:var(--muted)">Loops that surface across domains</div></div><div style="background:var(--bb);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,74,140,.12)"><div style="font-size:12px;font-weight:900;color:var(--cb);margin-bottom:3px">📖 This Week, Plainly</div><div style="font-size:11px;font-weight:700;color:var(--muted)">No score — just what was</div></div><div style="background:var(--bg2);border-radius:12px;padding:11px 13px;border:1px solid rgba(26,107,60,.14)"><div style="font-size:12px;font-weight:900;color:var(--cg);margin-bottom:3px">🌿 Where You Were</div><div style="font-size:11px;font-weight:700;color:var(--muted)">How nature shaped your week</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><button class="wwstart" onclick="startWiz()" style="margin:0">&#9889; Text log</button><button class="wwstart" onclick="startVoiceLog()" style="margin:0">&#127908; Voice log</button></div><button class="wwseed" onclick="seedData()">Load sample data to explore</button><div style="margin-top:18px;background:var(--bg2);border-radius:11px;padding:10px 13px;border:1px solid rgba(26,107,60,.13);text-align:left"><div style="font-size:11px;font-weight:900;color:var(--cg);margin-bottom:3px">&#128274; Your data never leaves your device</div><div style="font-size:11px;font-weight:700;color:var(--muted);line-height:1.75">No account required. Nothing is sent to any server. No tracking, no analytics, no ads. Your notes stay on your phone or browser — always. The only exception is cross-device sync, which uses <em>your own</em> cloud account and is entirely optional.</div></div></div>';return;}
-  if(wizDone){var m=MODES[WD.mode]||MODES.doing;el.innerHTML='<div class="wsuccess"><div class="wsicon">'+m.emoji+'</div><div class="wstitle">Logged.</div><div class="wssub"><strong>'+he(WD.activity)+'</strong><br>'+(WD.direction==='directed'?'Directed':'Distractor')+' &middot; '+m.label+' &middot; '+NATICONS[WD.natureScore]+' '+WD.natureScore+'/5'+(WD.hasFinance&&WD.financeAmount>0?'<br>'+(WD.financeType==='expense'?'Spent':'Earned')+' Rs '+fM(WD.financeAmount):'')+' </div><div class="wsbtns"><button class="wsbtn" style="background:var(--soft);color:#444" onclick="resetWiz()">Log another</button><button class="wsbtn" style="background:var(--cb);color:#fff" onclick="sw(&#39;dashboard&#39;,document.querySelectorAll(&#39;.tab&#39;)[1])">Dashboard</button><button class="wsbtn" style="background:#0f0f0f;color:#fff" onclick="sw(&#39;insights&#39;,document.querySelectorAll(&#39;.tab&#39;)[2])">Insights</button></div></div>';return;}
+  if(wizDone){
+    var m=MODES[WD.mode]||MODES.doing;
+    var finLine=(WD.hasFinance&&WD.financeAmount>0)?'<br>'+(WD.financeType==='expense'?'Spent':'Earned')+' Rs '+fM(WD.financeAmount):'';
+    var xCards=[
+      ['dashboard','1','&#128202;','Dashboard','Trends &amp; your day&#39;s shape'],
+      ['insights','2','&#128257;','Insights','Habit loops &amp; drains'],
+      ['review','3','&#128214;','Weekly Review','This week, plainly'],
+      ['nature','4','&#127807;','Nature','Circadian science'],
+    ].map(function(x){
+      return '<button onclick="sw(&#39;'+x[0]+'&#39;,document.querySelectorAll(&#39;.tab&#39;)['+x[1]+'])" style="background:var(--softer);border:1.5px solid var(--border);border-radius:14px;padding:14px 10px;font-family:inherit;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;transition:all .15s"><div style="font-size:22px;margin-bottom:5px">'+x[2]+'</div><div style="font-size:13px;font-weight:900;color:var(--text);margin-bottom:3px">'+x[3]+'</div><div style="font-size:11px;font-weight:700;color:var(--muted)">'+x[4]+'</div></button>';
+    }).join('');
+    el.innerHTML='<div class="wsuccess"><div class="wsicon">'+m.emoji+'</div><div class="wstitle">Logged &#10003;</div><div class="wssub"><strong>'+he(WD.activity)+'</strong><br>'+(WD.direction==='directed'?'Directed':'Distractor')+' &middot; '+m.label+' &middot; '+NATICONS[WD.natureScore]+' '+WD.natureScore+'/5'+finLine+'</div><div style="margin-top:22px"><div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--muted);margin-bottom:10px">Explore your patterns</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+xCards+'</div></div><button style="width:100%;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);margin-top:12px;-webkit-tap-highlight-color:transparent" onclick="resetWiz()">&#43; Log another</button></div>';
+    return;
+  }
   var pct=[0,33,66][wizStep-1]||99;
   var names=['What and How Long','How It Felt','Context'];
   var prog='<div class="wiz-prog"><div class="wiz-track"><div class="wiz-fill" style="width:'+pct+'%"></div></div><div class="wiz-steps">'+names.map(function(n,i){var c=i+1<wizStep?'done':i+1===wizStep?'on':'';return'<span class="wiz-sl '+c+'">'+(i+1===wizStep?'&rsaquo; ':'')+n+'</span>';}).join('')+'</div></div>';
@@ -2196,7 +2211,7 @@ function _qbarSubmit(){
   WD.activity=inp.value.trim();
   inp.value='';
   wizWelcome=false;wizStep=1;wizDone=false;
-  sw('quicklog',document.querySelector('.tab.on')||document.querySelector('.tab'));
+  sw('quicklog',document.querySelector('.tabs .tab'));
 }
 function _qbarVoice(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -2212,32 +2227,54 @@ function _qbarVoice(){
     var t=e.results[0][0].transcript;
     WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
     wizWelcome=false;wizStep=1;wizDone=false;
-    sw('quicklog',document.querySelector('.tab.on')||document.querySelector('.tab'));
+    sw('quicklog',document.querySelector('.tabs .tab'));
     if(mic){mic.textContent='&#127908;';mic.classList.remove('active');}
   };
   r.onerror=function(){if(mic){mic.textContent='&#127908;';mic.classList.remove('active');}};
   r.onend=function(){if(mic){mic.textContent='&#127908;';mic.classList.remove('active');}};
   r.start();
 }
-/* Floating mic FAB — appears on all tabs, instant voice entry */
+/* Floating mic FAB — switches to quicklog wizard and shows listening state inline */
 function _fabVoice(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   var fab=document.getElementById('mic-fab');
+  /* Always switch to quicklog + show wizard step 1 first */
+  wizWelcome=false;wizStep=1;wizDone=false;
+  var qtab=document.querySelector('.tabs .tab');
+  sw('quicklog',qtab);
   if(!SR){
-    if(fab){var orig=fab.innerHTML;fab.textContent='?';setTimeout(function(){fab.innerHTML=orig;},1800);}
+    /* Non-Chrome: show fallback inside the now-visible wiz-act input */
+    setTimeout(function(){
+      var a=document.getElementById('wiz-act');
+      if(a){a.placeholder='Voice needs Chrome or Safari 15+ — type here instead';a.focus();}
+    },80);
     return;
   }
+  /* After render settles, light up the activity input */
+  setTimeout(function(){
+    var a=document.getElementById('wiz-act');
+    if(a){a.placeholder='Listening… speak now';a.classList.add('listening');a.focus();}
+    if(fab)fab.classList.add('listening');
+  },80);
   var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
-  r.onstart=function(){if(fab){fab.classList.add('listening');}};
   r.onresult=function(e){
     var t=e.results[0][0].transcript;
     WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
-    wizWelcome=false;wizStep=1;wizDone=false;
-    sw('quicklog',document.querySelector('.tab.on')||document.querySelector('.tab'));
-    if(fab){fab.classList.remove('listening');}
+    if(fab)fab.classList.remove('listening');
+    render();
+    /* Focus the now-filled input so user can edit or just tap Next */
+    setTimeout(function(){var a=document.getElementById('wiz-act');if(a)a.focus();},80);
   };
-  r.onerror=function(){if(fab){fab.classList.remove('listening');}};
-  r.onend=function(){if(fab){fab.classList.remove('listening');}};
+  r.onerror=function(){
+    if(fab)fab.classList.remove('listening');
+    var a=document.getElementById('wiz-act');
+    if(a){a.placeholder='e.g. deep work, gym, team call, reading...';a.classList.remove('listening');}
+  };
+  r.onend=function(){
+    if(fab)fab.classList.remove('listening');
+    var a=document.getElementById('wiz-act');
+    if(a&&a.classList.contains('listening')){a.placeholder='e.g. deep work, gym, team call, reading...';a.classList.remove('listening');}
+  };
   r.start();
 }
 /* ── 16. Window exports ──────────────────────────────────────────────────
