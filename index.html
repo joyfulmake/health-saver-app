@@ -1805,7 +1805,7 @@ function navF(d){fRef=navRef(fRef,fView,d);renderFinance();}
 function navT(d){tRef=navRef(tRef,tView,d);renderTime();}
 function askDel(id){delId=id;render();}
 function cancelDel(){delId=null;render();}
-function doDelete(id){entries=entries.filter(function(e){return e.id!==id;});persist();delId=null;render();}
+function doDelete(id){deletedIds.add(id);persistDeleted();entries=entries.filter(function(e){return e.id!==id;});persist();delId=null;render();}
 /* ── 11. Modal / entry CRUD ──────────────────────────────────────────────
    openModal(id)  — opens the add/edit entry modal. id=null → new entry,
                     id=string → loads that entry into F for editing.
@@ -1863,7 +1863,7 @@ var RAZORPAY_KEY='__RAZORPAY_KEY__';
    Anyone with this key can unlock pro features in Settings.
    Since this file is public, keep it something only you would guess.
    ─────────────────────────────────────────────────────────────────────────*/
-var FLOURISH_PRO_KEY='flourish2025';
+var FLOURISH_PRO_KEY='__FLOURISH_PRO_KEY__';
 
 /* ─────────────────────────────────────────────────────────────────────────
    CROSS-DEVICE SYNC  (optional — enables Firebase cloud sync)
@@ -1872,12 +1872,12 @@ var FLOURISH_PRO_KEY='flourish2025';
    3. Enable Firestore Database (start in production mode, add rule: allow read, write: if request.auth != null)
    4. Replace null below with your Firebase config object from Project Settings
    ─────────────────────────────────────────────────────────────────────────*/
-var FIREBASE_CONFIG=null;
-/* Example:
-var FIREBASE_CONFIG={apiKey:"AIza...",authDomain:"myapp.firebaseapp.com",
-  projectId:"myapp",storageBucket:"myapp.appspot.com",
-  messagingSenderId:"12345",appId:"1:12345:web:abc"};
-*/
+var FIREBASE_CONFIG=(function(){var _s='__FIREBASE_CONFIG__';try{return _s&&_s[0]==='{'?JSON.parse(_s):null;}catch(e){return null;}})();
+/* To configure: set FIREBASE_CONFIG secret in GitHub → Settings → Secrets.
+   Value must be the Firebase config JSON object as a single-line string, e.g.:
+   {"apiKey":"AIza...","authDomain":"myapp.firebaseapp.com","projectId":"myapp",
+    "storageBucket":"myapp.appspot.com","messagingSenderId":"12345","appId":"1:12345:web:abc"}
+   Firebase config is not a password — Firestore rules enforce security server-side. */
 
 /* ─────────────────────────────────────────────────────────────────────────
    FEEDBACK EMAIL  (optional — routes feedback form to your inbox)
@@ -1898,6 +1898,8 @@ var WEB3FORMS_KEY='__WEB3FORMS_KEY__';
    ─────────────────────────────────────────────────────────────────────── */
 var fbAuth=null,fbDB=null,fbLoaded=false;
 var currentUser=(function(){try{var s=localStorage.getItem('flourish_pro');return s?JSON.parse(s):null;}catch(e){return null;}})();
+var deletedIds=(function(){try{return new Set(JSON.parse(localStorage.getItem('flourish_del_v5')||'[]'));}catch(e){return new Set();}})();
+function persistDeleted(){try{localStorage.setItem('flourish_del_v5',JSON.stringify([...deletedIds]));}catch(e){}}
 function loadFirebaseSDK(cb){
   if(fbLoaded){cb();return;}
   var srcs=['https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js'];
@@ -2010,7 +2012,7 @@ function startUPIPay(){
   if(!emailEl||!emailEl.value.trim()){var e=emailEl;e.style.borderColor='var(--cr)';setTimeout(function(){e.style.borderColor='';},1500);return;}
   if(!agreeEl||!agreeEl.checked){alert('Please agree to the terms to proceed.');return;}
   _payEmail=emailEl.value.trim();
-  if(!RAZORPAY_KEY){
+  if(!RAZORPAY_KEY||RAZORPAY_KEY.includes('__')){
     alert('Payment gateway (Razorpay) is not yet configured by the developer.\n\nContact the app owner to complete setup.');
     return;
   }
@@ -2081,19 +2083,26 @@ function syncNow(){
   if(!fbDB){alert('Cloud sync requires Firebase setup.\n\nUse "Generate Backup Code" in Your Data section to transfer entries between devices.');return;}
   var ref=fbDB.collection('users').doc(currentUser.uid).collection('data').doc('entries');
   ref.get().then(function(doc){
-    var cloud=doc.exists&&doc.data().entries?doc.data().entries:[];
+    var d=doc.exists?doc.data():{};
+    var cloud=d.entries||[];
+    // merge remote deletedIds so deletes made on other devices propagate here
+    var cloudDel=new Set(d.deletedIds||[]);
+    cloudDel.forEach(function(id){deletedIds.add(id);});
+    persistDeleted();
+    // purge any locally kept entry that was deleted on another device
+    entries=entries.filter(function(e){return !deletedIds.has(e.id);});
+    // add cloud entries not present locally and not deleted on any device
     var localIds=new Set(entries.map(function(e){return e.id;}));
-    var merged=entries.slice();
-    cloud.forEach(function(ce){if(!localIds.has(ce.id))merged.push(ce);});
-    entries=merged;persist();
-    ref.set({entries:entries,updated:new Date().toISOString()});
+    cloud.forEach(function(ce){if(!localIds.has(ce.id)&&!deletedIds.has(ce.id))entries.push(ce);});
+    persist();
+    ref.set({entries:entries,deletedIds:[...deletedIds],updated:new Date().toISOString()});
     render();
   }).catch(function(e){console.log('Sync error:',e);});
 }
 function persistCloud(){
   if(!currentUser||!fbDB)return;
   fbDB.collection('users').doc(currentUser.uid).collection('data').doc('entries')
-    .set({entries:entries,updated:new Date().toISOString()}).catch(function(){});
+    .set({entries:entries,deletedIds:[...deletedIds],updated:new Date().toISOString()}).catch(function(){});
 }
 function genBackupCode(){
   var data=JSON.stringify({entries:entries,v:5,ts:new Date().toISOString()});

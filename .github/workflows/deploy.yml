@@ -21,9 +21,18 @@ jobs:
         env:
           RAZORPAY_KEY: ${{ secrets.RAZORPAY_KEY }}
           WEB3FORMS_KEY: ${{ secrets.WEB3FORMS_KEY }}
+          FLOURISH_PRO_KEY: ${{ secrets.FLOURISH_PRO_KEY }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
           sed -i "s|__RAZORPAY_KEY__|$RAZORPAY_KEY|g" index.html
           sed -i "s|__WEB3FORMS_KEY__|$WEB3FORMS_KEY|g" index.html
+          sed -i "s|__FLOURISH_PRO_KEY__|$FLOURISH_PRO_KEY|g" index.html
+          python3 -c "
+import os
+with open('index.html','r') as f: c=f.read()
+c=c.replace('__FIREBASE_CONFIG__', os.environ.get('FIREBASE_CONFIG',''))
+with open('index.html','w') as f: f.write(c)
+"
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
