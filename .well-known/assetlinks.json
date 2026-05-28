@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "dev.isa.flourish",
+    "sha256_cert_fingerprints": [
+      "D7:84:7E:9C:78:5A:54:F9:1F:A4:D2:82:56:CF:F6:08:96:12:4D:43:2C:30:4C:BC:C3:82:5B:24:E2:ED:42:43"
+    ]
+  }
+}]
