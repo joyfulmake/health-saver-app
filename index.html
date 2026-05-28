@@ -1945,9 +1945,9 @@ function updateAuthUI(){
    verifyPayOTP()    — compares entered OTP against _payOTP; on match
                        sets currentUser and persists pro status.
    ─────────────────────────────────────────────────────────────────────── */
-var _payOTP=null,_payEmail=null,_payStep=null;
+var _payEmail=null,_payStep=null;
 function openPay(){document.getElementById('pay-ov').classList.add('open');_renderPayStep('email');}
-function closePay(){document.getElementById('pay-ov').classList.remove('open');_payOTP=null;_payEmail=null;}
+function closePay(){document.getElementById('pay-ov').classList.remove('open');_payEmail=null;}
 function _renderPayStep(step){
   _payStep=step;
   var el=document.getElementById('pay-content');if(!el)return;
@@ -1983,19 +1983,6 @@ function _renderPayStep(step){
         '<span style="font-size:20px">&#128176;</span> Pay &#8377;99 via GPay / PhonePe / UPI'+
       '</button>'+
       '<button style="width:100%;padding:10px;border-radius:10px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);margin-top:7px" onclick="closePay()">Cancel</button>';
-  } else if(step==='otp'){
-    el.innerHTML='<div class="mtitle">Verify Email</div>'+
-      '<div style="text-align:center;padding:20px 0 14px">'+
-        '<div style="font-size:42px;margin-bottom:12px">&#128140;</div>'+
-        '<div style="font-size:16px;font-weight:800">Check your inbox</div>'+
-        '<div style="font-size:13px;font-weight:700;color:var(--muted);margin-top:6px;line-height:1.65">A 6-digit code was sent to<br><strong>'+he(_payEmail||'your email')+'</strong></div>'+
-      '</div>'+
-      '<div class="fg" style="margin-bottom:12px">'+
-        '<label class="fl">Verification code</label>'+
-        '<input id="pay-otp-inp" class="fi" type="text" inputmode="numeric" placeholder="000000" maxlength="6" style="font-size:22px;letter-spacing:6px;text-align:center">'+
-      '</div>'+
-      '<button style="width:100%;padding:13px;border-radius:12px;border:none;background:#0f0f0f;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer" onclick="verifyPayOTP()">Verify &amp; Activate Pro</button>'+
-      '<button style="width:100%;padding:10px;border-radius:10px;border:none;background:transparent;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);margin-top:6px" onclick="_renderPayStep(\'email\')">&lsaquo; Back</button>';
   } else if(step==='done'){
     el.innerHTML='<div class="mtitle">Pro Activated &#10003;</div>'+
       '<div style="text-align:center;padding:24px 0 18px">'+
@@ -2026,27 +2013,19 @@ function startUPIPay(){
   document.head.appendChild(s);
 }
 function _onPaySuccess(paymentId){
-  _payOTP=Math.floor(100000+Math.random()*900000).toString();
-  if(WEB3FORMS_KEY&&WEB3FORMS_KEY!=='YOUR_WEB3FORMS_ACCESS_KEY'){
+  currentUser={name:'Pro User',email:_payEmail||'',role:'pro'};
+  try{localStorage.setItem('flourish_pro',JSON.stringify(currentUser));}catch(e){}
+  updateAuthUI();
+  // notify owner — Web3Forms delivers to account owner only, not to arbitrary addresses
+  if(WEB3FORMS_KEY&&!WEB3FORMS_KEY.includes('__')){
     fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({access_key:WEB3FORMS_KEY,to:_payEmail,
-        subject:'Flourish Pro — Your activation code: '+_payOTP,
-        message:'Your Flourish Pro activation code is: '+_payOTP+'\n\nPayment ID: '+paymentId+'\n\nEnter this code in the Flourish app (Settings → Verify Email) to activate Pro.\n\nThank you!'
+      body:JSON.stringify({access_key:WEB3FORMS_KEY,
+        subject:'Flourish Pro payment — '+(_payEmail||'unknown'),
+        message:'New Pro activation.\n\nEmail: '+(_payEmail||'—')+'\nPayment ID: '+paymentId
       })
     }).catch(function(){});
   }
-  _renderPayStep('otp');
-}
-function verifyPayOTP(){
-  var el=document.getElementById('pay-otp-inp');if(!el)return;
-  if(el.value.trim()===_payOTP){
-    currentUser={name:'Pro User',email:_payEmail||'',role:'pro'};
-    try{localStorage.setItem('flourish_pro',JSON.stringify(currentUser));}catch(e){}
-    updateAuthUI();_renderPayStep('done');
-  }else{
-    el.style.borderColor='var(--cr)';el.style.background='rgba(184,48,32,.05)';
-    setTimeout(function(){el.style.borderColor='';el.style.background='';},1500);
-  }
+  _renderPayStep('done');
 }
 function unlockPro(){
   var k=document.getElementById('pro-key-input');if(!k)return;
@@ -2305,7 +2284,7 @@ function _fabVoice(){
 window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveSettings=saveSettings;
 window.genBackupCode=genBackupCode;window.copyBackupCode=copyBackupCode;window.restoreFromCode=restoreFromCode;
 window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
-window._storyNext=_storyNext;window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;window.unlockPro=unlockPro;window.voiceNote=voiceNote;window.openPay=openPay;window.closePay=closePay;window.startUPIPay=startUPIPay;window.verifyPayOTP=verifyPayOTP;window._renderPayStep=_renderPayStep;window.startVoiceLog=startVoiceLog;window.cancelVoiceLog=cancelVoiceLog;
+window._storyNext=_storyNext;window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;window.unlockPro=unlockPro;window.voiceNote=voiceNote;window.openPay=openPay;window.closePay=closePay;window.startUPIPay=startUPIPay;window._renderPayStep=_renderPayStep;window.startVoiceLog=startVoiceLog;window.cancelVoiceLog=cancelVoiceLog;
 window._qbarSubmit=_qbarSubmit;window._qbarVoice=_qbarVoice;window._fabVoice=_fabVoice;window._setAct=_setAct;window._gWizAct=_gWizAct;window._guideEl=_guideEl;window._stepReady=_stepReady;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
 window.setF=setF;window.toggleFin=toggleFin;window.setFinType=setFinType;window.saveEntry=saveEntry;
