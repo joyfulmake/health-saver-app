@@ -806,6 +806,7 @@ async function boot(){
   _startStories();
   _spawnAmb(activeTab);
   if(FIREBASE_CONFIG)initFirebase();
+  if(new URLSearchParams(location.search).get('getpro')==='1')setTimeout(openPay,400);
 }
 /* ── 4. Date & formatting utilities ─────────────────────────────────────
    today()     — midnight Date for today
@@ -1885,6 +1886,7 @@ var FIREBASE_CONFIG=(function(){var _s='__FIREBASE_CONFIG__';try{return _s&&_s[0
    2. Replace YOUR_WEB3FORMS_ACCESS_KEY below with that key
    ─────────────────────────────────────────────────────────────────────────*/
 var WEB3FORMS_KEY='__WEB3FORMS_KEY__';
+var IS_TWA=(function(){try{return document.referrer.startsWith('android-app://');}catch(e){return false;}})();
 
 /* ── 13. Firebase / cloud sync (optional) ───────────────────────────────
    Only active when FIREBASE_CONFIG is set (not null).
@@ -1951,21 +1953,35 @@ function closePay(){document.getElementById('pay-ov').classList.remove('open');_
 function _renderPayStep(step){
   _payStep=step;
   var el=document.getElementById('pay-content');if(!el)return;
-  if(step==='email'){
-    el.innerHTML='<div class="mtitle">Get Pro Access</div>'+
-      '<div style="background:linear-gradient(135deg,#0f0f0f,#1a1a2e);border-radius:14px;padding:18px 20px;color:#fff;margin-bottom:16px">'+
-        '<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">'+
-          '<div style="font-size:28px;font-weight:900">&#8377;99 <span style="font-size:13px;font-weight:700;opacity:.55">one-time forever</span></div>'+
-          '<div style="font-size:11px;font-weight:800;padding:3px 8px;border-radius:5px;background:rgba(176,112,32,.35);color:#f6c96e;letter-spacing:.4px">Founding price &bull; goes to &#8377;499 at launch</div>'+
-        '</div>'+
-        '<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'+
-          '<div style="font-size:13px;font-weight:700">&#9729;&#65039;&nbsp; Cross-device sync &mdash; history safe in your own cloud</div>'+
-          '<div style="font-size:13px;font-weight:700">&#129504;&nbsp; AI weekly narrative &mdash; richer than a report <span style="opacity:.5;font-size:11px">coming</span></div>'+
-          '<div style="font-size:13px;font-weight:700">&#128203;&nbsp; PDF insight export &amp; accountability partner <span style="opacity:.5;font-size:11px">coming</span></div>'+
-          '<div style="font-size:13px;font-weight:700">&#127942;&nbsp; Every future Pro feature, forever</div>'+
-          '<div style="font-size:12px;font-weight:700;opacity:.5;margin-top:2px">&#127908; Voice logging &mdash; free for everyone always</div>'+
-        '</div>'+
+  var _proFeaturesHtml=
+    '<div style="background:linear-gradient(135deg,#0f0f0f,#1a1a2e);border-radius:14px;padding:18px 20px;color:#fff;margin-bottom:16px">'+
+      '<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">'+
+        '<div style="font-size:28px;font-weight:900">&#8377;99 <span style="font-size:13px;font-weight:700;opacity:.55">one-time forever</span></div>'+
+        '<div style="font-size:11px;font-weight:800;padding:3px 8px;border-radius:5px;background:rgba(176,112,32,.35);color:#f6c96e;letter-spacing:.4px">Founding price &bull; goes to &#8377;499 at launch</div>'+
       '</div>'+
+      '<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'+
+        '<div style="font-size:13px;font-weight:700">&#9729;&#65039;&nbsp; Cross-device sync &mdash; history safe in your own cloud</div>'+
+        '<div style="font-size:13px;font-weight:700">&#129504;&nbsp; AI weekly narrative &mdash; richer than a report <span style="opacity:.5;font-size:11px">coming</span></div>'+
+        '<div style="font-size:13px;font-weight:700">&#128203;&nbsp; PDF insight export &amp; accountability partner <span style="opacity:.5;font-size:11px">coming</span></div>'+
+        '<div style="font-size:13px;font-weight:700">&#127942;&nbsp; Every future Pro feature, forever</div>'+
+        '<div style="font-size:12px;font-weight:700;opacity:.5;margin-top:2px">&#127908; Voice logging &mdash; free for everyone always</div>'+
+      '</div>'+
+    '</div>';
+  if(step==='email'){
+    if(IS_TWA){
+      el.innerHTML='<div class="mtitle">Get Pro Access</div>'+
+        _proFeaturesHtml+
+        '<div style="background:var(--softer);border-radius:11px;padding:13px 15px;margin-bottom:14px;border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--muted);line-height:1.75">'+
+          'Payment opens on <strong style="color:var(--text)">flourish.is-a.dev</strong> in your browser. After paying, sign in here with Google &mdash; your Pro status syncs back automatically.'+
+        '</div>'+
+        '<button style="width:100%;padding:14px;border-radius:13px;border:none;background:linear-gradient(135deg,#0f0f0f,#1a1a2e);color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,.18)" onclick="window.open(\'https://flourish.is-a.dev/?getpro=1\',\'_blank\')">'+
+          '<span style="font-size:20px">&#128176;</span> Pay &#8377;99 on the web &rarr;'+
+        '</button>'+
+        '<button style="width:100%;padding:10px;border-radius:10px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);margin-top:7px" onclick="closePay()">Cancel</button>';
+      return;
+    }
+    el.innerHTML='<div class="mtitle">Get Pro Access</div>'+
+      _proFeaturesHtml+
       '<div class="fg" style="margin-bottom:10px">'+
         '<label class="fl">Your email &mdash; pro code will be sent here</label>'+
         '<input id="pay-email" class="fi" type="email" placeholder="you@gmail.com" autocomplete="email">'+
