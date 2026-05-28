@@ -100,7 +100,13 @@ Pro mode overrides: `body.is-pro` sets warm gold borders and background tints.
 
 ## Google Play Store
 
-TWA submission pending approval (as of 2026-05-27). Package tracks the same `flourish.is-a.dev` PWA.
+TWA submission in progress (as of 2026-05-28). Package name: `dev.isa.flourish`. Tracks `flourish.is-a.dev`.
+
+## Firebase project
+
+Project ID: `opsmanifest-d363a` — Authentication (Google), Firestore enabled.
+Firestore rule: `allow read, write: if request.auth != null;`
+Data path: `users/{uid}/data/entries`
 
 ## Pitfalls
 
