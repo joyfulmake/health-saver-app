@@ -453,8 +453,7 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
     <div class="story-prog"><div class="story-prog-bar" id="story-prog-bar"></div></div>
   </div>
   <div class="qbar" role="search" aria-label="Quick log entry">
-    <input class="qbar-inp" id="qbar-inp" type="text" placeholder="What are you noticing right now?" autocomplete="off" enterkeyhint="done" onkeydown="if(event.key==='Enter')_qbarSubmit()">
-    <button class="qbar-mic" id="qbar-mic" onclick="_qbarVoice()" aria-label="Speak to log" title="Tap to speak">&#127908;</button>
+    <input class="qbar-inp" id="qbar-inp" type="text" placeholder="What did you just do? (or tap mic below)" autocomplete="off" enterkeyhint="done" onkeydown="if(event.key==='Enter')_qbarSubmit()">
     <button class="qbar-go" onclick="_qbarSubmit()" aria-label="Log entry">Log &#8250;</button>
   </div>
   <div id="now-strip" class="now-strip" style="display:none">
@@ -1502,17 +1501,19 @@ function startVoiceLog(){
     el.innerHTML='<div style="text-align:center;padding:52px 20px"><div style="font-size:44px;margin-bottom:14px">&#127908;</div><div style="font-size:17px;font-weight:900;margin-bottom:8px;color:var(--text)">Voice not available</div><div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.75;max-width:280px;margin:0 auto">Voice input works in Chrome (Android &amp; desktop) and Safari (iOS 15+).<br><br>Use the text field above to log instead.</div><button onclick="cancelVoiceLog()" style="margin-top:24px;padding:11px 26px;border-radius:10px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted)">Back</button></div>';
     return;
   }
-  var el=document.getElementById('p-quicklog');if(!el)return;
-  el.innerHTML='<div style="text-align:center;padding:52px 20px"><div style="width:86px;height:86px;border-radius:50%;background:rgba(184,48,32,.07);border:2px solid rgba(184,48,32,.18);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:38px;animation:tickPulse .95s ease-in-out infinite">&#127908;</div><div style="font-size:19px;font-weight:900;letter-spacing:-.3px;margin-bottom:8px">Listening&hellip;</div><div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.8;max-width:280px;margin:0 auto">Speak naturally &mdash; e.g.<br>&ldquo;Deep work on the design&rdquo; or &ldquo;Went for a walk&rdquo;</div><button onclick="cancelVoiceLog()" style="margin-top:30px;padding:11px 26px;border-radius:10px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);-webkit-tap-highlight-color:transparent">Cancel</button></div>';
-  var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
-  r.onresult=function(e){
-    var t=e.results[0][0].transcript;
-    WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
-    wizWelcome=false;wizStep=1;wizDone=false;renderQuickLog();
-  };
-  r.onerror=function(){renderQuickLog();};
-  r.onend=function(){};
-  r.start();
+  _reqMic(function(){
+    var el=document.getElementById('p-quicklog');if(!el)return;
+    el.innerHTML='<div style="text-align:center;padding:52px 20px"><div style="width:86px;height:86px;border-radius:50%;background:rgba(184,48,32,.07);border:2px solid rgba(184,48,32,.18);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:38px;animation:tickPulse .95s ease-in-out infinite">&#127908;</div><div style="font-size:19px;font-weight:900;letter-spacing:-.3px;margin-bottom:8px">Listening&hellip;</div><div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.8;max-width:280px;margin:0 auto">Speak naturally &mdash; e.g.<br>&ldquo;Deep work on the design&rdquo; or &ldquo;Went for a walk&rdquo;</div><button onclick="cancelVoiceLog()" style="margin-top:30px;padding:11px 26px;border-radius:10px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);-webkit-tap-highlight-color:transparent">Cancel</button></div>';
+    var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
+    r.onresult=function(e){
+      var t=e.results[0][0].transcript;
+      WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
+      wizWelcome=false;wizStep=1;wizDone=false;renderQuickLog();
+    };
+    r.onerror=function(){renderQuickLog();};
+    r.onend=function(){};
+    r.start();
+  });
 }
 function cancelVoiceLog(){renderQuickLog();}
 function buildMonthlyReflection(){
@@ -2229,69 +2230,56 @@ function _qbarSubmit(){
   wizWelcome=false;wizStep=1;wizDone=false;
   sw('quicklog',document.querySelector('.tabs .tab'));
 }
-function _qbarVoice(){
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  var mic=document.getElementById('qbar-mic');
-  if(!SR){
-    var inp=document.getElementById('qbar-inp');
-    if(inp){var ph=inp.placeholder;inp.placeholder='Voice needs Chrome or Safari 15+';setTimeout(function(){inp.placeholder=ph;},3000);}
-    return;
-  }
-  var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
-  r.onstart=function(){if(mic){mic.textContent='&#128308;';mic.classList.add('active');}};
-  r.onresult=function(e){
-    var t=e.results[0][0].transcript;
-    WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
-    wizWelcome=false;wizStep=1;wizDone=false;
-    sw('quicklog',document.querySelector('.tabs .tab'));
-    if(mic){mic.textContent='&#127908;';mic.classList.remove('active');}
-  };
-  r.onerror=function(){if(mic){mic.textContent='&#127908;';mic.classList.remove('active');}};
-  r.onend=function(){if(mic){mic.textContent='&#127908;';mic.classList.remove('active');}};
-  r.start();
+/* Request mic permission explicitly so Android shows the native dialog */
+function _reqMic(cb){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){cb();return;}
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(function(s){s.getTracks().forEach(function(t){t.stop();});cb();})
+    .catch(function(err){
+      if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
+        alert('Microphone access is blocked.\n\nTap the lock icon in the address bar → allow Microphone, then try again.');
+      } else {cb();}
+    });
 }
-/* Floating mic FAB — switches to quicklog wizard and shows listening state inline */
+/* Floating mic FAB — requests permission first, then starts listening in wizard */
 function _fabVoice(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   var fab=document.getElementById('mic-fab');
-  /* Always switch to quicklog + show wizard step 1 first */
   wizWelcome=false;wizStep=1;wizDone=false;
-  var qtab=document.querySelector('.tabs .tab');
-  sw('quicklog',qtab);
+  sw('quicklog',document.querySelector('.tabs .tab'));
   if(!SR){
-    /* Non-Chrome: show fallback inside the now-visible wiz-act input */
     setTimeout(function(){
       var a=document.getElementById('wiz-act');
       if(a){a.placeholder='Voice needs Chrome or Safari 15+ — type here instead';a.focus();}
     },80);
     return;
   }
-  /* After render settles, light up the activity input */
-  setTimeout(function(){
-    var a=document.getElementById('wiz-act');
-    if(a){a.placeholder='Listening… speak now';a.classList.add('listening');a.focus();}
-    if(fab)fab.classList.add('listening');
-  },80);
-  var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
-  r.onresult=function(e){
-    var t=e.results[0][0].transcript;
-    WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
-    if(fab)fab.classList.remove('listening');
-    render();
-    /* Focus the now-filled input so user can edit or just tap Next */
-    setTimeout(function(){var a=document.getElementById('wiz-act');if(a)a.focus();},80);
-  };
-  r.onerror=function(){
-    if(fab)fab.classList.remove('listening');
-    var a=document.getElementById('wiz-act');
-    if(a){a.placeholder='e.g. deep work, gym, team call, reading...';a.classList.remove('listening');}
-  };
-  r.onend=function(){
-    if(fab)fab.classList.remove('listening');
-    var a=document.getElementById('wiz-act');
-    if(a&&a.classList.contains('listening')){a.placeholder='e.g. deep work, gym, team call, reading...';a.classList.remove('listening');}
-  };
-  r.start();
+  _reqMic(function(){
+    setTimeout(function(){
+      var a=document.getElementById('wiz-act');
+      if(a){a.placeholder='Listening… speak now';a.classList.add('listening');a.focus();}
+      if(fab)fab.classList.add('listening');
+    },80);
+    var r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;
+    r.onresult=function(e){
+      var t=e.results[0][0].transcript;
+      WD.activity=t.charAt(0).toUpperCase()+t.slice(1);
+      if(fab)fab.classList.remove('listening');
+      render();
+      setTimeout(function(){var a=document.getElementById('wiz-act');if(a)a.focus();},80);
+    };
+    r.onerror=function(){
+      if(fab)fab.classList.remove('listening');
+      var a=document.getElementById('wiz-act');
+      if(a){a.placeholder='e.g. deep work, gym, team call, reading...';a.classList.remove('listening');}
+    };
+    r.onend=function(){
+      if(fab)fab.classList.remove('listening');
+      var a=document.getElementById('wiz-act');
+      if(a&&a.classList.contains('listening')){a.placeholder='e.g. deep work, gym, team call, reading...';a.classList.remove('listening');}
+    };
+    r.start();
+  });
 }
 /* ── 16. Window exports ──────────────────────────────────────────────────
    Inline onclick="" handlers in the HTML cannot see module-scoped vars.
@@ -2301,7 +2289,7 @@ window.openSettings=openSettings;window.closeSettings=closeSettings;window.saveS
 window.genBackupCode=genBackupCode;window.copyBackupCode=copyBackupCode;window.restoreFromCode=restoreFromCode;
 window.openFeedback=openFeedback;window.closeFeedback=closeFeedback;window.submitFeedback=submitFeedback;
 window._storyNext=_storyNext;window.signInGoogle=signInGoogle;window.signOutUser=signOutUser;window.syncNow=syncNow;window.unlockPro=unlockPro;window.voiceNote=voiceNote;window.openPay=openPay;window.closePay=closePay;window.startUPIPay=startUPIPay;window._renderPayStep=_renderPayStep;window.startVoiceLog=startVoiceLog;window.cancelVoiceLog=cancelVoiceLog;
-window._qbarSubmit=_qbarSubmit;window._qbarVoice=_qbarVoice;window._fabVoice=_fabVoice;window._setAct=_setAct;window._gWizAct=_gWizAct;window._guideEl=_guideEl;window._stepReady=_stepReady;
+window._reqMic=_reqMic;window._qbarSubmit=_qbarSubmit;window._fabVoice=_fabVoice;window._setAct=_setAct;window._gWizAct=_gWizAct;window._guideEl=_guideEl;window._stepReady=_stepReady;
 window.sw=sw;window.openModal=openModal;window.closeModal=closeModal;
 window.setF=setF;window.toggleFin=toggleFin;window.setFinType=setFinType;window.saveEntry=saveEntry;
 window.setLF=setLF;window.setFV=setFV;window.setTV=setTV;window.navF=navF;window.navT=navT;
