@@ -55,8 +55,8 @@ body{overscroll-behavior-y:contain}
    Glow shadows:    gwb/gwg/gwr/gwa  (used on score values + now-strip)
    ─────────────────────────────────────────────────────────────────────── */
 :root{
-  --bg:#fff;--text:#0f0f0f;--muted:#6b7280;--faint:#9ca3af;
-  --soft:#f5f4f1;--softer:#f9f8f6;--border:rgba(0,0,0,.08);
+  --bg:#fdfcfa;--text:#130f0c;--muted:#736b5e;--faint:#a09488;
+  --soft:#f3f0eb;--softer:#f7f4f0;--border:rgba(80,50,20,.1);
   --cb:#1A4A8C;--cg:#1A6B3C;--ca:#B07020;--cr:#B83020;
   --cp:#5C2A9D;--ct:#0F6B6B;--co:#C06520;
   --bb:rgba(26,74,140,.08);--bg2:rgba(26,107,60,.08);
@@ -71,15 +71,15 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .wrap{max-width:1196px;margin:0 auto;padding:0 26px 150px}
 .hdr{padding:22px 0 0;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .hdr-l{display:flex;align-items:center;gap:11px}
-.hdr-logo{width:40px;height:40px;background:#0f0f0f;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
-.hdr-name{font-size:21px;font-weight:900;letter-spacing:-.5px;text-shadow:0 0 22px rgba(0,0,0,0.08)}
+.hdr-logo{width:40px;height:40px;background:var(--cb);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:0 2px 12px rgba(26,74,140,.22)}
+.hdr-name{font-size:21px;font-weight:900;letter-spacing:-.5px;color:var(--text);text-shadow:0 1px 14px rgba(26,74,140,.1)}
 .hdr-sub{font-size:12px;color:var(--muted);font-weight:700;margin-top:1px;text-shadow:0 0 18px rgba(0,0,0,0.06)}
 .hdr-btns{display:flex;gap:7px}
-.btn-pri{background:#0f0f0f;color:#fff;border:none;border-radius:11px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;transition:opacity .15s}
+.btn-pri{background:var(--cb);color:#fff;border:none;border-radius:11px;padding:10px 17px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;transition:opacity .15s}
 .btn-pri:hover{opacity:.78}
 .btn-sec{background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;transition:all .15s}
 .btn-sec:hover{border-color:rgba(0,0,0,.22);color:var(--text)}
-.now-strip{border-radius:14px;padding:12px 15px;margin-bottom:15px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--softer);border:1px solid var(--border)}
+.now-strip{border-radius:14px;padding:12px 15px;margin-bottom:15px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(100deg,#fdf8f0 0%,#f7f4f0 100%);border:1px solid rgba(176,112,32,.15)}
 .now-l{display:flex;align-items:center;gap:10px}
 .now-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;animation:pulseA 2.2s ease-in-out infinite}
 @keyframes pulseA{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
@@ -386,7 +386,7 @@ body.is-pro .hdr-logo{box-shadow:0 0 0 2px rgba(176,112,32,.25),0 0 18px rgba(17
 @keyframes storyIn{from{transform:translateX(28px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes storyOut{from{transform:translateX(0);opacity:1}to{transform:translateX(-28px);opacity:0}}
 @keyframes storyProg{from{width:0%}to{width:100%}}
-.story-wrap{background:linear-gradient(160deg,#faf9f7 0%,#f1efe9 100%);border-radius:14px;padding:14px 16px 11px;margin-bottom:14px;border:1px solid rgba(0,0,0,.07);cursor:pointer;position:relative;overflow:hidden;user-select:none;-webkit-user-select:none}
+.story-wrap{background:linear-gradient(160deg,#fdf9f4 0%,#f2ece0 100%);border-radius:14px;padding:14px 16px 11px;margin-bottom:14px;border:1px solid rgba(176,112,32,.13);cursor:pointer;position:relative;overflow:hidden;user-select:none;-webkit-user-select:none}
 .story-wrap:active{opacity:.88}
 .story-leaf{position:absolute;top:-6px;right:0px;font-size:64px;opacity:.06;pointer-events:none;transform:rotate(20deg);line-height:1;filter:grayscale(1)}
 .story-body{font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.8;min-height:54px}
@@ -413,10 +413,10 @@ body.is-pro .hdr-logo{box-shadow:0 0 0 2px rgba(176,112,32,.25),0 0 18px rgba(17
 .qbar-mic{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;-webkit-tap-highlight-color:transparent;line-height:1}
 .qbar-mic:hover,.qbar-mic:active{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.2)}
 .qbar-mic.active{background:rgba(184,48,32,.1);border-color:rgba(184,48,32,.35);animation:tickPulse .9s ease-in-out infinite}
-.qbar-go{height:40px;padding:0 15px;border-radius:10px;border:none;background:#0f0f0f;color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;transition:opacity .15s;-webkit-tap-highlight-color:transparent}
+.qbar-go{height:40px;padding:0 15px;border-radius:10px;border:none;background:var(--cb);color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;transition:opacity .15s;-webkit-tap-highlight-color:transparent}
 .qbar-go:hover,.qbar-go:active{opacity:.82}
 /* ── Prominent mic+note combo ─────────────────────────────────────────── */
-.mic-fab{position:fixed;bottom:calc(56px + env(safe-area-inset-bottom));right:18px;width:54px;height:54px;border-radius:50%;background:#0f0f0f;color:#fff;border:none;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.22);z-index:190;transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+.mic-fab{position:fixed;bottom:calc(56px + env(safe-area-inset-bottom));right:18px;width:54px;height:54px;border-radius:50%;background:var(--cb);color:#fff;border:none;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(26,74,140,.32);z-index:190;transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
 .mic-fab:hover,.mic-fab:active{transform:scale(1.07);box-shadow:0 6px 26px rgba(0,0,0,.28)}
 .mic-fab.listening{background:rgba(184,48,32,.9);animation:tickPulse .9s ease-in-out infinite}
 select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
