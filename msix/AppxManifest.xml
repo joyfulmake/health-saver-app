@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap uap3">
+
+  <Identity
+    Name="Flourishing.Flourish"
+    Publisher="CN=CF05ACFD-1A2C-4D3B-85CE-80828C73812E"
+    Version="1.0.3.0"
+    ProcessorArchitecture="neutral" />
+
+  <Properties>
+    <DisplayName>Flourish: Self Tracker</DisplayName>
+    <PublisherDisplayName>Flourishing</PublisherDisplayName>
+    <Logo>Images\StoreLogo.png</Logo>
+    <Description>Note your day. Know yourself. Flow - habit, finance, time and nature in one place.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" StartPage="https://flourish.is-a.dev/">
+      <uap:VisualElements
+        DisplayName="Flourish: Self Tracker"
+        Description="Note your day. Know yourself. Flow - habit, finance, time and nature in one place."
+        BackgroundColor="#1A4A8C"
+        Square150x150Logo="Images\Square150x150Logo.png"
+        Square44x44Logo="Images\Square44x44Logo.png">
+        <uap:DefaultTile
+          Wide310x150Logo="Images\Wide310x150Logo.png"
+          Square310x310Logo="Images\Square310x310Logo.png"
+          ShortName="Flourish">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Images\SplashScreen.png" BackgroundColor="#1A4A8C" />
+      </uap:VisualElements>
+      <uap:ApplicationContentUriRules>
+        <uap:Rule Type="include" WindowsRuntimeAccess="all" Match="https://flourish.is-a.dev/" />
+        <uap:Rule Type="include" WindowsRuntimeAccess="all" Match="https://flourish.is-a.dev/*" />
+      </uap:ApplicationContentUriRules>
+      <Extensions>
+        <uap3:Extension Category="windows.appUriHandler">
+          <uap3:AppUriHandler>
+            <uap3:Host Name="flourish.is-a.dev" />
+          </uap3:AppUriHandler>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <DeviceCapability Name="microphone" />
+  </Capabilities>
+
+</Package>

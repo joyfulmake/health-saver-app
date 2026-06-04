@@ -1,0 +1,43 @@
+name: Build MSIX
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find makeappx.exe
+        id: sdk
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" `
+                   -Recurse -Filter makeappx.exe -ErrorAction SilentlyContinue |
+                 Where-Object { $_.FullName -match "x64" } |
+                 Select-Object -First 1
+          if (-not $exe) {
+            $exe = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" `
+                     -Recurse -Filter makeappx.exe -ErrorAction SilentlyContinue |
+                   Select-Object -First 1
+          }
+          if (-not $exe) { Write-Error "makeappx.exe not found"; exit 1 }
+          Write-Host "Found: $($exe.FullName)"
+          echo "path=$($exe.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Package MSIX
+        shell: pwsh
+        run: |
+          $makeappx = "${{ steps.sdk.outputs.path }}"
+          & $makeappx pack /d msix /p flourish-windows.msix
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host "Package size: $((Get-Item flourish-windows.msix).Length) bytes"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flourish-windows-msix
+          path: flourish-windows.msix
+          retention-days: 30
