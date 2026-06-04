@@ -1478,7 +1478,7 @@ function voiceNote(targetId){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){
     var btn=document.getElementById('mic-btn-'+targetId);
-    if(btn){var orig=btn.textContent;btn.textContent='N/A';setTimeout(function(){btn.textContent=orig;},2200);}
+    if(btn){var orig=btn.innerHTML;btn.innerHTML='<span style="font-size:10px;font-weight:900;color:var(--muted)">Not<br>avail.</span>';setTimeout(function(){btn.innerHTML=orig;},2200);}
     return;
   }
   var btn=document.getElementById('mic-btn-'+targetId);
@@ -1498,7 +1498,7 @@ function startVoiceLog(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){
     var el=document.getElementById('p-quicklog');if(!el)return;
-    el.innerHTML='<div style="text-align:center;padding:52px 20px"><div style="font-size:44px;margin-bottom:14px">&#127908;</div><div style="font-size:17px;font-weight:900;margin-bottom:8px;color:var(--text)">Voice not available</div><div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.75;max-width:280px;margin:0 auto">Voice input works in Chrome (Android &amp; desktop) and Safari (iOS 15+).<br><br>Use the text field above to log instead.</div><button onclick="cancelVoiceLog()" style="margin-top:24px;padding:11px 26px;border-radius:10px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted)">Back</button></div>';
+    el.innerHTML='<div style="text-align:center;padding:52px 20px"><div style="font-size:44px;margin-bottom:14px">&#127908;</div><div style="font-size:17px;font-weight:900;margin-bottom:8px;color:var(--text)">Voice not available</div><div style="font-size:13px;font-weight:700;color:var(--muted);line-height:1.75;max-width:280px;margin:0 auto">This browser doesn\'t support voice input.<br><br>Voice works wherever the Web Speech API is available — try updating your browser, or use the text field instead.</div><button onclick="cancelVoiceLog()" style="margin-top:24px;padding:11px 26px;border-radius:10px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted)">Back</button></div>';
     return;
   }
   _reqMic(function(){
@@ -2250,7 +2250,7 @@ function _fabVoice(){
   if(!SR){
     setTimeout(function(){
       var a=document.getElementById('wiz-act');
-      if(a){a.placeholder='Voice needs Chrome or Safari 15+ — type here instead';a.focus();}
+      if(a){a.placeholder='Voice not supported in this browser — type here instead';a.focus();}
     },80);
     return;
   }
@@ -2301,6 +2301,12 @@ window.aiInsights=aiInsights;window.localWeeklyReview=localWeeklyReview;
 window.seedData=seedData;window.exportCSV=exportCSV;
 /* ── 17. Entry point ────────────────────────────────────────────────── */
 boot();
+(function(){
+  if(!(window.SpeechRecognition||window.webkitSpeechRecognition)){
+    var fab=document.getElementById('mic-fab');
+    if(fab)fab.style.display='none';
+  }
+})();
 
 </script>
 </body>
