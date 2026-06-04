@@ -2237,7 +2237,7 @@ function _reqMic(cb){
     .then(function(s){s.getTracks().forEach(function(t){t.stop();});cb();})
     .catch(function(err){
       if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
-        alert('Microphone access is blocked.\n\nTap the lock icon in the address bar → allow Microphone, then try again.');
+        alert('Microphone access is blocked.\n\nIn a browser: tap the lock icon in the address bar → allow Microphone.\n\nIn the Windows app: go to Windows Settings → Privacy & security → Microphone → allow Flourish.\n\nThen try again.');
       } else {cb();}
     });
 }
