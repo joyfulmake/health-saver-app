@@ -79,7 +79,7 @@ Each maps to a pane with `id="p-{name}"`.
 
 - **Guided wizard** — step-by-step entry flow; every field glows and the wizard self-directs the user through all steps
 - **FAB mic** — prominent floating action button enters guided listening state; opens explore screen after a log entry
-- **Voice logging** — Web Speech API on Activity field, Note field, and wizard Note card; free for all users; cross-browser polyfill in place
+- **Voice logging** — Web Speech API on Activity field, Note field, and wizard Note card; free for all users; capability-detected at boot — FAB and mic buttons are hidden entirely on browsers that don't support it (no browser name restrictions; works on any device where the API is available, stops naturally when support ends)
 - **Suggestion chips** — quick-pick activity chips in both the modal and the wizard
 - **Wisdom stories** — 50-story rotating banner (15s each, 3-hour no-repeat), Thirukkural / philosophical quotes
 - **Ambient particles** — subtle CSS animation on the quick-entry bar
@@ -98,9 +98,38 @@ Each maps to a pane with `id="p-{name}"`.
 
 Pro mode overrides: `body.is-pro` sets warm gold borders and background tints.
 
-## Google Play Store
+## App Store distribution
 
-TWA submission in progress (as of 2026-05-28). Package name: `dev.isa.flourish`. Tracks `flourish.is-a.dev`.
+Full submission guide with step-by-step instructions for all stores:
+`/home/kali/Coding/flourish-store-assets/STORE-SUBMISSION-GUIDE.md`
+
+### Store Status (as of 2026-06-04)
+
+| Store | Status |
+|---|---|
+| Google Play | Awaiting production access — need 12 Android testers × 14 days on closed track; ~6 confirmed so far (iOS users don't count) |
+| Microsoft Store | Live — screenshots updated and resubmitted for certification (2026-06-04); awaiting screenshot update to propagate |
+| Amazon Appstore | Pending — guide in STORE-SUBMISSION-GUIDE.md |
+| Huawei AppGallery | Pending — guide in STORE-SUBMISSION-GUIDE.md |
+| Samsung Galaxy Store | Blocked — requires commercial/business registration |
+
+### Key assets
+- Signed APK: `/home/kali/Coding/flourish-twa/app-release-signed.apk` (1.7MB)
+- AAB: `/home/kali/Coding/flourish-twa/app-release-bundle.aab`
+- Windows MSIX: `/home/kali/Coding/flourish-windows.msix`
+- Store icons + feature graphics: `/home/kali/Coding/flourish-store-assets/`
+
+### Microsoft Store identity (Partner Center)
+- Identity Name: `Flourishing.Flourish`
+- Publisher: `CN=CF05ACFD-1A2C-4D3B-85CE-80828C73812E`
+- Publisher Display Name: `Flourishing`
+- App display name: `Flourish: Self Tracker` (reserved)
+- MSIX hand-crafted as ZIP — PWABuilder CLI cannot package for stores
+
+### Google Play — production access checklist
+- 12 unique **Android** testers must opt in and stay opted in for 14 consecutive days on closed track (iOS users cannot participate)
+- Tester invite link: Play Console → Closed testing → your track → copy invite link
+- After 14 days: Play Console → Production → Start rollout → Apply for access
 
 ## Firebase project
 
