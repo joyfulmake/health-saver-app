@@ -2,6 +2,22 @@ name: Build MSIX
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'App version (e.g. 1.2.0)'
+        required: true
+        default: '1.0.0'
+      changelog:
+        description: 'Release notes — plain text or markdown, one change per line'
+        required: false
+        default: 'Bug fixes and improvements'
+      create_release:
+        description: 'Create a GitHub Release after build (notifies watchers)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -41,3 +57,31 @@ jobs:
           name: flourish-windows-msix
           path: flourish-windows.msix
           retention-days: 30
+
+      # Runs only when all previous steps succeed AND create_release is true.
+      # Creates a GitHub Release → all watchers subscribed to "Releases" are notified.
+      - name: Create GitHub Release
+        if: ${{ inputs.create_release && success() }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: Flourish v${{ inputs.version }}
+          body: |
+            ## What's new in v${{ inputs.version }}
+
+            ${{ inputs.changelog }}
+
+            ---
+
+            ### Install
+            | Platform | Store |
+            |---|---|
+            | Windows | [Microsoft Store](https://apps.microsoft.com/store/detail/flourish-self-tracker) |
+            | Web | [flourish.is-a.dev](https://flourish.is-a.dev) |
+            | Android | [Google Play](https://play.google.com/store/apps/details?id=dev.flourish.app) *(pending full rollout)* |
+
+            > The MSIX package attached to this release is for sideloading only.
+            > The Microsoft Store version is signed and auto-updates via the Store.
+          files: flourish-windows.msix
+          draft: false
+          prerelease: false

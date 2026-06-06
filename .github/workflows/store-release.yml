@@ -1,0 +1,100 @@
+name: Announce Store Release
+
+# Use this workflow to publish a GitHub Release whenever a new version
+# lands in one or more stores.  Watchers subscribed to "Releases" receive
+# an email/on-site notification automatically.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 1.2.0) — will create tag v1.2.0'
+        required: true
+      changelog:
+        description: 'What changed — markdown bullet points, one per line'
+        required: true
+        default: '- Bug fixes and improvements'
+      microsoft_store:
+        description: 'Live on Microsoft Store'
+        type: boolean
+        default: true
+      google_play:
+        description: 'Live on Google Play'
+        type: boolean
+        default: false
+      amazon_appstore:
+        description: 'Live on Amazon Appstore'
+        type: boolean
+        default: false
+      web_updated:
+        description: 'Web app (flourish.is-a.dev) updated'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build release body
+        run: |
+          python3 - <<'PYEOF'
+          import os
+
+          version    = os.environ['VERSION']
+          changelog  = os.environ['CHANGELOG']
+          ms         = os.environ['MICROSOFT_STORE'] == 'true'
+          gp         = os.environ['GOOGLE_PLAY']     == 'true'
+          az         = os.environ['AMAZON']          == 'true'
+          web        = os.environ['WEB']             == 'true'
+
+          stores = []
+          if ms:
+              stores.append('| Windows | [Microsoft Store](https://apps.microsoft.com/store/detail/flourish-self-tracker) |')
+          if web:
+              stores.append('| Web | [flourish.is-a.dev](https://flourish.is-a.dev) |')
+          if gp:
+              stores.append('| Android | [Google Play](https://play.google.com/store/apps/details?id=dev.flourish.app) |')
+          if az:
+              stores.append('| Android (Amazon) | [Amazon Appstore](https://www.amazon.com/dp/REPLACE_ASIN) |')
+
+          lines = [
+              f'## What\'s new in v{version}',
+              '',
+              changelog,
+              '',
+              '---',
+              '',
+          ]
+
+          if stores:
+              lines += [
+                  '### Available on',
+                  '| Platform | Store |',
+                  '|---|---|',
+              ] + stores
+
+          with open('release-body.md', 'w') as f:
+              f.write('\n'.join(lines) + '\n')
+          PYEOF
+        env:
+          VERSION:         ${{ inputs.version }}
+          CHANGELOG:       ${{ inputs.changelog }}
+          MICROSOFT_STORE: ${{ inputs.microsoft_store }}
+          GOOGLE_PLAY:     ${{ inputs.google_play }}
+          AMAZON:          ${{ inputs.amazon_appstore }}
+          WEB:             ${{ inputs.web_updated }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: Flourish v${{ inputs.version }}
+          body_path: release-body.md
+          draft: false
+          prerelease: false
