@@ -55,7 +55,7 @@ jobs:
 
           stores = []
           if ms:
-              stores.append('| Windows | [Microsoft Store](https://apps.microsoft.com/store/detail/flourish-self-tracker) |')
+              stores.append('| Windows | [Microsoft Store](https://apps.microsoft.com/store/detail/9P2K25FH0JC8) |')
           if web:
               stores.append('| Web | [flourish.is-a.dev](https://flourish.is-a.dev) |')
           if gp:
