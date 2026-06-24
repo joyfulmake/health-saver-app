@@ -8,7 +8,7 @@
   <Identity
     Name="Flourishing.Flourish"
     Publisher="CN=CF05ACFD-1A2C-4D3B-85CE-80828C73812E"
-    Version="1.0.5.0"
+    Version="1.0.6.0"
     ProcessorArchitecture="neutral" />
 
   <Properties>
