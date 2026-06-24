@@ -16,35 +16,48 @@
 </head>
 <body>
 <h1>Privacy Policy</h1>
-<div class="meta">Flourish &mdash; Last updated: 29 May 2026</div>
+<div class="meta">Flourish &mdash; Last updated: 25 June 2026</div>
 
 <p>Flourish is a personal self-tracking app for habits, time, finance, and nature. This policy explains what data the app collects, where it goes, and what stays entirely on your device.</p>
 
 <h2>1. Data you enter</h2>
-<p>All log entries (activities, durations, notes, finance records, nature scores) are stored locally on your device using browser storage. They are never sent to our servers. We have no access to your entries.</p>
+<p>All log entries (activities, durations, notes, finance records, nature scores) are stored locally on your device using browser storage (<code>localStorage</code>). They are never sent to our servers. We have no access to your entries.</p>
 
 <h2>2. Optional cloud sync (Pro users)</h2>
-<p>If you sign in with Google and enable sync, your entries are stored in your own Google Firebase account under your Google user ID. This data is governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>. We do not read, share, or process your synced data — it flows directly between your device and your Google account.</p>
+<p>If you sign in with Google and enable sync, your entries are stored in your own Google Firebase / Firestore account under your Google user ID. This data is governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>. We do not read, share, or process your synced data — it flows directly between your device and your Google account.</p>
 
 <h2>3. Google Sign-in</h2>
-<p>Sign-in is handled entirely by Google OAuth. We receive only your name and email address to display in the app and to associate your sync data. We do not share this with third parties.</p>
+<p>Sign-in is handled entirely by Google OAuth. We receive only your Google user ID and display name to associate your sync data. We do not share this with third parties.</p>
 
 <h2>4. Payments</h2>
 <p>Pro access payments are processed by Razorpay. Your payment details are handled entirely by Razorpay and are never seen or stored by us. See <a href="https://razorpay.com/privacy/" target="_blank" rel="noopener">Razorpay's Privacy Policy</a>.</p>
 
-<h2>5. Microphone</h2>
-<p>Voice logging uses your device's microphone only while you are actively recording. Audio is processed on-device by your browser's speech recognition engine and is not sent to our servers.</p>
+<h2>5. Microphone / voice logging</h2>
+<p>Voice logging uses your device's microphone only while you are actively recording. Audio is processed on-device by your browser's built-in Web Speech API and is not sent to our servers. We do not record or store audio.</p>
 
-<h2>6. Analytics and advertising</h2>
+<h2>6. Push notifications</h2>
+<p>Daily reminder notifications are scheduled entirely on your device using a browser timer and the Notification API. No push server is involved. Enabling notifications does not transmit any data.</p>
+
+<h2>7. Feedback form</h2>
+<p>If you submit feedback through the in-app form, your message and the email address you provide are forwarded to our inbox via <a href="https://web3forms.com" target="_blank" rel="noopener">Web3Forms</a>. We use this only to reply to your feedback. We do not share it with third parties or add you to any mailing list.</p>
+
+<h2>8. Analytics and advertising</h2>
 <p>Flourish has no analytics, no advertising, and no third-party tracking of any kind.</p>
 
-<h2>7. Children</h2>
-<p>Flourish is intended for users aged 18 and over. We do not knowingly collect data from anyone under 18.</p>
+<h2>9. Children</h2>
+<p>Flourish is intended for users aged 13 and over. We do not knowingly collect data from children under 13. If you believe a child has provided personal information, contact us and we will delete it promptly.</p>
 
-<h2>8. Data deletion</h2>
-<p>To delete your local data: go to Settings → clear browser data, or uninstall the app. To delete synced data: sign in, then delete your account data from Settings, which removes the data from Firebase.</p>
+<h2>10. Data deletion</h2>
+<ul>
+  <li><strong>Local data:</strong> Clear site data for <code>flourish.is-a.dev</code> in your browser settings, or uninstall the app.</li>
+  <li><strong>Firebase sync data (Pro):</strong> Open your Firebase Console → Firestore → delete the document at <code>users/{your-uid}/data/entries</code>.</li>
+  <li><strong>Feedback submissions:</strong> Email <a href="mailto:sriram.c76@gmail.com">sriram.c76@gmail.com</a> to request deletion.</li>
+</ul>
 
-<h2>9. Contact</h2>
+<h2>11. Changes to this policy</h2>
+<p>Material changes will be reflected by updating the "Last updated" date above. Continued use of the app after changes constitutes acceptance.</p>
+
+<h2>12. Contact</h2>
 <p>Questions? Email us at <a href="mailto:sriram.c76@gmail.com">sriram.c76@gmail.com</a>.</p>
 
 </body>

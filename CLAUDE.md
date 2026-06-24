@@ -4,6 +4,8 @@
 
 **Flourish** (`flourish.is-a.dev`) is a single-file PWA for honest self-tracking: habits, finance, time, and nature in one place. No build step, no framework, no server — pure HTML/CSS/JS. All data lives in `localStorage` (key `lifeos_v5`) unless the user enables Firebase sync via Pro.
 
+**Current version: v4.1** — released 2026-06-25
+
 ## Live URL & deployment
 
 - **Live**: https://flourish.is-a.dev (custom domain → GitHub Pages)
@@ -30,6 +32,14 @@ netlify deploy --prod --dir=. --no-build
 - **No build step** — edit and push; the CI only does secret injection then deploys the flat directory
 - **Local dev**: open `index.html` directly in a browser; secrets will be `undefined` (payment and email features won't work, everything else does)
 - `manifest.json` — PWA manifest (standalone, portrait-primary, shortcuts to Quick Log)
+- `privacy.html` — standalone privacy policy page (required for store listings)
+
+## Navigation (v4.1)
+
+Replaced 7-tab horizontal bar with:
+- **Bottom nav** (5 items): Log · Board · Patterns · Body · More
+- **Left drawer**: all panes + tools (Export CSV, Share Week, Daily Reminder) + Settings
+- `sw(tab, el)` syncs both bnav buttons and drawer-item highlights
 
 ## Secret injection (CI only)
 
@@ -64,28 +74,34 @@ Never commit real keys. They live in GitHub → Settings → Secrets.
 }
 ```
 
-## App tabs
+## App panes
 
-`quicklog` · `dashboard` · `insights` · `nature` · `review` · `finance` · `time`
+`quicklog` · `dashboard` · `insights` · `body` · `nature` · `review` · `finance` · `time`
 
-Each maps to a pane with `id="p-{name}"`.
+Each maps to a pane with `id="p-{name}"`. `body` is the new Body Systems pane (v4.1).
 
 ## Free vs Pro
 
-**Free** (everyone): all logging, dashboard, insights, weekly review, voice logging  
-**Pro** (₹99 founding / ₹100 one-time via Razorpay): cross-device sync via Firebase (user's own cloud), golden premium theme (`body.is-pro`), Pro badge in header
+**Free** (everyone): all logging, dashboard, insights, body systems, weekly review, voice logging, dark mode, push notifications  
+**Pro** (₹99 founding / ₹100 one-time via Razorpay): cross-device sync via Firebase (user's own cloud), golden premium theme (`body.is-pro`), Pro badge in header, weekly share card, body system weekly report
 
-## Key features (as of latest commit)
+## Key features (v4.1)
 
-- **Guided wizard** — step-by-step entry flow; every field glows and the wizard self-directs the user through all steps
-- **FAB mic** — prominent floating action button enters guided listening state; opens explore screen after a log entry
-- **Voice logging** — Web Speech API on Activity field, Note field, and wizard Note card; free for all users; capability-detected at boot — FAB and mic buttons are hidden entirely on browsers that don't support it (no browser name restrictions; works on any device where the API is available, stops naturally when support ends)
-- **Suggestion chips** — quick-pick activity chips in both the modal and the wizard
-- **Wisdom stories** — 50-story rotating banner (15s each, 3-hour no-repeat), Thirukkural / philosophical quotes
-- **Ambient particles** — subtle CSS animation on the quick-entry bar
-- **Seasonal insights** — Telangana-specific advice per season (summer / monsoon / post-monsoon / winter)
-- **Finance tracking** — attach income/expense to any log entry with category breakdown
-- **Nature score** — 1–5 scale per entry; aggregated in dashboard
+- **Bottom nav + left drawer** — 5-button bottom nav; drawer has all secondary panes + tools
+- **Dashboard hero ring** — animated SVG energy ring with week-over-week delta indicators
+- **Insights → pure patterns** — no tips, no gyan; pattern cards show data + time window only
+- **11 Body Systems panel** — live scores from real log data; draining vs balancing per system; week delta
+- **Dark mode** — full CSS dark theme; toggle in drawer footer; respects `prefers-color-scheme`
+- **Correlation Intelligence** — auto-derived: nature→direction, best/worst day-of-week, friction→spend, flow %
+- **90-day heatmap** — calendar grid in drawer under Records
+- **Onboarding flow** — 4-step first-run carousel for users with no entries
+- **Push Notifications** — daily 9pm reminder; opt-in from drawer
+- **Weekly share card** — Pro: visual summary card with energy score, KPIs, body system dots
+- **Guided wizard** — step-by-step entry flow
+- **FAB mic** — voice logging for all users (Web Speech API, capability-detected)
+- **Wisdom stories** — 50-story rotating banner (Thirukkural / philosophy)
+- **Finance tracking** — attach income/expense to any log entry
+- **Nature score** — 1–5 per entry; aggregated in dashboard
 
 ## Design tokens
 
@@ -97,20 +113,20 @@ Each maps to a pane with `id="p-{name}"`.
 ```
 
 Pro mode overrides: `body.is-pro` sets warm gold borders and background tints.
+Dark mode overrides: `[data-theme="dark"]` on `<html>` element.
 
 ## App Store distribution
 
-Full submission guide with step-by-step instructions for all stores:
-`/home/kali/Coding/flourish-store-assets/STORE-SUBMISSION-GUIDE.md`
+Full submission guide: `/home/kali/Coding/flourish-store-assets/STORE-SUBMISSION-GUIDE.md`
 
-### Store Status (as of 2026-06-04)
+### Store Status (as of 2026-06-25)
 
 | Store | Status |
 |---|---|
-| Google Play | Awaiting production access — need 12 Android testers × 14 days on closed track; ~6 confirmed so far (iOS users don't count) |
-| Microsoft Store | Live — screenshots updated and resubmitted for certification (2026-06-04); awaiting screenshot update to propagate |
-| Amazon Appstore | Pending — guide in STORE-SUBMISSION-GUIDE.md |
-| Huawei AppGallery | Pending — guide in STORE-SUBMISSION-GUIDE.md |
+| Google Play | **Live in production** (as of 2026-06-24) |
+| Microsoft Store | Live — v4.1 MSIX pending upload |
+| Amazon Appstore | Pending submission |
+| Huawei AppGallery | Pending submission |
 | Samsung Galaxy Store | Blocked — requires commercial/business registration |
 
 ### Key assets
@@ -123,13 +139,13 @@ Full submission guide with step-by-step instructions for all stores:
 - Identity Name: `Flourishing.Flourish`
 - Publisher: `CN=CF05ACFD-1A2C-4D3B-85CE-80828C73812E`
 - Publisher Display Name: `Flourishing`
-- App display name: `Flourish: Self Tracker` (reserved)
+- App display name: `Flourish: Self Tracker`
 - MSIX hand-crafted as ZIP — PWABuilder CLI cannot package for stores
+- MSIX version must increment on each upload (e.g. 1.0.4.0 → 1.0.5.0)
 
-### Google Play — production access checklist
-- 12 unique **Android** testers must opt in and stay opted in for 14 consecutive days on closed track (iOS users cannot participate)
-- Tester invite link: Play Console → Closed testing → your track → copy invite link
-- After 14 days: Play Console → Production → Start rollout → Apply for access
+### Microsoft Store MSIX build (manual)
+
+Trigger via GitHub Actions → `build-msix.yml` → Run workflow. Download artifact, then upload via Partner Center → Packages.
 
 ## Firebase project
 
@@ -137,9 +153,17 @@ Project ID: `opsmanifest-d363a` — Authentication (Google), Firestore enabled.
 Firestore rule: `allow read, write: if request.auth != null;`
 Data path: `users/{uid}/data/entries`
 
+## Privacy policy
+
+`privacy.html` is deployed alongside `index.html`. URL: `https://flourish.is-a.dev/privacy.html`
+Required by Google Play, Microsoft Store, and other stores for production listings.
+No personal data is collected. All data stays on-device (localStorage). Optional Firebase sync uses the user's own Firebase project.
+
 ## Pitfalls
 
 - **Secret placeholders must be exact** — the `sed` replacements are literal string matches; any whitespace change breaks injection
 - **localStorage only** — clearing browser data erases all entries for free users; Pro + Firebase is the backup path
 - **Voice API** — requires HTTPS in production; works on `localhost` but not on bare `file://`
-- **CDN cache** — after a deploy, force-push an empty commit if the CDN is serving stale HTML (see commit `cab1e42`)
+- **CDN cache** — after a deploy, force-push an empty commit if the CDN is serving stale HTML
+- **Brace counter false positives** — the JS contains braces inside string literals (e.g. `==='{'`); use `node --check` to validate JS syntax, not a naive counter
+- **MSIX version** — must be incremented in `AppxManifest.xml` before each Partner Center upload or the submission will be rejected

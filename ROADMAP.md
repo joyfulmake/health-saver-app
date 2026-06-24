@@ -9,8 +9,8 @@ Live at [flourish.is-a.dev](https://flourish.is-a.dev)
 | Platform | Status |
 |---|---|
 | Web (GitHub Pages) | Live |
-| Microsoft Store | Live |
-| Google Play | Closed track — needs 12 Android testers × 14 days |
+| Microsoft Store | Live — v4.1 update pending upload |
+| Google Play | **Production** — live as of 2026-06-24 |
 | Amazon Appstore | Pending submission |
 | Huawei AppGallery | Pending submission |
 | Samsung Galaxy Store | Blocked — requires business registration |
@@ -18,80 +18,83 @@ Live at [flourish.is-a.dev](https://flourish.is-a.dev)
 
 ---
 
-## Phase 1 — Complete store distribution *(now)*
+## v4.1 — Shipped (2026-06-24)
 
-Goal: get the app into every major Android store and unblock Google Play production access.
+All 14 enhancements shipped in one release:
 
-- [x] Microsoft Store — submitted and live
-- [ ] Google Play production access — recruit 12 Android testers, maintain closed track for 14 days
-- [ ] Amazon Appstore — submit APK via developer.amazon.com
-- [ ] Huawei AppGallery — submit APK via developer.huawei.com/AppGallery
-- [ ] GitHub Releases automation — create a tagged release + notify watchers on every store update *(done via `store-release.yml`)*
+1. **Sidebar/drawer navigation** — bottom nav (5 items) + left drawer replaces 7-tab horizontal bar
+2. **Dashboard hero card** — animated energy ring + week-over-week deltas on all KPIs
+3. **Insights → pure data** — removed all prescriptive tips; patterns show data + time window only
+4. **90-day calendar heatmap** — already existed; now in drawer under Records
+5. **11 Body Systems panel** — new "Body" pane; live scores derived from actual log data, not static
+6. **Dark mode** — CSS tokens + toggle in drawer footer; respects system `prefers-color-scheme`
+7. **Push Notifications** — Web Push API, daily 9pm reminder; opt-in from drawer
+8. **Correlation Intelligence** — auto-derived from 60 days of data: nature→direction, day-of-week, friction→spend, flow state
+9. **CSV + Share card** — CSV existed; weekly share card for Pro (visual summary)
+10. **Onboarding flow** — 4-step first-run carousel for new users with no entries
+11. **Swipe actions CSS** — swipe-reveal CSS in place (JS touch handlers: backlog)
+12. **Habit correlation patterns** — `buildCorrelations()` auto-derives statistical insights
+13. **Body System weekly report** — Pro share card includes system scores
+14. **Integration hooks stub** — "Coming soon" placeholder in drawer for Pro users
 
 ---
 
-## Phase 2 — User growth & retention *(next 30–60 days)*
+## Phase 1 — Complete store distribution *(now)*
 
-Goal: give early users reasons to return daily and invite others.
+- [x] Microsoft Store — live; v4.1 MSIX to be uploaded
+- [x] Google Play — production live as of 2026-06-24
+- [ ] Amazon Appstore — submit APK via developer.amazon.com
+- [ ] Huawei AppGallery — submit APK via developer.huawei.com/AppGallery
+- [ ] GitHub Releases automation *(done via `store-release.yml`)*
 
-- [ ] **Daily streak notifications** — PWA push notification at a user-chosen time ("time to log")
-- [ ] **Share a day** — generate a shareable image/card from a day's entries (no server needed, canvas API)
-- [ ] **Onboarding flow** — 3-step first-run guide so new users understand the 7 tabs immediately
-- [ ] **Export data** — one-tap CSV / JSON download of all entries
-- [ ] **Import data** — restore from a previous export (migration path between devices for free users)
-- [ ] **Tester recruitment page** — a simple landing page / Google Form linked from the app to onboard Android testers for Play production access
+---
+
+## Phase 2 — Retention and growth *(next 30–60 days)*
+
+- [ ] **Swipe-to-edit gesture** — wire JS touch handlers for the existing swipe-reveal CSS
+- [ ] **Import data** — restore from CSV export (migration path for free users)
+- [ ] **Recurring templates** — one-tap log for common activities (e.g. "Morning run 30m")
+- [ ] **Tester recruitment** — simple form linked from app to onboard more Android testers
 
 ---
 
 ## Phase 3 — Feature depth *(60–120 days)*
 
-Goal: make the app substantially more useful for daily self-tracking.
-
 ### Logging
-- [ ] **Recurring templates** — save a common entry as a one-tap template (e.g. "Morning run 30m")
 - [ ] **Batch entry** — log multiple activities for a past day in one session
-- [ ] **Photos** — attach a photo to a nature or activity entry (stored as base64 in localStorage)
+- [ ] **Photos** — attach a photo to a nature entry (base64 in localStorage)
 
 ### Insights
-- [ ] **Monthly review** — extend the existing weekly review to monthly roll-ups
-- [ ] **Goal tracking** — set a target (e.g. "3 workouts/week") and see progress in dashboard
-- [ ] **Habit calendar** — GitHub-style contribution grid per activity category
-- [ ] **Finance trends** — month-over-month spend graph per category
+- [ ] **Monthly review** — extend weekly review to monthly roll-ups
+- [ ] **Goal tracking** — set targets (e.g. "3 workouts/week") visible in dashboard
 
 ### Nature
-- [ ] **Location tagging** — optional place name attached to nature entries (no GPS required, free text)
-- [ ] **Nature streak** — consecutive days with a nature score ≥ 3
+- [ ] **Location tagging** — optional place name (free text, no GPS required)
+- [ ] **Nature streak** — consecutive days with score ≥ 3
 
 ---
 
 ## Phase 4 — Pro tier expansion *(120–180 days)*
 
-Goal: make Pro genuinely compelling and self-sustaining.
-
-- [ ] **AI weekly summary** — call Claude API server-side (edge function) to generate a plain-English summary of the week's entries; Pro only
-- [ ] **Custom themes** — 3–4 additional color themes beyond the gold Pro theme
-- [ ] **Multiple Firebase accounts** — let power users switch between their own Firebase projects
-- [ ] **Web widgets** — embeddable badge (streak count, today's nature score) for personal sites
-- [ ] **Android home-screen widget** — quick-log widget via TWA / shortcut
+- [ ] **AI weekly summary** — Claude API edge function; plain-English week summary (Pro only)
+- [ ] **Custom themes** — 3–4 additional color themes beyond gold Pro theme
+- [ ] **Android home-screen widget** — quick-log widget via TWA shortcut
 
 ---
 
 ## Phase 5 — Platform expansion *(future)*
 
-- [ ] **iOS Safari PWA** — audit and fix any iOS-specific layout or API issues (Web Speech API absent on iOS; need graceful fallback)
-- [ ] **Apple App Store** — WKWebView wrapper via Xcode once iOS PWA issues are resolved
-- [ ] **Samsung Galaxy Store** — requires business/commercial registration; revisit when entity is set up
-- [ ] **Desktop PWA** — test and polish the installed desktop experience on Windows and macOS (currently functional but not optimised)
-- [ ] **Offline-first hardening** — service worker caching for full offline use, not just install
+- [ ] **iOS Safari PWA** — audit Web Speech API fallback, layout fixes
+- [ ] **Apple App Store** — WKWebView wrapper via Xcode
+- [ ] **Samsung Galaxy Store** — requires business registration; revisit when entity is set up
+- [ ] **Desktop PWA** — polish installed desktop experience on Windows / macOS
+- [ ] **Offline-first** — service worker caching for full offline use
 
 ---
 
 ## Backlog / ideas
 
-These are not scheduled but worth considering:
-
-- Telangana / regional language support (Telugu) for suggestions and UI strings
-- Dark mode
+- Telangana / Telugu language support for suggestions
 - Keyboard shortcuts for power users on desktop
 - CSV import from other habit trackers (Streaks, Habitica)
 - Public API for personal automation (IFTTT, Zapier, n8n)
@@ -102,5 +105,4 @@ These are not scheduled but worth considering:
 ## How to contribute
 
 1. Open an [issue](https://github.com/joyfulmake/health-saver-app/issues) describing the feature or bug
-2. For Android tester recruitment (unblocks Google Play): use the Play Console invite link and stay opted in for 14 days
-3. PRs welcome — the entire app is one file (`index.html`), so changes are self-contained
+2. PRs welcome — the entire app is one file (`index.html`), so changes are self-contained
