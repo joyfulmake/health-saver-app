@@ -1,19 +1,12 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Pages
 on:
   push:
     branches: [main]
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: true
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,9 +21,9 @@ jobs:
           sed -i "s|__WEB3FORMS_KEY__|$WEB3FORMS_KEY|g" index.html
           sed -i "s|__FLOURISH_PRO_KEY__|$FLOURISH_PRO_KEY|g" index.html
           python3 -c "import os; cfg=os.environ.get('FIREBASE_CONFIG','').replace('\n','').replace('\r','').replace(' ',''); content=open('index.html').read(); open('index.html','w').write(content.replace('__FIREBASE_CONFIG__',cfg))"
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: '.'
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=health-saver-app --commit-dirty=true

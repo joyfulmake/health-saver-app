@@ -8,22 +8,21 @@
 
 ## Live URL & deployment
 
-- **Live**: https://flourish.is-a.dev (custom domain → GitHub Pages)
+- **Live**: https://flourish.is-a.dev (custom domain → Cloudflare Pages)
 - **Repo**: github.com/joyfulmake/health-saver-app
-- **Auto-deploy**: push to `main` triggers `.github/workflows/deploy.yml` → GitHub Pages
-- Secrets are injected by the CI workflow via `sed` — never hardcode them in source
+- **Deploy**: push to `main` → GitHub Actions injects secrets → `npx wrangler pages deploy`
 
-**Deploy command** (manual, from WSL):
+**Deploy command** (manual):
 
 ```bash
-git add -p && git commit -m "..." && git push
-# GitHub Actions deploys automatically; no local build needed
+git add -A && git commit -m "..." && git push
+# GitHub Actions (deploy.yml) injects secrets and deploys to Cloudflare Pages automatically
 ```
 
-For Netlify fallback (not currently used):
+**Manual deploy** (without CI):
 ```bash
-export NVM_DIR="$HOME/.config/nvm" && . "$NVM_DIR/nvm.sh"
-netlify deploy --prod --dir=. --no-build
+# Inject secrets locally first (replace placeholders in index.html), then:
+npx wrangler pages deploy . --project-name health-saver-app
 ```
 
 ## Architecture
