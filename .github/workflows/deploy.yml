@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Workers
 on:
   push:
     branches: [main]
@@ -21,9 +21,9 @@ jobs:
           sed -i "s|__WEB3FORMS_KEY__|$WEB3FORMS_KEY|g" index.html
           sed -i "s|__FLOURISH_PRO_KEY__|$FLOURISH_PRO_KEY|g" index.html
           python3 -c "import os; cfg=os.environ.get('FIREBASE_CONFIG','').replace('\n','').replace('\r','').replace(' ',''); content=open('index.html').read(); open('index.html','w').write(content.replace('__FIREBASE_CONFIG__',cfg))"
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=health-saver-app --commit-dirty=true
+          command: deploy
