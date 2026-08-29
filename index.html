@@ -586,6 +586,8 @@ body.is-pro[data-theme="dark"]{--soft:#1c1909;--softer:#171500;--border:rgba(176
 .ob-btn{width:100%;max-width:360px;padding:16px;border-radius:16px;border:none;background:#0f0f0f;color:#fff;font-family:inherit;font-size:19px;font-weight:900;cursor:pointer;margin-bottom:10px;transition:opacity .15s}
 .ob-btn:hover{opacity:.85}
 .ob-skip{background:none;border:none;font-family:inherit;font-size:16px;font-weight:700;color:var(--muted);cursor:pointer;padding:8px;display:block;margin:0 auto}
+.ob-signin{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;margin:-10px auto 18px;border-radius:13px;border:1.5px solid var(--text);background:transparent;font-family:inherit;font-size:16px;font-weight:800;color:var(--text);cursor:pointer}
+.ob-signin:hover{opacity:.8}
 /* ── Contextual coach marks (first-use hints) ───────────────────────────── */
 .coach{display:flex;align-items:flex-start;gap:9px;background:var(--bb);border:1px solid rgba(26,74,140,.16);border-radius:12px;padding:11px 13px;margin-bottom:14px;font-size:12.5px;font-weight:700;line-height:1.55;color:var(--text);animation:fadeUp .25s ease}
 .coach-ico{font-size:18px;flex-shrink:0;line-height:1.3}
@@ -737,7 +739,8 @@ body.is-pro[data-theme="dark"]{--soft:#1c1909;--softer:#171500;--border:rgba(176
   <div class="ob-step" id="ob-1">
     <div class="ob-ico">&#128275;</div>
     <div class="ob-t">No login needed</div>
-    <div class="ob-s">Everything works free, right now, in this tab — habits, money, time, body systems. Sign in later only if you want your history synced across devices.</div>
+    <div class="ob-s">Everything works free, right now, in this tab — habits, money, time, body systems. Sign in only if you want your history synced across devices.</div>
+    <button class="ob-signin needs-fb" onclick="signInGoogle()"><span style="font-size:18px">&#128273;</span> Sign in with Google now</button>
   </div>
   <div class="ob-step" id="ob-2">
     <div class="ob-ico">&#129517;</div>
@@ -810,6 +813,10 @@ body.is-pro[data-theme="dark"]{--soft:#1c1909;--softer:#171500;--border:rgba(176
         <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;padding:2px 8px;border-radius:20px;background:#0f0f0f;color:#fff">Pro</span>
       </div>
       <div id="auth-state-signed-out" style="display:block">
+        <div class="needs-fb" style="margin-bottom:14px">
+          <button style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;color:var(--text)" onclick="signInGoogle()"><span style="font-size:18px">&#128273;</span> Sign in with Google</button>
+          <div style="font-size:11px;font-weight:700;color:var(--muted);line-height:1.7;margin-top:6px">Syncs your entries to your Google account so history survives across devices and browser clears. Already paid for Pro? Sign in with the same Google account to restore it.</div>
+        </div>
         <button style="width:100%;padding:14px;border-radius:13px;border:none;background:linear-gradient(135deg,#0f0f0f,#1a1a2e);color:#fff;font-family:inherit;font-size:17px;font-weight:900;cursor:pointer;margin-bottom:12px;letter-spacing:-.2px" onclick="openPay()">&#127941; Get Pro</button>
         <div style="background:var(--softer);border-radius:11px;padding:10px 13px;margin-bottom:12px;border:1px solid var(--border)">
           <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:5px">Pro — what it unlocks today</div>
@@ -876,6 +883,15 @@ body.is-pro[data-theme="dark"]{--soft:#1c1909;--softer:#171500;--border:rgba(176
       <div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px">Your Feedback</div>
       <div style="font-size:16px;font-weight:700;color:var(--muted);line-height:1.65;margin-bottom:10px">Every message is read. Your honest thoughts are the clearest signal we have.</div>
       <button style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:17px;font-weight:800;cursor:pointer;color:var(--text)" onclick="closeSettings();openFeedback()">&#9993; Send a note</button>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:16px"></div>
+
+    <!-- ABOUT -->
+    <div style="margin-bottom:18px">
+      <div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">About</div>
+      <button style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:17px;font-weight:800;cursor:pointer;color:var(--text);margin-bottom:8px" onclick="closeSettings();obReplay()">&#128218; Replay intro</button>
+      <a href="privacy.html" target="_blank" rel="noopener" style="display:block;text-align:center;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;font-family:inherit;font-size:17px;font-weight:800;color:var(--text);text-decoration:none">&#128274; Privacy policy</a>
     </div>
 
     <div class="fact"><button class="bsav" onclick="closeSettings()" style="width:100%">Done</button></div>
@@ -1157,6 +1173,7 @@ async function boot(){
   _startStories();
   _spawnAmb(activeTab);
   if(FIREBASE_CONFIG)initFirebase();
+  else try{document.querySelectorAll('.needs-fb').forEach(function(e){e.style.display='none';});}catch(e){}
   if(new URLSearchParams(location.search).get('getpro')==='1')setTimeout(openPay,400);
   /* onboarding: show on first ever launch only */
   try{if(!localStorage.getItem('flourish_ob')&&!entries.length){var obEl=document.getElementById('ob-ov');if(obEl)obEl.classList.remove('gone');}}catch(e){}
@@ -2362,6 +2379,13 @@ function obDone(){
   var ov=document.getElementById('ob-ov');if(ov)ov.classList.add('gone');
   try{localStorage.setItem('flourish_ob','1');}catch(e){}
 }
+function obReplay(){
+  var ov=document.getElementById('ob-ov');if(!ov)return;
+  _obStep=0;
+  for(var i=0;i<_obTotal;i++){var s=document.getElementById('ob-'+i);if(s)s.classList.toggle('on',i===0);var d=document.getElementById('ob-d'+i);if(d)d.classList.toggle('on',i===0);}
+  var btn=document.getElementById('ob-next-btn');if(btn)btn.textContent='Next ›';
+  ov.classList.remove('gone');
+}
 /* ── Contextual coach marks ────────────────────────────────────────────
    _coach(key,text) — returns a one-line dismissible hint banner the first
    time a feature area is rendered; '' every time after (flag in localStorage).
@@ -2650,6 +2674,9 @@ function initFirebase(){
       if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
       fbAuth=firebase.auth();fbDB=firebase.firestore();
       fbAuth.onAuthStateChanged(function(user){currentUser=user;updateAuthUI();});
+      fbAuth.getRedirectResult().then(function(result){
+        if(result&&result.user){currentUser=result.user;updateAuthUI();syncNow();}
+      }).catch(function(e){if(e&&e.code&&e.code!=='auth/no-auth-event')alert('Sign-in failed: '+e.message);});
     }catch(e){console.log('Firebase init:',e);}
   });
 }
@@ -2743,8 +2770,9 @@ function _renderPayStep(step){
       '<div style="text-align:center;padding:24px 0 18px">'+
         '<div style="font-size:55px;margin-bottom:12px">&#127881;</div>'+
         '<div style="font-size:21px;font-weight:900">Welcome to Pro</div>'+
-        '<div style="font-size:16px;font-weight:700;color:var(--muted);margin-top:7px;line-height:1.65">Voice logging and sync are now active.<br>Your pro status is saved to this device.</div>'+
+        '<div style="font-size:16px;font-weight:700;color:var(--muted);margin-top:7px;line-height:1.65">Voice logging and Pro features are now active on this device.<br>Sign in with Google to back up your history and carry Pro across devices.</div>'+
       '</div>'+
+      (FIREBASE_CONFIG?'<button style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#0f0f0f,#1a1a2e);color:#fff;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:9px" onclick="signInGoogle()"><span style="font-size:18px">&#128273;</span> Sign in with Google to sync</button>':'')+
       '<button class="bsav" style="width:100%" onclick="closePay();closeSettings();updateAuthUI();render()">Start using Pro &rarr;</button>';
   }
 }
@@ -2794,15 +2822,22 @@ function unlockPro(){
   }
 }
 function signInGoogle(){
-  if(!FIREBASE_CONFIG){return;}
+  if(!FIREBASE_CONFIG){alert('Cloud sync is not set up yet. Use Settings → Your Data → Generate Backup Code to move entries between devices.');return;}
   loadFirebaseSDK(function(){
     try{
       if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
       fbAuth=firebase.auth();fbDB=firebase.firestore();
       var provider=new firebase.auth.GoogleAuthProvider();
+      /* Custom Tabs / TWA block popups — go straight to redirect there */
+      if(IS_TWA){fbAuth.signInWithRedirect(provider);return;}
       fbAuth.signInWithPopup(provider).then(function(result){
         currentUser=result.user;updateAuthUI();syncNow();
-      }).catch(function(e){alert('Sign-in failed: '+e.message);});
+      }).catch(function(e){
+        if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/cancelled-popup-request'||e.code==='auth/operation-not-supported-in-this-environment')){
+          fbAuth.signInWithRedirect(provider);return;
+        }
+        alert('Sign-in failed: '+e.message);
+      });
     }catch(e){alert('Firebase error: '+e.message);}
   });
 }
@@ -3090,7 +3125,7 @@ function _fabVoice(){
    Every function referenced in HTML must be explicitly attached to window.
    ─────────────────────────────────────────────────────────────────────── */
 window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.toggleDark=toggleDark;
-window.obNext=obNext;window.obDone=obDone;
+window.obNext=obNext;window.obDone=obDone;window.obReplay=obReplay;
 window._coachDismiss=_coachDismiss;window._pickerMore=_pickerMore;
 window.openShareCard=openShareCard;window.closeShareCard=closeShareCard;window.shareCardImage=shareCardImage;
 window.requestNotifPermission=requestNotifPermission;

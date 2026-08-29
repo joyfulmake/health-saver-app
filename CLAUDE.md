@@ -141,7 +141,10 @@ Trigger via GitHub Actions → `build-msix.yml` → Run workflow. Download artif
 
 ## Firebase project
 
-Project ID: `opsmanifest-d363a` — Authentication (Google), Firestore enabled. Owned by Flourish, not the end user.
+Project ID: `flourish-app-a5672` — Authentication (Google), Firestore enabled. Owned by Flourish, not the end user.
+The `FIREBASE_CONFIG` GitHub secret carries this project's web config (injected into `index.html` at deploy).
+Migrated 2026-08-29 from the old repurposed project `opsmanifest-d363a`; users re-sync on next sign-in (their local
+entries push up to the new per-user doc — no server-side data migration needed as long as they still hold local data).
 Data path: `users/{uid}/data/entries` (one document per user, holding `entries[]` + `deletedIds` + `updated`).
 
 Firestore rules (per-user isolation — updated 2026-08-29):
@@ -166,7 +169,7 @@ sign-in fails.
 `privacy.html` is deployed alongside `index.html`. URL: `https://flourish.is-a.dev/privacy.html`
 Required by Google Play, Microsoft Store, and other stores for production listings.
 Free users: all data stays on-device (`localStorage`), nothing collected. Pro users who sign in:
-a copy of their entries is stored in Flourish's own Firestore project (`opsmanifest-d363a`) under
+a copy of their entries is stored in Flourish's own Firestore project (`flourish-app-a5672`) under
 a private per-user path; Firebase Auth holds their Google ID, email, and display name. This must
 match the Google Play Data Safety declaration (data collected, stored on our server, transmitted
 off device, deletable on request).
