@@ -40,8 +40,8 @@ Four modules in one file:
 | Pro sync | Firebase Firestore (optional, Pro tier) |
 | Auth | Firebase Auth (Pro tier) |
 | Payments | Razorpay (Pro unlock) |
-| Hosting | Cloudflare Pages |
-| Deploy | GitHub push → Actions inject secrets → `wrangler pages deploy` |
+| Hosting | Cloudflare Pages (native Git integration — connected directly to this repo) |
+| Deploy | GitHub push → Cloudflare builds & deploys automatically, no Actions workflow involved |
 
 ---
 
@@ -53,34 +53,37 @@ manifest.json       ← PWA manifest (standalone, shortcuts to Quick Log)
 privacy.html        ← privacy policy (required for store listings)
 icon-192.png        ← PWA icon
 icon-512.png        ← PWA icon (maskable)
-.github/
-  workflows/
-    deploy.yml      ← injects secrets, deploys to Cloudflare Pages on push
+build.sh            ← runs during the Cloudflare Pages build; injects secrets into index.html
 ```
 
 ---
 
-## Secrets (GitHub repo settings → Secrets)
+## Secrets (Cloudflare Pages project → Settings → Environment variables)
 
-| Secret | Purpose |
-|--------|---------|
-| `RAZORPAY_KEY` | Payment public key injected at deploy |
+These are **not** GitHub secrets — Cloudflare's native Git integration builds directly from
+its own dashboard, so the values live there instead. `build.sh` reads them as env vars at
+build time and substitutes them into `index.html`.
+
+| Variable | Purpose |
+|----------|---------|
+| `RAZORPAY_KEY` | Payment public key injected at build |
 | `WEB3FORMS_KEY` | Contact form submissions |
 | `FLOURISH_PRO_KEY` | Pro tier unlock validation |
-| `FIREBASE_CONFIG` | JSON blob for Firestore sync |
-| `CLOUDFLARE_API_TOKEN` | Wrangler deploy from CI |
-| `CLOUDFLARE_ACCOUNT_ID` | `254fa20341a7b0c16458102e1b48f004` |
+| `FIREBASE_CONFIG` | JSON blob for Firestore sync (single line, no unescaped newlines) |
+
+Cloudflare Pages project: `health-saver-app` → `health-saver-app.pages.dev`
+Build command: `bash build.sh` · Build output directory: `/`
 
 ---
 
 ## Deploy
 
 ```bash
-# Manual deploy (secrets injected manually first):
-npx wrangler pages deploy . --project-name health-saver-app
-
 # Normal workflow — just push:
-git push origin main  # GitHub Actions handles the rest
+git push origin main  # Cloudflare Pages builds and deploys automatically
+
+# Manual deploy (secrets injected manually first), only if you need to bypass Git:
+npx wrangler pages deploy . --project-name health-saver-app
 ```
 
 ---

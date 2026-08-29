@@ -18,8 +18,8 @@ Flourish is a single-file progressive web app (PWA). There is no framework, no b
 | Email / OTP | Web3Forms |
 | Voice input | Web Speech API (capability-detected at boot) |
 | Dark mode | CSS `data-theme="dark"` on `<html>`, persisted in localStorage |
-| Hosting | GitHub Pages — `flourish.is-a.dev` |
-| CI / CD | GitHub Actions |
+| Hosting | Cloudflare Pages (native Git integration) — `flourish.is-a.dev` |
+| CI / CD | Cloudflare Pages builds directly from GitHub pushes; GitHub Actions handles store artifacts only |
 | Windows package | MSIX (hand-crafted, `makeappx.exe`) |
 | Android package | TWA — signed APK + AAB |
 
@@ -158,8 +158,8 @@ flowchart LR
 flowchart LR
     Dev[Developer\nWSL] -->|git push main| GH[(GitHub\nmain branch)]
 
-    GH -->|deploy.yml\nauto on push| INJ[Secret injection\nsed + python3]
-    INJ --> Pages[GitHub Pages\nflourish.is-a.dev]
+    GH -->|native Git integration\nauto on push| CFP[Cloudflare Pages build\nbuild.sh: sed + python3 secret injection]
+    CFP --> Pages[Cloudflare Pages\nflourish.is-a.dev]
 
     GH -->|build-msix.yml\nmanual dispatch| MSIX[MSIX artifact\nflourish-windows.msix]
     MSIX -->|manual upload\nPartner Center| MS[Microsoft Store\nlive]
