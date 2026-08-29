@@ -2,33 +2,26 @@
 
 ## Project overview
 
-**Flourish** (`flourish.is-a.dev`) is a single-file PWA for honest self-tracking: habits, finance, time, and nature in one place. No build step, no framework, no server — pure HTML/CSS/JS. All data lives in `localStorage` (key `lifeos_v5`) unless the user enables Firebase sync via Pro.
+**Flourish** (`flourish.is-a.dev`) is a single-file PWA for honest self-tracking: habits, finance, time, and nature in one place. No build step, no framework, no server — pure HTML/CSS/JS. All data lives in `localStorage` (key `lifeos_v5`) unless the user signs in with Google (Pro), which syncs a copy of their entries to Flourish's own Firestore project under a private per-user path.
 
-**Current version: v4.1** — released 2026-06-25
+**Current version: v4.2** — released 2026-08-29 (onboarding rework, progressive-disclosure UX, faster entry management, gzip backup codes). v4.1 shipped 2026-06-25.
 
 ## Live URL & deployment
 
-- **Live**: https://flourish.is-a.dev (custom domain → Cloudflare Pages)
+- **Live**: https://flourish.is-a.dev — **GitHub Pages**, custom domain, build type "GitHub Actions"
 - **Repo**: github.com/joyfulmake/health-saver-app
-- **Deploy**: push to `main` → GitHub Actions injects secrets → `npx wrangler pages deploy`
-
-**Deploy command** (manual):
+- **Deploy**: push to `main` → `.github/workflows/deploy.yml` runs `build.sh` (secret injection) → publishes the flat directory to Pages. A merge to `main` is a production release — it is the URL the Play Store TWA loads.
+- Secrets live in **GitHub repo → Settings → Secrets → Actions** (`RAZORPAY_KEY`, `WEB3FORMS_KEY`, `FLOURISH_PRO_KEY`, `FIREBASE_CONFIG`). The workflow hard-fails if a `__PLACEHOLDER__` survives injection.
+- `health-saver-app.pages.dev` (Cloudflare Pages) is a **dead experiment** — not wired for secret injection, not the canonical host. Ignore it or delete the project.
 
 ```bash
-git add -A && git commit -m "..." && git push
-# GitHub Actions (deploy.yml) injects secrets and deploys to Cloudflare Pages automatically
-```
-
-**Manual deploy** (without CI):
-```bash
-# Inject secrets locally first (replace placeholders in index.html), then:
-npx wrangler pages deploy . --project-name health-saver-app
+git add -A && git commit -m "..." && git push   # then: gh run watch
 ```
 
 ## Architecture
 
 - **Single file**: `index.html` — all CSS, JS, and HTML inline
-- **No build step** — edit and push; the CI only does secret injection then deploys the flat directory
+- **No build step** for local dev — open `index.html` in a browser. The deploy workflow only does secret injection then publishes the flat directory.
 - **Local dev**: open `index.html` directly in a browser; secrets will be `undefined` (payment and email features won't work, everything else does)
 - `manifest.json` — PWA manifest (standalone, portrait-primary, shortcuts to Quick Log)
 - `privacy.html` — standalone privacy policy page (required for store listings)
@@ -148,15 +141,35 @@ Trigger via GitHub Actions → `build-msix.yml` → Run workflow. Download artif
 
 ## Firebase project
 
-Project ID: `opsmanifest-d363a` — Authentication (Google), Firestore enabled.
-Firestore rule: `allow read, write: if request.auth != null;`
-Data path: `users/{uid}/data/entries`
+Project ID: `opsmanifest-d363a` — Authentication (Google), Firestore enabled. Owned by Flourish, not the end user.
+Data path: `users/{uid}/data/entries` (one document per user, holding `entries[]` + `deletedIds` + `updated`).
+
+Firestore rules (per-user isolation — updated 2026-08-29):
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+Auth → Settings → **Authorized domains** must list every domain the app is served from
+(`flourish.is-a.dev`, plus `health-saver-app.pages.dev` / `localhost` as needed) or Google
+sign-in fails.
 
 ## Privacy policy
 
 `privacy.html` is deployed alongside `index.html`. URL: `https://flourish.is-a.dev/privacy.html`
 Required by Google Play, Microsoft Store, and other stores for production listings.
-No personal data is collected. All data stays on-device (localStorage). Optional Firebase sync uses the user's own Firebase project.
+Free users: all data stays on-device (`localStorage`), nothing collected. Pro users who sign in:
+a copy of their entries is stored in Flourish's own Firestore project (`opsmanifest-d363a`) under
+a private per-user path; Firebase Auth holds their Google ID, email, and display name. This must
+match the Google Play Data Safety declaration (data collected, stored on our server, transmitted
+off device, deletable on request).
 
 ## Pitfalls
 

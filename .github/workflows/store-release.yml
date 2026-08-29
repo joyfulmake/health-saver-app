@@ -59,7 +59,7 @@ jobs:
           if web:
               stores.append('| Web | [flourish.is-a.dev](https://flourish.is-a.dev) |')
           if gp:
-              stores.append('| Android | [Google Play](https://play.google.com/store/apps/details?id=dev.flourish.app) |')
+              stores.append('| Android | [Google Play](https://play.google.com/store/apps/details?id=dev.isa.flourish) |')
           if az:
               stores.append('| Android (Amazon) | [Amazon Appstore](https://www.amazon.com/dp/REPLACE_ASIN) |')
 

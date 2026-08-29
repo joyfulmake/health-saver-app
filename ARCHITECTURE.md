@@ -18,8 +18,8 @@ Flourish is a single-file progressive web app (PWA). There is no framework, no b
 | Email / OTP | Web3Forms |
 | Voice input | Web Speech API (capability-detected at boot) |
 | Dark mode | CSS `data-theme="dark"` on `<html>`, persisted in localStorage |
-| Hosting | Cloudflare Pages (native Git integration) — `flourish.is-a.dev` |
-| CI / CD | Cloudflare Pages builds directly from GitHub pushes; GitHub Actions handles store artifacts only |
+| Hosting | GitHub Pages — custom domain `flourish.is-a.dev`, build type "GitHub Actions" |
+| CI / CD | `.github/workflows/deploy.yml` on push to `main`: `build.sh` secret injection → publish. Other workflows handle store artifacts only. |
 | Windows package | MSIX (hand-crafted, `makeappx.exe`) |
 | Android package | TWA — signed APK + AAB |
 
@@ -158,8 +158,8 @@ flowchart LR
 flowchart LR
     Dev[Developer\nWSL] -->|git push main| GH[(GitHub\nmain branch)]
 
-    GH -->|native Git integration\nauto on push| CFP[Cloudflare Pages build\nbuild.sh: sed + python3 secret injection]
-    CFP --> Pages[Cloudflare Pages\nflourish.is-a.dev]
+    GH -->|deploy.yml\nauto on push to main| CI[GitHub Actions\nbuild.sh: sed + python3 secret injection]
+    CI --> Pages[GitHub Pages\nflourish.is-a.dev]
 
     GH -->|build-msix.yml\nmanual dispatch| MSIX[MSIX artifact\nflourish-windows.msix]
     MSIX -->|manual upload\nPartner Center| MS[Microsoft Store\nlive]

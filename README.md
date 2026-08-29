@@ -40,8 +40,8 @@ Four modules in one file:
 | Pro sync | Firebase Firestore (optional, Pro tier) |
 | Auth | Firebase Auth (Pro tier) |
 | Payments | Razorpay (Pro unlock) |
-| Hosting | Cloudflare Pages (native Git integration — connected directly to this repo) |
-| Deploy | GitHub push → Cloudflare builds & deploys automatically, no Actions workflow involved |
+| Hosting | GitHub Pages, custom domain `flourish.is-a.dev` (build type: GitHub Actions) |
+| Deploy | Push to `main` → `.github/workflows/deploy.yml` injects secrets via `build.sh`, then publishes |
 
 ---
 
@@ -53,38 +53,36 @@ manifest.json       ← PWA manifest (standalone, shortcuts to Quick Log)
 privacy.html        ← privacy policy (required for store listings)
 icon-192.png        ← PWA icon
 icon-512.png        ← PWA icon (maskable)
-build.sh            ← runs during the Cloudflare Pages build; injects secrets into index.html
+build.sh            ← runs in the deploy workflow; injects build-time secrets into index.html
+CNAME               ← binds the GitHub Pages site to flourish.is-a.dev (do not delete)
 ```
 
 ---
 
-## Secrets (Cloudflare Pages project → Settings → Environment variables)
+## Secrets (GitHub repo → Settings → Secrets and variables → Actions)
 
-These are **not** GitHub secrets — Cloudflare's native Git integration builds directly from
-its own dashboard, so the values live there instead. `build.sh` reads them as env vars at
-build time and substitutes them into `index.html`.
+`build.sh` reads these as env vars during the deploy workflow and substitutes them into
+`index.html`. Locally they are unset, so payment / email / cloud-sync features are inert —
+everything else works.
 
 | Variable | Purpose |
 |----------|---------|
 | `RAZORPAY_KEY` | Payment public key injected at build |
-| `WEB3FORMS_KEY` | Contact form submissions |
-| `FLOURISH_PRO_KEY` | Pro tier unlock validation |
+| `WEB3FORMS_KEY` | Contact form + Pro-activation notifications |
+| `FLOURISH_PRO_KEY` | Pro tier unlock passphrase |
 | `FIREBASE_CONFIG` | JSON blob for Firestore sync (single line, no unescaped newlines) |
-
-Cloudflare Pages project: `health-saver-app` → `health-saver-app.pages.dev`
-Build command: `bash build.sh` · Build output directory: `/`
 
 ---
 
 ## Deploy
 
 ```bash
-# Normal workflow — just push:
-git push origin main  # Cloudflare Pages builds and deploys automatically
-
-# Manual deploy (secrets injected manually first), only if you need to bypass Git:
-npx wrangler pages deploy . --project-name health-saver-app
+# Just push — the deploy workflow builds and publishes to flourish.is-a.dev:
+git push origin main
 ```
+
+The workflow fails the build if any `__SECRET__` placeholder survives injection, so a
+missing repo secret can never ship a broken page. Watch a run with `gh run watch`.
 
 ---
 

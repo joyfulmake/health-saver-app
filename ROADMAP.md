@@ -18,6 +18,21 @@ Live at [flourish.is-a.dev](https://flourish.is-a.dev)
 
 ---
 
+## v4.2 — Shipped (2026-08-29)
+
+Web-only release (no new Android/Windows package — the TWA loads the updated site):
+
+1. **Onboarding rework** — 5-step first-run carousel; clarifies no-login-needed, introduces Body Systems + Patterns without overwhelming
+2. **Contextual coach marks** — Body, Nature, finance toggle; shown once, dismissible (localStorage flag)
+3. **Progressive disclosure in log form** — Mode / Category / Expense-category pickers capped at 3 visible choices + "more"; active choice stays visible
+4. **Backup codes v2** — compact array + gzip encoding with FNV-1a checksum; rejects corrupted/truncated pastes before touching data; old codes still restore
+5. **Life Intelligence Feed** — random no-immediate-repeat picker per lane; shorter cooldown for time-bound lanes
+6. **Readability** — body text +3px app-wide; nav/header/buttons left alone to avoid narrow-phone overflow
+7. **Firestore rules hardened** — per-user isolation (`request.auth.uid == userId`)
+8. **Privacy policy corrected** — accurately describes cloud sync into Flourish's own Firestore project
+
+---
+
 ## v4.1 — Shipped (2026-06-24)
 
 All 14 enhancements shipped in one release:

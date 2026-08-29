@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+# flourish.is-a.dev is a GitHub Pages site (custom domain, build type "GitHub Actions").
+# On every push to main: inject the build-time secrets into index.html via build.sh,
+# then publish the flat directory. This is the URL the Play Store TWA (dev.isa.flourish)
+# and all web users load, so a merge to main == a production release.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inject secrets into index.html
+        env:
+          RAZORPAY_KEY: ${{ secrets.RAZORPAY_KEY }}
+          WEB3FORMS_KEY: ${{ secrets.WEB3FORMS_KEY }}
+          FLOURISH_PRO_KEY: ${{ secrets.FLOURISH_PRO_KEY }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+        run: bash build.sh
+
+      - name: Fail if any placeholder survived injection
+        run: |
+          if grep -qE '__(RAZORPAY_KEY|WEB3FORMS_KEY|FLOURISH_PRO_KEY|FIREBASE_CONFIG)__' index.html; then
+            echo "::error::A secret placeholder is still present in index.html — check repo secrets."
+            grep -nE '__(RAZORPAY_KEY|WEB3FORMS_KEY|FLOURISH_PRO_KEY|FIREBASE_CONFIG)__' index.html
+            exit 1
+          fi
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - id: deployment
+        uses: actions/deploy-pages@v4
