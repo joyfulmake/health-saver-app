@@ -469,7 +469,7 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
 [data-theme="dark"] .mbox{background:#1a1816}
 [data-theme="dark"] .story-wrap{background:linear-gradient(160deg,#1e1c18,#1a170f)}
 [data-theme="dark"] .winp,[data-theme="dark"] .fi{background:#1e1c19;color:#f0ede8;border-color:rgba(255,200,120,.15)}
-[data-theme="dark"] .bnav{background:rgba(15,14,13,.97);box-shadow:0 -2px 20px rgba(0,0,0,.45)}
+[data-theme="dark"] .bnav{background:#0f0e0d;box-shadow:0 -1px 8px rgba(0,0,0,.3)}
 [data-theme="dark"] .bnav-btn{color:rgba(240,237,232,.55)}
 [data-theme="dark"] .bnav-btn.on{color:#7eb3f7;background:rgba(100,150,255,.1)}
 [data-theme="dark"] .bnav-btn.on::after{background:#7eb3f7;box-shadow:0 0 8px rgba(100,150,255,.5)}
@@ -480,7 +480,7 @@ select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-i
 [data-theme="dark"] .share-box{background:#1a1816}
 body.is-pro[data-theme="dark"]{--soft:#1c1909;--softer:#171500;--border:rgba(176,112,32,.18)}
 /* ── Bottom navigation bar ──────────────────────────────────────────────── */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(253,252,250,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 -2px 20px rgba(0,0,0,.06);padding:0 4px;padding-bottom:env(safe-area-inset-bottom);display:flex;z-index:200;height:calc(72px + env(safe-area-inset-bottom))}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fdfcfa;box-shadow:0 -1px 8px rgba(0,0,0,.04);padding:0 4px;padding-bottom:env(safe-area-inset-bottom);display:flex;z-index:200;height:calc(72px + env(safe-area-inset-bottom))}
 .bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 2px 8px;border:none;background:transparent;cursor:pointer;font-family:inherit;color:var(--muted);transition:color .15s,background .15s;gap:4px;-webkit-tap-highlight-color:transparent;position:relative;border-radius:12px;margin:6px 2px}
 .bnav-btn.on{color:var(--cb);background:rgba(26,74,140,.07)}
 .bnav-btn.on::after{content:'';position:absolute;top:-6px;left:25%;right:25%;height:3px;border-radius:0 0 3px 3px;background:var(--cb);box-shadow:0 0 8px rgba(26,74,140,.45)}
@@ -609,8 +609,8 @@ body.is-pro[data-theme="dark"]{--soft:#1c1909;--softer:#171500;--border:rgba(176
 .ec-r-rep{background:var(--cg)}
 .ec-r-del{background:var(--cr)}
 /* ── Toast (undo / confirmation) ─────────────────────────────────────────── */
-.toast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));background:#0f0f0f;color:#fff;border-radius:12px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:220;transform:translateY(140%);transition:transform .25s cubic-bezier(.22,1,.36,1);pointer-events:none}
-.toast.show{transform:translateY(0);pointer-events:auto}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));background:#0f0f0f;color:#fff;border-radius:12px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:220;transform:translateY(calc(100% + 120px));transition:transform .25s cubic-bezier(.22,1,.36,1);pointer-events:none;visibility:hidden}
+.toast.show{transform:translateY(0);pointer-events:auto;visibility:visible}
 .toast-action{background:none;border:none;color:#7eb3f7;font-family:inherit;font-size:13px;font-weight:900;cursor:pointer;flex-shrink:0;text-transform:uppercase;letter-spacing:.4px;padding:0}
 /* ── Weekly report share card (Pro) ─────────────────────────────────────── */
 .share-ov{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:600;display:none;align-items:flex-end;justify-content:center}
