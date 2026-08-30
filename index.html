@@ -1086,7 +1086,7 @@ function _pickStory(){
   try{localStorage.setItem('flourish_slog',JSON.stringify(shown));}catch(e){}
   return idx;
 }
-function _applyStory(s){
+function _applyStory(s,skipAnim){
   var el=document.getElementById('story-body');
   var sr=document.getElementById('story-src');
   var sl=document.getElementById('story-link');
@@ -1097,6 +1097,7 @@ function _applyStory(s){
   if(sl)sl.href=s.u;
   if(pb){pb.classList.remove('run');void pb.offsetWidth;pb.classList.add('run');}
   el.classList.remove('sin','sout');
+  if(skipAnim)return; /* first paint: quote is fully visible immediately, no fade */
   void el.offsetWidth;
   el.classList.add('sin');
 }
@@ -1113,8 +1114,27 @@ function _storyNext(){
   _storyTimer=setTimeout(_storyNext,15500);
 }
 function _startStories(){
-  _applyStory(STORIES[_pickStory()]);
+  _applyStory(STORIES[_pickStory()],true);
   _storyTimer=setTimeout(_storyNext,15500);
+}
+/* After the calm landing (quote first), wait ~3s then gently scroll down so the
+   "What did you just do?" input is in view — unless the user already moved. */
+function _landingNudge(){
+  if(activeTab!=='quicklog')return;
+  try{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}
+  var done=false;
+  function cancel(){done=true;off();}
+  function off(){['wheel','touchmove','keydown','pointerdown'].forEach(function(ev){window.removeEventListener(ev,cancel);});}
+  ['wheel','touchmove','keydown','pointerdown'].forEach(function(ev){window.addEventListener(ev,cancel,{passive:true});});
+  setTimeout(function(){
+    off();
+    if(done||window.scrollY>40)return;
+    var card=document.querySelector('#p-quicklog .wcard-hi')||document.querySelector('#p-quicklog .wiz-wrap');
+    if(!card)return;
+    var y=card.getBoundingClientRect().top+window.scrollY-124;
+    if(y<=window.scrollY+20)return;
+    window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+  },3000);
 }
 /* ── Swipe-to-reveal on entry cards (Edit / Again / Delete) ──────────────
    Pointer events (not touch-only) so it works the same on touch, mouse
@@ -1192,6 +1212,7 @@ async function boot(){
   try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
   window.scrollTo(0,0);
   setTimeout(function(){window.scrollTo(0,0);},50);
+  _landingNudge();
   if(FIREBASE_CONFIG)initFirebase();
   else try{document.querySelectorAll('.needs-fb').forEach(function(e){e.style.display='none';});}catch(e){}
   if(new URLSearchParams(location.search).get('getpro')==='1')setTimeout(openPay,400);
