@@ -12,7 +12,7 @@
 - **Repo**: github.com/joyfulmake/health-saver-app
 - **Deploy**: push to `main` → `.github/workflows/deploy.yml` runs `build.sh` (secret injection) → publishes the flat directory to Pages. A merge to `main` is a production release — it is the URL the Play Store TWA loads.
 - Secrets live in **GitHub repo → Settings → Secrets → Actions** (`RAZORPAY_KEY`, `WEB3FORMS_KEY`, `FLOURISH_PRO_KEY`, `FIREBASE_CONFIG`). The workflow hard-fails if a `__PLACEHOLDER__` survives injection.
-- `health-saver-app.pages.dev` (Cloudflare Pages) is a **dead experiment** — not wired for secret injection, not the canonical host. Ignore it or delete the project.
+- The `health-saver-app` Cloudflare Worker (a `wrangler deploy` experiment, never worked — no secret injection) is retired; delete it from the Cloudflare dashboard if it still exists. The `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` GitHub secrets it used are unused.
 
 ```bash
 git add -A && git commit -m "..." && git push   # then: gh run watch
@@ -161,8 +161,7 @@ service cloud.firestore {
 ```
 
 Auth → Settings → **Authorized domains** must list every domain the app is served from
-(`flourish.is-a.dev`, plus `health-saver-app.pages.dev` / `localhost` as needed) or Google
-sign-in fails.
+(`flourish.is-a.dev` + `localhost`) or Google sign-in fails with `auth/unauthorized-domain`.
 
 ## Privacy policy
 
