@@ -2679,9 +2679,20 @@ var currentUser=(function(){try{var s=localStorage.getItem('flourish_pro');retur
 var deletedIds=(function(){try{return new Set(JSON.parse(localStorage.getItem('flourish_del_v5')||'[]'));}catch(e){return new Set();}})();
 function persistDeleted(){try{localStorage.setItem('flourish_del_v5',JSON.stringify([...deletedIds]));}catch(e){}}
 function loadFirebaseSDK(cb){
-  if(fbLoaded){cb();return;}
+  if(fbLoaded&&window.firebase&&typeof firebase.auth==='function'){cb();return;}
+  /* Load sequentially: auth-compat / firestore-compat require app-compat to
+     have executed first. Parallel <script> injection races and can leave
+     firebase.auth undefined ("firebase.auth is not a function"). */
   var srcs=['https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js'];
-  var n=0;srcs.forEach(function(src){var s=document.createElement('script');s.src=src;s.onload=function(){if(++n===srcs.length){fbLoaded=true;cb();}};document.head.appendChild(s);});
+  (function next(i){
+    if(i>=srcs.length){fbLoaded=true;cb();return;}
+    var s=document.createElement('script');
+    s.src=srcs[i];
+    s.async=false;
+    s.onload=function(){next(i+1);};
+    s.onerror=function(){alert('Could not load the sign-in library — check your connection and try again.');};
+    document.head.appendChild(s);
+  })(0);
 }
 function initFirebase(){
   if(!FIREBASE_CONFIG)return;
